@@ -1,0 +1,171 @@
+/* ----- GLOBAL PROPS START ----- */
+:root {
+     --fontColor: #f2f2f2;
+     --font2ndColor: #999999;
+     --mainColor: #e5890a;
+     --main2ndColor: #9d5c0d;
+     --main3rdColor: #3a3a3a;
+ }
+ 
+ ::selection {
+     background: var(--main2ndColor);
+ }
+ 
+ ::-webkit-scrollbar {
+     display: none;
+ }
+ 
+ * {
+     font-family: "Century Gothic";
+     font-weight: 300;
+ }
+ 
+ body {
+     margin: 0;
+     padding: 0;
+     color: var(--fontColor);
+     background-size: cover;
+     background-repeat: no-repeat;
+     background-attachment: fixed;
+     background-position: center center;
+ }
+ 
+ @font-face {
+     font-family: "Century Gothic";
+     src: local("GOTHIC"), url(/src/assets/fonts/GOTHIC.TTF) format("TTF");
+ }
+ 
+ .display-flex {
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+ }
+ 
+ .flex-row {
+     flex-direction: row;
+ }
+ 
+ .content-fit {
+     padding: 10px 0;
+     margin: 0 160px;
+     min-height: 60vh;
+ }
+ 
+ .content-loader {
+     margin: 0 50px;
+ }
+ 
+ .prevent-drag {
+     -webkit-user-drag: none;
+     -khtml-user-drag: none;
+     -moz-user-drag: none;
+     -o-user-drag: none;
+ }
+ 
+ .btn-1 {
+     height: 40px;
+     width: 150px;
+     margin: 10px 0;
+     color: var(--fontColor);
+     background-color: #e5890a;
+     font-size: 18px;
+     font-weight: 700;
+     outline: none;
+     border: none;
+     border-radius: 18px;
+     cursor: pointer;
+ }
+ 
+ .btn-1:hover,
+ .btn-hover:hover,
+ .social-btn:hover,
+ .footer-wrapper .navigation-wrapper .social-icon:hover {
+     opacity: 0.8;
+     transition: 0.4s all;
+ }
+
+ .translate-button {
+    color: red;
+    bottom: 30px;
+    right: 30px;
+    z-index: 111111111;
+    width: 50px;
+    height: 50px;
+}
+ /* ----- GLOBAL PROPS END ----- */
+ 
+ /* -------------------------------------------------------- */
+ 
+ /* ---------- MEDIA QUERIES START -------------------- */
+ @media only screen and (max-width: 1280px) {
+ }
+ 
+ @media only screen and (max-width: 1260px) {
+ }
+ 
+ @media only screen and (max-width: 1088px) {
+ }
+ 
+ @media only screen and (min-width: 768px) and (max-width: 1023px) {
+ }
+ 
+ @media only screen and (max-width: 577px) {
+ }
+ 
+ /* -------------- ANIMATIONS START------------------------- */
+ 
+ @keyframes fade-in {
+     from {
+         opacity: 0;
+     }
+     to {
+         opacity: 1;
+     }
+ }
+ 
+ @keyframes fade-out {
+     from {
+         opacity: 1;
+     }
+     to {
+         opacity: 0;
+     }
+ }
+ 
+ @keyframes load-line {
+     0% {
+         width: 0;
+     }
+     10% {
+         width: 5%;
+     }
+     20% {
+         width: 15%;
+     }
+     30% {
+         width: 25%;
+     }
+     40% {
+         width: 30%;
+     }
+     50% {
+         width: 44%;
+     }
+     60% {
+         width: 50%;
+     }
+     70% {
+         width: 72%;
+     }
+     80% {
+         width: 84%;
+     }
+     90% {
+         width: 92%;
+     }
+     100% {
+         width: 100%;
+     }
+ }
+ /* -------------------------------------------------------- */
