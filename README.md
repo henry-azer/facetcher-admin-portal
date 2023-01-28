@@ -1,5 +1,3 @@
-# React-Redux-Router-Starter 
-- React, Redux and Router clean architecture starter project
+# Facetcher Admin Portal
 
-* React version 17.0.2
-* React version 18.2.0
+Facetcher admin portal react application.
