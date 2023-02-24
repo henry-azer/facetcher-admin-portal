@@ -1,11 +1,16 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import FacetcherDrawer from "../components/drawer/drawer";
 
 const Home = () => {
-    const { t } = useTranslation();
+     const { t } = useTranslation();
 
-    return <div>{t("home:title")}</div>;
+     return (
+          <div>
+               <FacetcherDrawer />
+          </div>
+     );
 };
 
 export default Home;
