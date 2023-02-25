@@ -12,12 +12,14 @@ import ListItemButton from "@mui/material/ListItemButton";
 // import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import CircleIcon from "@mui/icons-material/Circle";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 // import InboxIcon from "@mui/icons-material/MoveToInbox";
 // import MailIcon from "@mui/icons-material/Mail";
 import {
      CYAN,
      DARKGREY2,
+     GREY,
      LIGHTGREY,
      LIGHTGREY10T,
 } from "../../constants/app_colors";
@@ -25,6 +27,13 @@ import Logo from "../../assets/logo/logo.svg";
 import LogoText from "../../assets/logo/logo-text.svg";
 
 const drawerWidth = 240;
+
+const drawerCategories = [
+     { header: "Analysis", subHeaders: ["Dashboard"] },
+     { header: "Drawings", subHeaders: ["All Drawings", "Recent Drawings"] },
+     { header: "Analysis", subHeaders: ["All Users", "Top Users"] },
+     { header: "Admins", subHeaders: ["All Admins"] },
+];
 
 const FacetcherDrawer = () => {
      return (
@@ -39,20 +48,37 @@ const FacetcherDrawer = () => {
                          backgroundColor: `${LIGHTGREY10T}`,
                     }}
                >
-                    <Toolbar>
+                    <Toolbar sx={{ width: "100%", justifyContent: "end" }}>
                          <Box
                               sx={{
                                    display: "flex",
-                                   flexDirection: "row-reverse",
-                                   width: "100%",
+                                   alignItems: "center",
+                                   justifyContent: "space-between",
+                                   width: "17%",
+                                   marginX: "3%",
                               }}
                          >
-                              <Box>
+                              <LightModeOutlinedIcon
+                                   sx={{
+                                        color: `${LIGHTGREY}`,
+                                   }}
+                              />
+                              <Box
+                                   component="div"
+                                   sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                   }}
+                              >
+                                   <Typography sx={{ marginRight: "10px" }}>
+                                        Admin Name
+                                   </Typography>
                                    <Box
                                         component="div"
                                         sx={{
-                                             width: "30px",
-                                             height: "30px",
+                                             width: "40px",
+                                             height: "40px",
                                              borderRadius: "50%",
                                              backgroundColor: `${CYAN}`,
                                              display: "flex",
@@ -61,9 +87,13 @@ const FacetcherDrawer = () => {
                                         }}
                                    >
                                         <PermIdentityIcon
+                                             fontSize="large"
                                              sx={{ color: `${LIGHTGREY}` }}
                                         />
                                    </Box>
+                                   <KeyboardArrowDownIcon
+                                        sx={{ color: `${LIGHTGREY}` }}
+                                   />
                               </Box>
                          </Box>
                     </Toolbar>
@@ -97,24 +127,47 @@ const FacetcherDrawer = () => {
                          />
                          <Box component="img" src={LogoText} />
                     </Toolbar>
-                    <Divider />
-
-                    <List>
-                         {[
-                              "Dashboard",
-                              "All Drawings",
-                              "Recent Drawings",
-                              "All Users",
-                              "Top Users",
-                              "All Admins",
-                         ].map((text, index) => (
-                              <ListItem key={text} disablePadding>
-                                   <ListItemButton>
-                                        <ListItemText primary={text} />
-                                   </ListItemButton>
-                              </ListItem>
+                    <Box
+                         component="div"
+                         sx={{
+                              marginTop: "5%",
+                              marginLeft: "5%",
+                         }}
+                    >
+                         {drawerCategories.map((category, index) => (
+                              <List disablePadding key={index}>
+                                   <ListItem>
+                                        <ListItemText
+                                             primaryTypographyProps={{
+                                                  fontSize: "15px",
+                                             }}
+                                             sx={{ color: `${GREY}` }}
+                                             primary={category.header}
+                                        />
+                                   </ListItem>
+                                   {category.subHeaders.map(
+                                        (subHeader, index) => (
+                                             <ListItem
+                                                  key={index}
+                                                  disablePadding
+                                             >
+                                                  <ListItemButton>
+                                                       <ListItemText
+                                                            primaryTypographyProps={{
+                                                                 fontSize:
+                                                                      "20px",
+                                                                 fontWeight:
+                                                                      "Bold",
+                                                            }}
+                                                            primary={subHeader}
+                                                       />
+                                                  </ListItemButton>
+                                             </ListItem>
+                                        )
+                                   )}
+                              </List>
                          ))}
-                    </List>
+                    </Box>
                </Drawer>
                <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                     <Toolbar />
