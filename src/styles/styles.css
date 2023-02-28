@@ -4,7 +4,7 @@
      --lightGrey: #eaeaea;
      --grey: #b3b4b4;
      --darkGrey: #3d4149;
-     --darkGrey2: #1E1E1E;
+     --darkGrey2: #1e1e1e;
      --cyan: #07abb3;
      --darkCyan: #003b3f;
 }
@@ -93,6 +93,17 @@ body {
      height: 50px;
 }
 /* ----- GLOBAL PROPS END ----- */
+
+.active_sub_header::before {
+     content: "";
+     position: absolute;
+     left: -20px;
+     width: 25px;
+     height: 30px;
+     background-color: var(--cyan);
+     border-bottom-right-radius: 5px;
+     border-top-right-radius: 5px;
+}
 
 /* -------------------------------------------------------- */
 
