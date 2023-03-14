@@ -8,9 +8,50 @@
      --cyan: #07abb3;
      --darkCyan: #003b3f;
 }
+.btn:active{
+     border: none !important;
+     /* outline: none !important; */
+}
+.form-control{
+     box-shadow: none !important;
+}
+input:focus-visible {
+     outline: none !important;
+}
+.bg-dark-grey {
+     background-color: var(--darkGrey);
+}
+.bg-cyan {
+     background-color: var(--cyan) !important;
+}
+.text-grey {
+     color: var(--grey) !important;
+}
+.text-light-grey {
+     color: var(--lightGrey) !important;
+}
+::placeholder {
+     /* Chrome, Firefox, Opera, Safari 10.1+ */
+     color: var(--grey) !important;
+     opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+     /* Internet Explorer 10-11 */
+     color: var(--grey) !important;
+}
+
+::-ms-input-placeholder {
+     /* Microsoft Edge */
+     color: var(--grey) !important;
+}
+.grey-border {
+     border-color: solid var(--grey) !important;
+}
 
 ::selection {
      background: var(--darkCyan);
+     color: var(--lightGrey) !important;
 }
 
 ::-webkit-scrollbar {
@@ -26,7 +67,7 @@ body {
      margin: 0;
      padding: 0;
      color: var(--lightGrey) !important;
-     background-color: var(--darkGrey) !important;
+     background-color: var(--darkGrey2) !important;
 }
 
 @font-face {
@@ -103,6 +144,7 @@ body {
      background-color: var(--cyan);
      border-bottom-right-radius: 5px;
      border-top-right-radius: 5px;
+     z-index: 1111;
 }
 
 /* -------------------------------------------------------- */
