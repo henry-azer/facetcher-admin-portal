@@ -29,7 +29,8 @@
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.4.2",
     "universal-cookie": "^4.0.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^1.0.2"
   },
   "scripts": {
     "start": "react-scripts start",

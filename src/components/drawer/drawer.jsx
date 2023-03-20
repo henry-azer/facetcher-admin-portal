@@ -18,7 +18,7 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 // import MailIcon from "@mui/icons-material/Mail";
 import {
      CYAN,
-     DARKGREY2,
+     DARKGREY,
      GREY,
      LIGHTGREY,
      LIGHTGREY10T,
@@ -106,7 +106,7 @@ const FacetcherDrawer = () => {
                          "& .MuiDrawer-paper": {
                               border: "none",
                               color: `${LIGHTGREY}`,
-                              backgroundColor: `${DARKGREY2}`,
+                              backgroundColor: `${DARKGREY}`,
                               width: drawerWidth,
                               boxSizing: "border-box",
                          },
