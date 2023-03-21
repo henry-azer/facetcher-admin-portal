@@ -7,12 +7,14 @@
      --darkGrey2: #1e1e1e;
      --cyan: #07abb3;
      --darkCyan: #003b3f;
+     --orange: #b34b07;
+     --darkOrange: #401a00;
 }
-.btn:active{
+.btn:active {
      border: none !important;
      /* outline: none !important; */
 }
-.form-control{
+.form-control {
      box-shadow: none !important;
 }
 input:focus-visible {
@@ -26,6 +28,9 @@ input:focus-visible {
 }
 .text-grey {
      color: var(--grey) !important;
+}
+.text-cyan {
+     color: var(--cyan) !important;
 }
 .text-light-grey {
      color: var(--lightGrey) !important;
@@ -85,7 +90,9 @@ body {
 .flex-row {
      flex-direction: row;
 }
-
+.recharts-tooltip-wrapper {
+     background-color: var(--darkGrey2) !important;
+}
 .content-fit {
      padding: 10px 0;
      margin: 0 160px;

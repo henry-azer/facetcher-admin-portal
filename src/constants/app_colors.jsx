@@ -5,3 +5,5 @@ export const DARKGREY = "#3d4149";
 export const DARKGREY2 = "#1E1E1E";
 export const CYAN = "#07abb3";
 export const DARKCYAN = "#003b3f";
+export const ORANGE = "#B34B07";
+export const DARKORANGE = "#401A00";
