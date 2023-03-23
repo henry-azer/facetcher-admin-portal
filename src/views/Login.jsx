@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Logo from "../assets/logo/logo.svg";
 import LogoText from "../assets/logo/logo-text.svg";
 import { useFormik } from "formik";
+import Cookies from "universal-cookie";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { authenticateUser } from "../store/actions/auth/auth-actions";
+import { ISUSERAUTH } from "../constants/app_constants";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
      const formik = useFormik({
@@ -19,14 +22,23 @@ const Login = () => {
                     .required("Email is required"),
                password: Yup.string().required("Password is required"),
           }),
-          onSubmit: () => {
-               dispatch(authenticateUser());
+          onSubmit: (values) => {
+               dispatch(authenticateUser(values));
           },
      });
 
+     const cookies = new Cookies();
+     const navigate = useNavigate();
      const dispatch = useDispatch();
+     const err = false;
 
-     console.log(formik.values);
+     useEffect(() => {
+          document.title = "Sign In | Facetcher";
+
+          if (cookies.get(ISUSERAUTH) == "true") {
+               navigate("/");
+          }
+     });
 
      return (
           <div className="d-flex">
@@ -60,7 +72,11 @@ const Login = () => {
                               placeholder="Email"
                               onChange={formik.handleChange}
                               value={formik.values.email}
+                              onBlur={formik.handleBlur}
                          />
+                         {formik.errors.email && formik.touched.email && (
+                              <p>{formik.errors.email}</p>
+                         )}
                          <input
                               type="text"
                               className=" rounded-pill bg-transparent form-control grey-border w-75 p-2 px-3 fs-5 text-grey my-3"
@@ -68,7 +84,14 @@ const Login = () => {
                               placeholder="Password"
                               onChange={formik.handleChange}
                               value={formik.values.password}
+                              onBlur={formik.handleBlur}
                          />
+                         {formik.errors.password && formik.touched.password && (
+                              <p>{formik.errors.password}</p>
+                         )}
+                         { err && (
+                              <p>Invalid Email or Password</p>
+                         )}
                          <input
                               type="submit"
                               className="btn bg-cyan rounded-pill h-25 px-5 text-light-grey my-3 fw-bold"

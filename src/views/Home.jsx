@@ -14,7 +14,13 @@ import {
      Legend,
 } from "recharts";
 import FacetcherDrawer from "../components/drawer/drawer";
-import { CYAN, LIGHTGREY, LIGHTGREY10T, ORANGE } from "../constants/app_colors";
+import {
+     CYAN,
+     DARKGREY2,
+     LIGHTGREY,
+     LIGHTGREY10T,
+     ORANGE,
+} from "../constants/app_colors";
 
 const Home = () => {
      // const { t } = useTranslation();
@@ -40,8 +46,8 @@ const Home = () => {
           <div>
                <FacetcherDrawer>
                     <div>
-                         <h1 className="my-0 fw-bold">Dashboard</h1>
-                         <p className="text-cyan fs-5">
+                         <h1 className="my-0 fs-4 fw-bold">Dashboard</h1>
+                         <p className="text-cyan fs-6">
                               Welcome,
                               <span className="fw-bold"> {adminName}</span>
                          </p>
@@ -50,7 +56,7 @@ const Home = () => {
                          <div className="col-8 bg-dark-grey mx-2 p-3">
                               <div>
                                    <ResponsiveContainer
-                                        width="100%"
+                                        width="70%"
                                         height={300}
                                    >
                                         <LineChart data={dataView()}>
@@ -59,14 +65,15 @@ const Home = () => {
                                                   dataKey="value"
                                                   stroke={CYAN}
                                                   strokeWidth="2"
-                                                  fill="transparent"
+                                                  dot={false}
                                              />
                                              <Line
                                                   type="monotone"
                                                   dataKey="value2"
                                                   stroke={ORANGE}
                                                   strokeWidth="2"
-                                                  fill="transparent"
+                                                  dot={false}
+                                                  // strokeDasharray="5 5"
                                              />
                                              <Line
                                                   activeDot={{ r: 8 }}
@@ -74,7 +81,7 @@ const Home = () => {
                                                   dataKey="value3"
                                                   stroke={LIGHTGREY}
                                                   strokeWidth="2"
-                                                  fill="transparent"
+                                                  dot={false}
                                              />
                                              <XAxis
                                                   dataKey="day"
@@ -82,17 +89,28 @@ const Home = () => {
                                                   tickLine={false}
                                              />
                                              <YAxis
+                                                  tickCount={8}
                                                   dataKey="value3"
                                                   stroke={LIGHTGREY}
                                                   tickLine={false}
                                              />
-                                             <Tooltip />
+                                             <Tooltip
+                                                  contentStyle={{
+                                                       background: DARKGREY2,
+                                                       border: "none",
+                                                  }}
+                                             />
                                              <CartesianGrid
                                                   stroke={LIGHTGREY10T}
                                                   vertical={false}
                                                   strokeDasharray="5 5"
                                              />
-                                             <Legend/>
+                                             <Legend
+                                                  align="right"
+                                                  iconType="rect"
+                                                  verticalAlign="top"
+                                                  height={36}
+                                             />
                                         </LineChart>
                                    </ResponsiveContainer>
                               </div>

@@ -26,7 +26,7 @@ import {
 import Logo from "../../assets/logo/logo.svg";
 import LogoText from "../../assets/logo/logo-text.svg";
 
-const drawerWidth = 240;
+const drawerWidth = 190;
 
 const drawerCategories = [
      { header: "Analysis", subHeaders: ["Dashboard"] },
@@ -118,14 +118,18 @@ const FacetcherDrawer = ({ children }) => {
                          sx={{
                               backgroundColor: `${LIGHTGREY10T}`,
                               display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
                          }}
                     >
-                         <Box
-                              component="img"
-                              src={Logo}
-                              sx={{ marginRight: "15px" }}
-                         />
-                         <Box component="img" src={LogoText} />
+                         <div className="d-flex justify-content-center align-items-center">
+                              <Box
+                                   component="img"
+                                   src={Logo}
+                                   sx={{ marginRight: "15px" }}
+                              />
+                              <Box component="img" src={LogoText} />
+                         </div>
                     </Toolbar>
                     <Box
                          component="div"
@@ -139,7 +143,7 @@ const FacetcherDrawer = ({ children }) => {
                                    <ListItem>
                                         <ListItemText
                                              primaryTypographyProps={{
-                                                  fontSize: "15px",
+                                                  fontSize: "12px",
                                              }}
                                              sx={{ color: `${GREY}` }}
                                              primary={category.header}
@@ -155,7 +159,7 @@ const FacetcherDrawer = ({ children }) => {
                                                        <ListItemText
                                                             primaryTypographyProps={{
                                                                  fontSize:
-                                                                      "20px",
+                                                                      "15px",
                                                                  fontWeight:
                                                                       "Bold",
                                                             }}

@@ -23,20 +23,28 @@ const URL = APIs_URL.STAGING;
 //      adapter: delayAdapterEnhancer(axios.defaults.adapter),
 // });
 
-export const authenticateUser = () => (dispatch) => {
+export const authenticateUser = (values) => (dispatch) => {
      dispatch({ type: LOGIN_REQUEST });
-
      axios.post(`${URL}/auth/log-in`, {
-          email: "admin@facetcher.com",
+          email: "admi@facetcher.com",
           password: "admin@facetcher",
-     }).then((response) => {
-          if (response.status === 200) {
-               console.log("cookies added");
+     })
+          .then((response) => {
                console.log(response);
-               cookies.set(ISUSERAUTH, "true");
-               cookies.set(ACCESSTOKEN, `${response.data.body.accessToken}`);
-          }
-     });
+               if (response.status === 200) {
+                    console.log(response);
+                    console.log("cookies added");
+                    cookies.set(ISUSERAUTH, "true");
+                    cookies.set(
+                         ACCESSTOKEN,
+                         `${response.data.body.accessToken}`
+                    );
+               }
+          })
+          .catch((err) => {
+               console.log(err);
+               // if (err.response.status == 400) cookies.set(ISUSERAUTH, "false");
+          });
      //           .then(function(response) {
      //                if (response.data.status === 200) {
      //                     dispatch({
