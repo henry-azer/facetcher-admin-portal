@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import {
      Tooltip,
      CartesianGrid,
@@ -21,8 +22,14 @@ import {
      LIGHTGREY10T,
      ORANGE,
 } from "../constants/app_colors";
+import { getCurrentUser } from "../store/actions/auth/auth-actions";
+import { getAllSubmissions } from "../store/actions/submission/submission-actions";
 
 const Home = () => {
+     const state = useSelector((state) => state);
+     const dispatch = useDispatch();
+
+     console.log(state);
      // const { t } = useTranslation();
      const adminName = "Admin Name";
      const dataView = () => {
@@ -37,7 +44,7 @@ const Home = () => {
                     value3: val + val2,
                });
           }
-          console.log(data);
+          // console.log(data);
 
           return data;
      };
@@ -115,7 +122,18 @@ const Home = () => {
                                    </ResponsiveContainer>
                               </div>
                          </div>
-                         <div className="col bg-dark-grey mx-2 p-3">Column</div>
+                         <div className="col bg-dark-grey mx-2 p-3">
+                              <button
+                                   onClick={() => dispatch(getCurrentUser())}
+                              >
+                                   Get Current User
+                              </button>
+                              <button
+                                   onClick={() => dispatch(getAllSubmissions())}
+                              >
+                                   Get All Trails
+                              </button>
+                         </div>
                     </div>
                </FacetcherDrawer>
           </div>

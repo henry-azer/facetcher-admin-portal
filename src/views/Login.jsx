@@ -35,10 +35,15 @@ const Login = () => {
      useEffect(() => {
           document.title = "Sign In | Facetcher";
 
-          if (cookies.get(ISUSERAUTH) == "true") {
+          if (isUserAuthenticated()) {
                navigate("/");
           }
      });
+
+     const isUserAuthenticated = () => {
+          if (cookies.get(ISUSERAUTH) === "true") return true;
+          else return false;
+     };
 
      return (
           <div className="d-flex">
@@ -89,9 +94,7 @@ const Login = () => {
                          {formik.errors.password && formik.touched.password && (
                               <p>{formik.errors.password}</p>
                          )}
-                         { err && (
-                              <p>Invalid Email or Password</p>
-                         )}
+                         {err && <p>Invalid Email or Password</p>}
                          <input
                               type="submit"
                               className="btn bg-cyan rounded-pill h-25 px-5 text-light-grey my-3 fw-bold"

@@ -26,7 +26,7 @@ const URL = APIs_URL.STAGING;
 export const authenticateUser = (values) => (dispatch) => {
      dispatch({ type: LOGIN_REQUEST });
      axios.post(`${URL}/auth/log-in`, {
-          email: "admi@facetcher.com",
+          email: "admin@facetcher.com",
           password: "admin@facetcher",
      })
           .then((response) => {
@@ -96,6 +96,20 @@ export const authenticateUser = (values) => (dispatch) => {
      //           .catch(function(error) {
      //                console.log(error);
      //           });
+};
+
+export const getCurrentUser = () => (dispatch) => {
+     console.log("lol");
+     axios.get(`${URL}/auth/current`).then((res) => {
+          console.log(res);
+          if (res.data.success) {
+               console.log(res);
+               dispatch({
+                    type: LOGIN_SUCCEEDED,
+                    payload: res,
+               });
+          }
+     });
 };
 
 export function clearLoginDetails() {

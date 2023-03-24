@@ -7,7 +7,7 @@ import {
     CLEAR_REGISTRATION_DETAILS,
 } from "../../types";
 
-const URL = "http://localhost:8080/api/user";
+// const URL = "http://localhost:8080/api/user";
 
 export const userRegistration = (user) => (dispatch) => {
     dispatch({ type: REGISTRATION_REQUEST });

@@ -71,7 +71,12 @@ const FacetcherDrawer = ({ children }) => {
                                         alignItems: "center",
                                    }}
                               >
-                                   <Typography sx={{ marginRight: "10px" }}>
+                                   <Typography
+                                        sx={{
+                                             marginRight: "10px",
+                                             fontSize: "12px",
+                                        }}
+                                   >
                                         Admin Name
                                    </Typography>
                                    <Box
