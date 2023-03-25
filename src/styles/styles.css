@@ -32,6 +32,9 @@ input:focus-visible {
 .bg-cyan {
      background-color: var(--cyan) !important;
 }
+.bg-orange {
+     background-color: var(--orange) !important;
+}
 .text-grey {
      color: var(--grey) !important;
 }
@@ -57,9 +60,9 @@ input:focus-visible {
      color: var(--grey) !important;
 }
 .grey-border {
-     border: solid var(--grey) !important;
+     border: solid var(--grey) 1px !important;
 }
-.h-20{
+.h-20 {
      height: 20% !important;
 }
 ::selection {
@@ -152,7 +155,7 @@ body {
      width: 50px;
      height: 50px;
 }
-.overflowY-scroll{
+.overflowY-scroll {
      overflow-y: scroll !important;
      overflow-x: visible !important;
 }
@@ -175,7 +178,6 @@ body {
      width: 230px;
      height: 230px;
 }
-
 
 /* -------------------------------------------------------- */
 

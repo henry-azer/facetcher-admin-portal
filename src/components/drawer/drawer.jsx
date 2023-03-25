@@ -208,7 +208,7 @@ const FacetcherDrawer = ({ children }) => {
                               marginTop: `${height}px`,
                          }}
                     >
-                         <div className="w-100 h-100 overflowY-scroll ">
+                         <div className="w-100 h-100">
                               {children}
                          </div>
                     </div>

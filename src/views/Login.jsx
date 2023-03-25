@@ -71,7 +71,7 @@ const Login = () => {
                          className="d-flex justify-content-center align-items-center flex-column w-100 h-25 justify-content-between"
                     >
                          <input
-                              type="text"
+                              type="email"
                               className=" rounded-pill bg-transparent form-control grey-border w-75 p-2 px-3 fs-5 text-grey my-3"
                               name="email"
                               placeholder="Email"
@@ -83,7 +83,7 @@ const Login = () => {
                               <p>{formik.errors.email}</p>
                          )}
                          <input
-                              type="text"
+                              type="password"
                               className=" rounded-pill bg-transparent form-control grey-border w-75 p-2 px-3 fs-5 text-grey my-3"
                               name="password"
                               placeholder="Password"
