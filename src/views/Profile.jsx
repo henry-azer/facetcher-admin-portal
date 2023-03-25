@@ -3,7 +3,7 @@ import FacetcherDrawer from "../components/drawer/drawer";
 import PersonIcon from "@mui/icons-material/Person";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
-import { Formik, useFormik } from "formik";
+import { Field, Formik, useFormik } from "formik";
 
 const Profile = () => {
      const store = useSelector((state) => state);
@@ -72,17 +72,21 @@ const Profile = () => {
                                                   email: user.email,
                                                   password: user.password,
                                              }}
-                                             enableReinitialize
+                                             enableReinitialize={true}
                                         >
-                                             {({ values, handleChange }) => (
+                                             {({
+                                                  values,
+                                                  handleChange,
+                                                  setFieldValue,
+                                             }) => (
                                                   <form className="d-flex justify-content-center align-items-center flex-column mx-2">
                                                        <div className="row justify-content-center align-items-center h-75">
                                                             <div className="col-6">
                                                                  <input
                                                                       type="text"
+                                                                      name="userName"
                                                                       placeholder="User Name"
                                                                       className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100"
-                                                                      name="userName"
                                                                       onChange={
                                                                            handleChange
                                                                       }
@@ -94,6 +98,7 @@ const Profile = () => {
                                                             <div className="col-6">
                                                                  <input
                                                                       type="text"
+                                                                      name="phoneNumber"
                                                                       placeholder="Phone number"
                                                                       className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100"
                                                                       onChange={
@@ -107,6 +112,7 @@ const Profile = () => {
                                                        </div>
                                                        <input
                                                             type="email"
+                                                            name="email"
                                                             placeholder="Email address"
                                                             className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100"
                                                             onChange={
@@ -117,15 +123,34 @@ const Profile = () => {
                                                             }
                                                        />
                                                        <div className="w-100 d-flex justify-content-between align-items-center">
-                                                            <input
+                                                            <Field
                                                                  type="password"
+                                                                 name="password"
                                                                  className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-50 me-2"
-                                                                 disabled
-                                                                 defaultValue={
-                                                                      values.password
-                                                                 }
+                                                                 // disabled
+                                                                 // onChange={
+                                                                 //      handleChange
+                                                                 // }
+                                                                 // defaultValue={
+                                                                 //      user.password
+                                                                 // }
                                                             />
-                                                            <button className="btn btn-sm bg-cyan text-light-grey rounded-pill w-50">
+                                                            <button
+                                                                 onClick={(
+                                                                      e
+                                                                 ) => {
+                                                                      e.preventDefault();
+                                                                      setFieldValue(
+                                                                           "password",
+                                                                           "facetcher@admin"
+                                                                           // "f"
+                                                                      );
+                                                                      console.log(
+                                                                           values
+                                                                      );
+                                                                 }}
+                                                                 className="btn btn-sm bg-cyan text-light-grey rounded-pill w-50"
+                                                            >
                                                                  Reset Password
                                                             </button>
                                                        </div>
