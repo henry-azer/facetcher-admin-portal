@@ -13,8 +13,7 @@ export default function auth_reducer(state = {}, action) {
         case LOGIN_SUCCEEDED:
             return {
                 ...state,
-                authenticatedUser: action.payload.user,
-                authenticationToken: action.payload.token,
+                authenticatedUser: action.payload,
                 isUserAuthenticated: true,
                 loginRequest: false,
             };

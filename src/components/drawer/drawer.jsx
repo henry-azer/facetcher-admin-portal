@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 // import CssBaseline from '@mui/material/CssBaseline';
@@ -36,6 +36,16 @@ const drawerCategories = [
 ];
 
 const FacetcherDrawer = ({ children }) => {
+     const ref = useRef(null);
+
+     const [height, setHeight] = useState(0);
+     const [height2, setHeight2] = useState(0);
+
+     useLayoutEffect(() => {
+          setHeight(ref.current.offsetHeight);
+          setHeight2(ref.current.offsetHeight);
+     }, []);
+
      return (
           <Box sx={{ display: "flex" }}>
                {/* <CssBaseline /> */}
@@ -50,6 +60,7 @@ const FacetcherDrawer = ({ children }) => {
                >
                     <Toolbar sx={{ width: "100%", justifyContent: "end" }}>
                          <Box
+                              ref={ref}
                               sx={{
                                    display: "flex",
                                    alignItems: "center",
@@ -114,6 +125,7 @@ const FacetcherDrawer = ({ children }) => {
                               backgroundColor: `${DARKGREY}`,
                               width: drawerWidth,
                               boxSizing: "border-box",
+                              overflowY: "hidden",
                          },
                     }}
                     variant="permanent"
@@ -179,9 +191,27 @@ const FacetcherDrawer = ({ children }) => {
                          ))}
                     </Box>
                </Drawer>
-               <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                    <Toolbar />
-                    <>{children}</>
+               <Box
+                    component="main"
+                    // className=" bg-primary"
+                    sx={{
+                         flexGrow: 1,
+                         p: 3,
+                         overflow: "hidden",
+                         height: `calc(100vh - ${height}px)`,
+                    }}
+               >
+                    {/* <Toolbar /> */}
+                    <div
+                         className=" overflow-hidden d-flex justify-content-center align-items-center h-100"
+                         style={{
+                              marginTop: `${height}px`,
+                         }}
+                    >
+                         <div className="w-100 h-100 overflowY-scroll ">
+                              {children}
+                         </div>
+                    </div>
                </Box>
           </Box>
      );

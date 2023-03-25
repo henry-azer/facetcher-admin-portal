@@ -106,7 +106,7 @@ export const getCurrentUser = () => (dispatch) => {
                console.log(res);
                dispatch({
                     type: LOGIN_SUCCEEDED,
-                    payload: res,
+                    payload: res.data.body,
                });
           }
      });

@@ -20,8 +20,14 @@
 input:focus-visible {
      outline: none !important;
 }
+.bg-grey {
+     background-color: var(--grey);
+}
 .bg-dark-grey {
      background-color: var(--darkGrey);
+}
+.bg-dark-grey2 {
+     background-color: var(--darkGrey2);
 }
 .bg-cyan {
      background-color: var(--cyan) !important;
@@ -51,9 +57,11 @@ input:focus-visible {
      color: var(--grey) !important;
 }
 .grey-border {
-     border-color: solid var(--grey) !important;
+     border: solid var(--grey) !important;
 }
-
+.h-20{
+     height: 20% !important;
+}
 ::selection {
      background: var(--darkCyan);
      color: var(--lightGrey) !important;
@@ -144,6 +152,10 @@ body {
      width: 50px;
      height: 50px;
 }
+.overflowY-scroll{
+     overflow-y: scroll !important;
+     overflow-x: visible !important;
+}
 /* ----- GLOBAL PROPS END ----- */
 
 .active_sub_header::before {
@@ -158,6 +170,12 @@ body {
      border-top-right-radius: 5px;
      z-index: 1111;
 }
+
+.user-profile-pic {
+     width: 230px;
+     height: 230px;
+}
+
 
 /* -------------------------------------------------------- */
 
