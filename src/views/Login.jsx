@@ -7,7 +7,7 @@ import Cookies from "universal-cookie";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { authenticateUser } from "../store/actions/auth/auth-actions";
-import { ISUSERAUTH } from "../constants/app_constants";
+import { ACCESSTOKEN, ISUSERAUTH } from "../constants/app_constants";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -24,9 +24,11 @@ const Login = () => {
                     .required("Email is required"),
                password: Yup.string().required("Password is required"),
           }),
-          onSubmit: (values) => {
+          onSubmit: (values, { setSubmitting }) => {
                dispatch(authenticateUser(values));
-               setNavigated(true);
+               setTimeout(() => {
+                    setSubmitting(false);
+               }, 1000);
           },
      });
 
@@ -38,19 +40,21 @@ const Login = () => {
      useEffect(() => {
           document.title = "Sign In | Facetcher";
 
-          if (navigated || isUserAuthenticated()) {
+          console.log("User is authenticated");
+
+          if (isUserAuthenticated()) {
                navigate("/");
+               // console.log("IF User is authenticated");
           }
-     }, [navigated]);
+     });
 
      const isUserAuthenticated = () => {
-          if (cookies.get(ISUSERAUTH) === "true") return true;
-          else return false;
+          return cookies.get(ACCESSTOKEN);
      };
 
      return (
-          <div className="d-flex">
-               <div className="d-flex flex-column justify-content-center align-items-center vh-100 w-50">
+          <div className="row row-cols-lg-2 row-cols-md-1 row-cols-sm-1 row-cols-1 justify-content-center align-items-center m-0">
+               <div className="col d-flex flex-column justify-content-center align-items-center vh-100">
                     <div className="logo w-25 mb-5">
                          <img src={Logo} alt="logo" className="w-100 mb-4" />
                          <img
@@ -64,7 +68,7 @@ const Login = () => {
                          get the best result in the shortest time.
                     </p>
                </div>
-               <div className="bg-dark-grey vh-100 w-50 d-flex justify-content-center align-items-center flex-column">
+               <div className="col bg-dark-grey vh-100 d-flex justify-content-center align-items-center flex-column">
                     <p className="fs-2 w-75 text-center mb-5">
                          Please Login with your generated account that you
                          received
@@ -74,7 +78,7 @@ const Login = () => {
                          className="d-flex justify-content-center align-items-center flex-column w-100 h-25 justify-content-between"
                     >
                          <input
-                              type="email"
+                              type="text"
                               className=" rounded-pill bg-transparent form-control grey-border w-75 p-2 px-3 fs-5 text-grey my-3"
                               name="email"
                               placeholder="Email"
@@ -98,12 +102,12 @@ const Login = () => {
                               <p>{formik.errors.password}</p>
                          )}
                          {err && <p>Invalid Email or Password</p>}
-                         <input
+                         <button
                               type="submit"
-                              className="btn bg-cyan rounded-pill h-25 px-5 text-light-grey my-3 fw-bold"
-                              title="Login"
-                              value="Login"
-                         />
+                              className="btn d-flex justify-content-center align-items-center bg-cyan rounded-pill h-25 px-5 text-light-grey my-3 fw-bold"
+                         >
+                              Login
+                         </button>
                     </form>
                </div>
           </div>
