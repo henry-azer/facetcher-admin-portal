@@ -8,9 +8,7 @@ import {
      Line,
      LineChart,
      XAxis,
-     AreaChart,
      ResponsiveContainer,
-     Area,
      YAxis,
      Legend,
 } from "recharts";
@@ -24,6 +22,7 @@ import {
 } from "../constants/app_colors";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { getAllSubmissions } from "../store/actions/submission/submission-actions";
+
 
 const Home = () => {
      const state = useSelector((state) => state);

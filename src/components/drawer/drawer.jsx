@@ -30,8 +30,8 @@ const drawerWidth = 190;
 
 const drawerCategories = [
      { header: "Analysis", subHeaders: ["Dashboard"] },
-     { header: "Drawings", subHeaders: ["All Drawings", "Recent Drawings"] },
-     { header: "Analysis", subHeaders: ["All Users", "Top Users"] },
+     { header: "Users", subHeaders: ["All Users", "Users Logs"] },
+     { header: "Drawings", subHeaders: ["Submissions", "Failed Trails"] },
      { header: "Admins", subHeaders: ["All Admins"] },
 ];
 
@@ -39,16 +39,13 @@ const FacetcherDrawer = ({ children }) => {
      const ref = useRef(null);
 
      const [height, setHeight] = useState(0);
-     const [height2, setHeight2] = useState(0);
 
      useLayoutEffect(() => {
           setHeight(ref.current.offsetHeight);
-          setHeight2(ref.current.offsetHeight);
      }, []);
 
      return (
           <Box sx={{ display: "flex" }}>
-               {/* <CssBaseline /> */}
                <AppBar
                     elevation={0}
                     position="fixed"
@@ -193,7 +190,6 @@ const FacetcherDrawer = ({ children }) => {
                </Drawer>
                <Box
                     component="main"
-                    // className=" bg-primary"
                     sx={{
                          flexGrow: 1,
                          p: 3,
@@ -201,7 +197,6 @@ const FacetcherDrawer = ({ children }) => {
                          height: `calc(100vh - ${height}px)`,
                     }}
                >
-                    {/* <Toolbar /> */}
                     <div
                          className=" overflow-hidden d-flex justify-content-center align-items-center h-100"
                          style={{

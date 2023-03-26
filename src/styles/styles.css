@@ -10,9 +10,14 @@
      --orange: #b34b07;
      --darkOrange: #401a00;
 }
-.btn:active {
+
+.btn,
+.btn-checked,
+.btn:active,
+.btn:focus {
+     outline: none !important;
      border: none !important;
-     /* outline: none !important; */
+     box-shadow: none !important;
 }
 .form-control {
      box-shadow: none !important;
@@ -85,7 +90,7 @@ input:focus-visible {
 }
 
 *:focus-visible {
-     outline: none !important;
+     outline: 0 !important;
 }
 
 body {

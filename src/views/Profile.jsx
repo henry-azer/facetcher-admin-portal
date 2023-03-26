@@ -3,9 +3,15 @@ import FacetcherDrawer from "../components/drawer/drawer";
 import PersonIcon from "@mui/icons-material/Person";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
-import { Field, Formik, useFormik } from "formik";
+import { Field, Formik } from "formik";
+
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import { CYAN, GREY, LIGHTGREY, ORANGE } from "../constants/app_colors";
 
 const Profile = () => {
+     const value = 450;
+
      const store = useSelector((state) => state);
      const dispatch = useDispatch();
 
@@ -21,15 +27,6 @@ const Profile = () => {
      });
 
      const user = store.auth.authenticatedUser;
-
-     // const formik = useFormik({
-     //      initialValues: {
-     //           name: "",
-     //           phoneNumber: "",
-     //           email: "",
-     //           password: "",
-     //      },
-     // });
 
      console.log(user);
 
@@ -171,14 +168,52 @@ const Profile = () => {
                               </div>
                          )}
                          <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll">
-                              <button
-                                   onClick={() => {
-                                        dispatch(getCurrentUser());
-                                        console.log(store);
+                              <CircularProgressbar
+                                   value={value}
+                                   maxValue={1000}
+                                   text={`${(value * 100) / 1000}%`}
+                                   className="w-25"
+                                   styles={{
+                                        path: {
+                                             stroke: "url(#cyanGradient)",
+                                             transition:
+                                                  "stroke-dashoffset 0.5s ease 0s",
+                                             filter: `drop-shadow(0px 0px 8px ${CYAN})`,
+                                        },
+                                        trail: {
+                                             stroke: `${GREY}`,
+                                             strokeWidth: 2,
+                                        },
+                                        text: {
+                                             fill: `${GREY}`,
+                                             fontSize: "16px",
+                                        },
+                                        root: {
+                                             overflow: "visible",
+                                        },
                                    }}
-                              >
-                                   Get User
-                              </button>
+                              />
+
+                              <svg>
+                                   <defs>
+                                        <linearGradient
+                                             id="cyanGradient"
+                                             gradientTransform="rotate(70)"
+                                        >
+                                             <stop stop-color="#003b3f" />
+                                             <stop stop-color="#003b3f" />
+                                             <stop
+                                                  offset="1"
+                                                  stop-color="#07abb3"
+                                             />
+                                        </linearGradient>
+                                   </defs>
+                                   {/* <rect
+                                        width="100%"
+                                        height="100%"
+                                        fill="url(#g1)"
+                                   /> */}
+                              </svg>
                          </div>
                     </div>
                </FacetcherDrawer>

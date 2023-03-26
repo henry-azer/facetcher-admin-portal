@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import Logo from "../assets/logo/logo.svg";
 import LogoText from "../assets/logo/logo-text.svg";
@@ -7,12 +7,10 @@ import Cookies from "universal-cookie";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { authenticateUser } from "../store/actions/auth/auth-actions";
-import { ACCESSTOKEN, ISUSERAUTH } from "../constants/app_constants";
+import { ACCESSTOKEN } from "../constants/app_constants";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-     const [navigated, setNavigated] = useState(false);
-
      const formik = useFormik({
           initialValues: {
                email: "",
@@ -40,11 +38,8 @@ const Login = () => {
      useEffect(() => {
           document.title = "Sign In | Facetcher";
 
-          console.log("User is authenticated");
-
           if (isUserAuthenticated()) {
                navigate("/");
-               // console.log("IF User is authenticated");
           }
      });
 
@@ -104,6 +99,7 @@ const Login = () => {
                          {err && <p>Invalid Email or Password</p>}
                          <button
                               type="submit"
+                              disabled={formik.isSubmitting}
                               className="btn d-flex justify-content-center align-items-center bg-cyan rounded-pill h-25 px-5 text-light-grey my-3 fw-bold"
                          >
                               Login
