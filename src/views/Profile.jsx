@@ -8,6 +8,7 @@ import { Field, Formik } from "formik";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { CYAN, GREY, LIGHTGREY, ORANGE } from "../constants/app_colors";
+import FacetcherCircularChart from "../components/charts/circularChart";
 
 const Profile = () => {
      const value = 450;
@@ -35,7 +36,7 @@ const Profile = () => {
                <FacetcherDrawer>
                     <div className="row h-100 justify-content-center align-items-center gx-2 mt-5 overflowY-scroll">
                          {user && (
-                              <div className="col-4 bg-dark-grey mx-2 p-3 position-relative d-flex justify-content-center h-100 overflow-hidden">
+                              <div className="col-lg-4 col-12 bg-dark-grey mx-2 p-3 position-relative d-flex justify-content-center h-100 overflow-hidden">
                                    <div className=" bg-dark-grey2 w-100 h-20 user-profile-pic position-absolute top-0"></div>
                                    <div className=" rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
                                         <div className="w-100 h-100 d-flex justify-content-center align-items-center">
@@ -92,7 +93,7 @@ const Profile = () => {
                                                                       }
                                                                  />
                                                             </div>
-                                                            <div className="col-6">
+                                                            <div className="col-lg-6 col-12">
                                                                  <input
                                                                       type="text"
                                                                       name="phoneNumber"
@@ -124,13 +125,6 @@ const Profile = () => {
                                                                  type="password"
                                                                  name="password"
                                                                  className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-50 me-2"
-                                                                 // disabled
-                                                                 // onChange={
-                                                                 //      handleChange
-                                                                 // }
-                                                                 // defaultValue={
-                                                                 //      user.password
-                                                                 // }
                                                             />
                                                             <button
                                                                  onClick={(
@@ -168,52 +162,7 @@ const Profile = () => {
                               </div>
                          )}
                          <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll">
-                              <CircularProgressbar
-                                   value={value}
-                                   maxValue={1000}
-                                   text={`${(value * 100) / 1000}%`}
-                                   className="w-25"
-                                   styles={{
-                                        path: {
-                                             stroke: "url(#cyanGradient)",
-                                             transition:
-                                                  "stroke-dashoffset 0.5s ease 0s",
-                                             filter: `drop-shadow(0px 0px 8px ${CYAN})`,
-                                        },
-                                        trail: {
-                                             stroke: `${GREY}`,
-                                             strokeWidth: 2,
-                                        },
-                                        text: {
-                                             fill: `${GREY}`,
-                                             fontSize: "16px",
-                                        },
-                                        root: {
-                                             overflow: "visible",
-                                        },
-                                   }}
-                              />
-
-                              <svg>
-                                   <defs>
-                                        <linearGradient
-                                             id="cyanGradient"
-                                             gradientTransform="rotate(70)"
-                                        >
-                                             <stop stop-color="#003b3f" />
-                                             <stop stop-color="#003b3f" />
-                                             <stop
-                                                  offset="1"
-                                                  stop-color="#07abb3"
-                                             />
-                                        </linearGradient>
-                                   </defs>
-                                   {/* <rect
-                                        width="100%"
-                                        height="100%"
-                                        fill="url(#g1)"
-                                   /> */}
-                              </svg>
+                              <FacetcherCircularChart value={180} maxValue={200} color="orange"/>
                          </div>
                     </div>
                </FacetcherDrawer>
