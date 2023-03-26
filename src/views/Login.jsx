@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import Logo from "../assets/logo/logo.svg";
 import LogoText from "../assets/logo/logo-text.svg";
@@ -11,6 +11,8 @@ import { ISUSERAUTH } from "../constants/app_constants";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+     const [navigated, setNavigated] = useState(false);
+
      const formik = useFormik({
           initialValues: {
                email: "",
@@ -24,6 +26,7 @@ const Login = () => {
           }),
           onSubmit: (values) => {
                dispatch(authenticateUser(values));
+               setNavigated(true);
           },
      });
 
@@ -35,10 +38,10 @@ const Login = () => {
      useEffect(() => {
           document.title = "Sign In | Facetcher";
 
-          if (isUserAuthenticated()) {
+          if (navigated || isUserAuthenticated()) {
                navigate("/");
           }
-     });
+     }, [navigated]);
 
      const isUserAuthenticated = () => {
           if (cookies.get(ISUSERAUTH) === "true") return true;
