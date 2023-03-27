@@ -10,6 +10,8 @@ export const navigateToLogin = () => {
      if (!isUserAuthenticated()) {
           window.location.href = "/login";
      }
+
+     console.log("Check");
 };
 
 export const isUserAuthenticated = () => {

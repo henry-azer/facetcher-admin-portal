@@ -45,9 +45,9 @@ const FacetcherCircularChart = (props) => {
                               id="cyanGradient"
                               gradientTransform="rotate(70)"
                          >
-                              <stop stop-color={DARKCYAN} />
-                              <stop stop-color={DARKCYAN} />
-                              <stop offset="1" stop-color={CYAN} />
+                              <stop stopColor={DARKCYAN} />
+                              <stop stopColor={DARKCYAN} />
+                              <stop offset="1" stopColor={CYAN} />
                          </linearGradient>
                     </defs>
                </svg>
@@ -57,9 +57,9 @@ const FacetcherCircularChart = (props) => {
                               id="orangeGradient"
                               gradientTransform="rotate(70)"
                          >
-                              <stop stop-color={DARKORANGE} />
-                              <stop stop-color={DARKORANGE} />
-                              <stop offset="1" stop-color={ORANGE} />
+                              <stop stopColor={DARKORANGE} />
+                              <stop stopColor={DARKORANGE} />
+                              <stop offset="1" stopColor={ORANGE} />
                          </linearGradient>
                     </defs>
                </svg>

@@ -5,13 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { Field, Formik } from "formik";
 
-import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import FacetcherCircularChart from "../components/charts/circularChart";
-import {navigateToLogin} from "../utils/util";
+import { navigateToLogin } from "../utils/util";
 
 const Profile = () => {
-     useEffect(navigateToLogin());
+     useEffect(() => navigateToLogin(), []);
 
      const store = useSelector((state) => state);
      const dispatch = useDispatch();
