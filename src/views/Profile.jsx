@@ -8,6 +8,7 @@ import { Field, Formik } from "formik";
 import "react-circular-progressbar/dist/styles.css";
 import FacetcherCircularChart from "../components/charts/circularChart";
 import { navigateToLogin } from "../utils/util";
+import FacetcherTable from "../components/tables/table";
 
 const Profile = () => {
      useEffect(() => navigateToLogin(), []);
@@ -29,6 +30,7 @@ const Profile = () => {
      const user = store.auth.authenticatedUser;
 
      console.log(user);
+     const headerArray = ["ID", "Date and Time", "Gender", "Preview"];
 
      return (
           <div>
@@ -160,10 +162,20 @@ const Profile = () => {
                                    </div>
                               </div>
                          )}
-                         <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll">
-                              <div className="row justify-content-center align-items-center">
-                                   <div className="col-6"></div>
-                                   <div className="col-3">
+                         <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll px-5 pt-3 pb-0">
+                              <div className="row justify-content-center align-items-center h-25 w-100">
+                                   <div className="col-6 ">
+                                        <h1 className=" fs-3 fw-bold">
+                                             Total Submissions: 80
+                                        </h1>
+                                        <h1 className="fs-5 text-cyan fw-bold">
+                                             Succeed Trails: 56
+                                        </h1>
+                                        <h1 className="fs-5 text-orange fw-bold">
+                                             Failed Trails: 24
+                                        </h1>
+                                   </div>
+                                   <div className="col-3 d-flex justify-content-center align-items-center">
                                         <FacetcherCircularChart
                                              value={150}
                                              maxValue={200}
@@ -172,7 +184,7 @@ const Profile = () => {
                                              strokeWidth={14}
                                         />
                                    </div>
-                                   <div className="col-3">
+                                   <div className="col-3 d-flex justify-content-center align-items-center">
                                         <FacetcherCircularChart
                                              value={50}
                                              maxValue={200}
@@ -180,6 +192,71 @@ const Profile = () => {
                                              width={75}
                                              strokeWidth={14}
                                         />
+                                   </div>
+                              </div>
+                              <div className="pt-5">
+                                   <h1 className="fs-3 fw-bold py-4">
+                                        Drawings History
+                                   </h1>
+                                   <div>
+                                        <FacetcherTable
+                                             headerArray={headerArray}
+                                        >
+                                             <tr>
+                                                  <td>Col1</td>
+                                                  <td>Col2</td>
+                                                  <td>Col3</td>
+                                                  <td>Col4</td>
+                                             </tr>
+                                             <tr>
+                                                  <td>Col1</td>
+                                                  <td>Col2</td>
+                                                  <td>Col3</td>
+                                                  <td>Col4</td>
+                                             </tr>
+                                             <tr>
+                                                  <td>Col1</td>
+                                                  <td>Col2</td>
+                                                  <td>Col3</td>
+                                                  <td>Col4</td>
+                                             </tr>
+                                             <tr>
+                                                  <td>Col1</td>
+                                                  <td>Col2</td>
+                                                  <td>Col3</td>
+                                                  <td>Col4</td>
+                                             </tr>
+                                             <tr>
+                                                  <td>Col1</td>
+                                                  <td>Col2</td>
+                                                  <td>Col3</td>
+                                                  <td>Col4</td>
+                                             </tr>
+                                             <tr>
+                                                  <td>Col1</td>
+                                                  <td>Col2</td>
+                                                  <td>Col3</td>
+                                                  <td>Col4</td>
+                                             </tr>
+                                             <tr>
+                                                  <td>Col1</td>
+                                                  <td>Col2</td>
+                                                  <td>Col3</td>
+                                                  <td>Col4</td>
+                                             </tr>
+                                             <tr>
+                                                  <td>Col1</td>
+                                                  <td>Col2</td>
+                                                  <td>Col3</td>
+                                                  <td>Col4</td>
+                                             </tr>
+                                             <tr>
+                                                  <td>Col1</td>
+                                                  <td>Col2</td>
+                                                  <td>Col3</td>
+                                                  <td>Col4</td>
+                                             </tr>
+                                        </FacetcherTable>
                                    </div>
                               </div>
                          </div>

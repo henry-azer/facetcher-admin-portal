@@ -19,8 +19,9 @@ const FacetcherCircularChart = (props) => {
                     styles={{
                          path: {
                               stroke: `url(#${props.color}Gradient)`,
-                              strokeWidth:props.strokeWidth,
-                              transition: "stroke-dashoffset 0.5s ease 0s",
+                              strokeWidth: props.strokeWidth,
+                              transition:
+                                   "stroke-dashoffset 0.5s ease-in-out 0s",
                               filter: `drop-shadow(0px 0px 6px ${
                                    props.color === "cyan" ? CYAN : ORANGE
                               })`,

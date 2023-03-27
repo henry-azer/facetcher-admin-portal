@@ -40,6 +40,9 @@ input:focus-visible {
 .bg-orange {
      background-color: var(--orange) !important;
 }
+.text-orange {
+     color: var(--orange) !important;
+}
 .text-grey {
      color: var(--grey) !important;
 }
