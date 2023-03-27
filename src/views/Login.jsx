@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { authenticateUser } from "../store/actions/auth/auth-actions";
 import { ACCESSTOKEN } from "../constants/app_constants";
 import { useNavigate } from "react-router-dom";
+import { isUserAuthenticated } from "../utils/util";
 
 const Login = () => {
      const formik = useFormik({
@@ -42,10 +43,6 @@ const Login = () => {
                navigate("/");
           }
      });
-
-     const isUserAuthenticated = () => {
-          return cookies.get(ACCESSTOKEN);
-     };
 
      return (
           <div className="row row-cols-lg-2 row-cols-md-1 row-cols-sm-1 row-cols-1 justify-content-center align-items-center m-0">

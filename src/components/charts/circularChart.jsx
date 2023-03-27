@@ -1,6 +1,12 @@
 import React from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
-import { CYAN, DARKCYAN, DARKORANGE, GREY, ORANGE } from "../../constants/app_colors";
+import {
+     CYAN,
+     DARKCYAN,
+     DARKORANGE,
+     GREY,
+     ORANGE,
+} from "../../constants/app_colors";
 
 const FacetcherCircularChart = (props) => {
      return (
@@ -9,10 +15,11 @@ const FacetcherCircularChart = (props) => {
                     value={props.value}
                     maxValue={props.maxValue}
                     text={`${(props.value * 100) / props.maxValue}%`}
-                    className="w-25"
+                    className={`w-${props.width}`}
                     styles={{
                          path: {
                               stroke: `url(#${props.color}Gradient)`,
+                              strokeWidth:props.strokeWidth,
                               transition: "stroke-dashoffset 0.5s ease 0s",
                               filter: `drop-shadow(0px 0px 6px ${
                                    props.color === "cyan" ? CYAN : ORANGE

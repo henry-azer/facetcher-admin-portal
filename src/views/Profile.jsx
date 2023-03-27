@@ -7,11 +7,11 @@ import { Field, Formik } from "formik";
 
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { CYAN, GREY, LIGHTGREY, ORANGE } from "../constants/app_colors";
 import FacetcherCircularChart from "../components/charts/circularChart";
+import {navigateToLogin} from "../utils/util";
 
 const Profile = () => {
-     const value = 450;
+     useEffect(navigateToLogin());
 
      const store = useSelector((state) => state);
      const dispatch = useDispatch();
@@ -162,7 +162,27 @@ const Profile = () => {
                               </div>
                          )}
                          <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll">
-                              <FacetcherCircularChart value={180} maxValue={200} color="orange"/>
+                              <div className="row justify-content-center align-items-center">
+                                   <div className="col-6"></div>
+                                   <div className="col-3">
+                                        <FacetcherCircularChart
+                                             value={150}
+                                             maxValue={200}
+                                             color="cyan"
+                                             width={75}
+                                             strokeWidth={14}
+                                        />
+                                   </div>
+                                   <div className="col-3">
+                                        <FacetcherCircularChart
+                                             value={50}
+                                             maxValue={200}
+                                             color="orange"
+                                             width={75}
+                                             strokeWidth={14}
+                                        />
+                                   </div>
+                              </div>
                          </div>
                     </div>
                </FacetcherDrawer>
