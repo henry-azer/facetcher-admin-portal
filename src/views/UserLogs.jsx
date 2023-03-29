@@ -15,7 +15,7 @@ const UserLogs = () => {
                               <h1 className="fs-3 fw-bold m-0">User Logs</h1>
                          </div>
                          <from className="w-100 d-flex justify-content-between align-items-end">
-                              <FacetcherSearchComponent placeHolder="Search by drawing title" />
+                              <FacetcherSearchComponent placeHolder="Search by user name" />
                               <div className="w-50 d-flex justify-content-around">
                                    <FacetcherSelectComponent
                                         width="25"
