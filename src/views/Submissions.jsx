@@ -3,6 +3,7 @@ import FacetcherDrawer from "../components/drawer/drawer";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import FacetcherSearchComponent from "../components/search-component";
+import FacetcherSelectComponent from "../components/select-component";
 
 const Submissions = () => {
      const tableTitles = [
@@ -26,18 +27,15 @@ const Submissions = () => {
                          </div>
                          <div className="w-100 d-flex justify-content-between align-items-end">
                               <FacetcherSearchComponent placeHolder="Search by drawing title" />
-                              <div className="w-50">
-                                   <div>
-                                        <h1 className="fs-6">Date</h1>
-                                        <select className="bg-transparent light-grey-border p-1 rounded-pill text-light-grey w-25">
-                                             <option value="newest">
-                                                  Newest
-                                             </option>
-                                             <option value="latest">
-                                                  Latest
-                                             </option>
-                                        </select>
-                                   </div>
+                              <div className="w-50 d-flex justify-content-between">
+                                   <FacetcherSelectComponent
+                                        label="Date"
+                                        options={["Newest", "Latest"]}
+                                   />
+                                   <FacetcherSelectComponent
+                                        label="Gender"
+                                        options={["Gender ...", "Male", "Female"]}
+                                   />
                               </div>
                          </div>
                     </div>
