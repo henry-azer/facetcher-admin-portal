@@ -20,9 +20,6 @@ const Submissions = () => {
                     <div className="p-5 w-100 d-flex justify-content-center align-items-center flex-column">
                          <div className="w-100 d-flex justify-content-between align-items-center mb-5">
                               <h1 className="fs-3 fw-bold m-0">Submissions</h1>
-                              {/* <button className="btn bg-transparent border border-grey light-grey-border fw-bold px-3 rounded-pill text-light-grey">
-                                   <PersonAddAltIcon /> Create New User
-                              </button> */}
                          </div>
                          <from className="w-100 d-flex justify-content-between align-items-end">
                               <FacetcherSearchComponent placeHolder="Search by drawing title" />
