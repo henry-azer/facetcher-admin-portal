@@ -4,6 +4,7 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
+import FacetcherTable from "../components/tables/table";
 
 const Submissions = () => {
      const tableTitles = [
@@ -25,18 +26,52 @@ const Submissions = () => {
                                    <PersonAddAltIcon /> Create New User
                               </button> */}
                          </div>
-                         <div className="w-100 d-flex justify-content-between align-items-end">
+                         <from className="w-100 d-flex justify-content-between align-items-end">
                               <FacetcherSearchComponent placeHolder="Search by drawing title" />
-                              <div className="w-50 d-flex justify-content-between">
+                              <div className="w-50 d-flex justify-content-around">
                                    <FacetcherSelectComponent
+                                        width="25"
                                         label="Date"
                                         options={["Newest", "Latest"]}
                                    />
                                    <FacetcherSelectComponent
+                                        width="25"
                                         label="Gender"
-                                        options={["Gender ...", "Male", "Female"]}
+                                        options={[
+                                             "Gender ...",
+                                             "Male",
+                                             "Female",
+                                        ]}
                                    />
                               </div>
+                              <div className="w-25 d-flex justify-content-end">
+                                   <button className="btn bg-cyan rounded-pill px-5 text-light-grey">
+                                        Search
+                                   </button>
+                              </div>
+                         </from>
+
+                         <div className="w-100 my-5">
+                              <FacetcherTable
+                                   table={2}
+                                   headerArray={[
+                                        "ID",
+                                        "Date",
+                                        "User",
+                                        "Submission Name",
+                                        "Gender",
+                                        "Preview",
+                                   ]}
+                              >
+                                   <tr>
+                                        <td>Col1</td>
+                                        <td>Col2</td>
+                                        <td>Col3</td>
+                                        <td>Col4</td>
+                                        <td>Col5</td>
+                                        <td>Col6</td>
+                                   </tr>
+                              </FacetcherTable>
                          </div>
                     </div>
                </FacetcherDrawer>

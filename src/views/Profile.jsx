@@ -199,7 +199,10 @@ const Profile = () => {
                                    </h1>
                                    <div>
                                         <FacetcherTable
+                                        table={1}
                                              headerArray={headerArray}
+                                             headerColor="bg-dark-grey2"
+                                             bodyColor="bg-dark-grey"
                                         >
                                              <tr>
                                                   <td>Col1</td>
