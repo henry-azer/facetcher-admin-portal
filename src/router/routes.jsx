@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import FailedTrials from "../views/FailedTrials";
 
 import Home from "../views/Home";
 import Login from "../views/Login";
@@ -12,6 +13,7 @@ const routes = () => (
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/submissions" element={<Submissions />} />
+          <Route exact path="/failed-trials" element={<FailedTrials />} />
           {/* <Route element={<NotFound />} /> */}
      </Routes>
 );

@@ -4,7 +4,7 @@ import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
 import FacetcherTable from "../components/tables/table";
 
-const Submissions = () => {
+const FailedTrials = () => {
      const headerArray = [
           "ID",
           "Date",
@@ -69,4 +69,4 @@ const Submissions = () => {
           </div>
      );
 };
-export default Submissions;
+export default FailedTrials;
