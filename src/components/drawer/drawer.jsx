@@ -31,7 +31,7 @@ const drawerWidth = 190;
 const drawerCategories = [
      { header: "Analysis", subHeaders: ["Dashboard"] },
      { header: "Users", subHeaders: ["All Users", "Users Logs"] },
-     { header: "Drawings", subHeaders: ["Submissions", "Failed Trails"] },
+     { header: "Drawings", subHeaders: ["Submissions", "Failed Trials"] },
      { header: "Admins", subHeaders: ["All Admins"] },
 ];
 

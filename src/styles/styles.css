@@ -70,6 +70,9 @@ input:focus-visible {
 .grey-border {
      border: solid var(--grey) 1px !important;
 }
+.light-grey-border {
+     border: solid var(--lightGrey) 1px !important;
+}
 .h-20 {
      height: 20% !important;
 }

@@ -130,7 +130,7 @@ const Home = () => {
                               <button
                                    onClick={() => dispatch(getAllSubmissions())}
                               >
-                                   Get All Trails
+                                   Get All Trialsss
                               </button>
                          </div>
                     </div>

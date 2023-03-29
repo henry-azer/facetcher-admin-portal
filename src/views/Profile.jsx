@@ -135,7 +135,6 @@ const Profile = () => {
                                                                       setFieldValue(
                                                                            "password",
                                                                            "facetcher@admin"
-                                                                           // "f"
                                                                       );
                                                                       console.log(
                                                                            values
@@ -162,17 +161,17 @@ const Profile = () => {
                                    </div>
                               </div>
                          )}
-                         <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll px-5 pt-3 pb-0">
+                         <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll px-5 pt-3 pb-5">
                               <div className="row justify-content-center align-items-center h-25 w-100">
                                    <div className="col-6 ">
                                         <h1 className=" fs-3 fw-bold">
-                                             Total Submissions: 80
+                                             Total Trials: 80
                                         </h1>
                                         <h1 className="fs-5 text-cyan fw-bold">
-                                             Succeed Trails: 56
+                                             Succeed Trials: 56
                                         </h1>
                                         <h1 className="fs-5 text-orange fw-bold">
-                                             Failed Trails: 24
+                                             Failed Trials: 24
                                         </h1>
                                    </div>
                                    <div className="col-3 d-flex justify-content-center align-items-center">
@@ -194,7 +193,7 @@ const Profile = () => {
                                         />
                                    </div>
                               </div>
-                              <div className="pt-5">
+                              <div className="pt-5 mb-5">
                                    <h1 className="fs-3 fw-bold py-4">
                                         Drawings History
                                    </h1>
@@ -251,10 +250,10 @@ const Profile = () => {
                                                   <td>Col4</td>
                                              </tr>
                                              <tr>
-                                                  <td>Col1</td>
-                                                  <td>Col2</td>
-                                                  <td>Col3</td>
-                                                  <td>Col4</td>
+                                                  <td>Col8</td>
+                                                  <td>Col9</td>
+                                                  <td>Col10</td>
+                                                  <td>Col11</td>
                                              </tr>
                                         </FacetcherTable>
                                    </div>

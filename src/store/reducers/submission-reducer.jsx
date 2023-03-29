@@ -5,7 +5,7 @@ export default function auth_reducer(state = {}, action) {
           case ALL_SUBMISSION:
                return {
                     ...state,
-                    allTrails: action.payload,
+                    allTrials: action.payload,
                };
           default:
                return state;
