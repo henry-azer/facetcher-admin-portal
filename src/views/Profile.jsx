@@ -9,6 +9,7 @@ import "react-circular-progressbar/dist/styles.css";
 import FacetcherCircularChart from "../components/charts/circularChart";
 import { navigateToLogin } from "../utils/util";
 import FacetcherTable from "../components/tables/table";
+import FacetcherSelectComponent from "../components/select-component";
 
 const Profile = () => {
      useEffect(() => navigateToLogin(), []);
@@ -37,48 +38,76 @@ const Profile = () => {
                <FacetcherDrawer>
                     <div className="row h-100 justify-content-center align-items-center gx-2 mt-5 overflowY-scroll">
                          {user && (
-                              <div className="col-lg-4 col-12 bg-dark-grey mx-2 p-3 position-relative d-flex justify-content-center h-100 overflow-hidden">
-                                   <div className=" bg-dark-grey2 w-100 h-20 user-profile-pic position-absolute top-0"></div>
-                                   <div className=" rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
-                                        <div className="w-100 h-100 d-flex justify-content-center align-items-center">
-                                             {user.profilePictureUrl ? (
-                                                  <img
-                                                       src={`${user.profilePictureUrl}`}
-                                                  />
-                                             ) : (
-                                                  <PersonIcon
-                                                       sx={{ fontSize: 160 }}
-                                                  />
-                                             )}
-                                        </div>
-                                   </div>
-                                   <div className=" align-self-end h-75 pt-5 text-center">
-                                        <h1 className="mt-3 fs-4 fw-bold text-capitalize">
-                                             {user.firstName +
-                                                  " " +
-                                                  user.lastName}
-                                        </h1>
-                                        <h1 className="fs-6 text-cyan">
-                                             {user.email}
-                                        </h1>
+                              <Formik
+                                   initialValues={{
+                                        id: user.id,
+                                        userName: `${user.firstName +
+                                             " " +
+                                             user.lastName}`,
+                                        phoneNumber: user.phoneNumber,
+                                        email: user.email,
+                                        password: user.password,
+                                        profilePicture: user.profilePictureUrl,
+                                   }}
+                                   enableReinitialize={true}
+                              >
+                                   {({
+                                        values,
+                                        handleChange,
+                                        setFieldValue,
+                                   }) => (
+                                        <div className="col-lg-4 col-12 bg-dark-grey mx-2 p-3 position-relative d-flex justify-content-center h-100 overflow-hidden">
+                                             <div className=" bg-dark-grey2 w-100 h-20 user-profile-pic position-absolute top-0"></div>
+                                             <div className=" rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
+                                                  <div className="w-100 h-100 d-flex justify-content-center align-items-center">
+                                                       {values.profilePicture ? (
+                                                            <img
+                                                                 src={`${values.profilePicture}`}
+                                                            />
+                                                       ) : (
+                                                            <PersonIcon
+                                                                 sx={{
+                                                                      fontSize: 160,
+                                                                 }}
+                                                            />
+                                                       )}
+                                                  </div>
+                                             </div>
+                                             <div className=" align-self-end h-75 pt-5 text-center">
+                                                  <h1 className="mt-3 fs-4 fw-bold text-capitalize">
+                                                       {user.firstName +
+                                                            " " +
+                                                            user.lastName}
+                                                  </h1>
+                                                  <h1 className="fs-6 text-cyan">
+                                                       {user.email}
+                                                  </h1>
 
-                                        <Formik
-                                             initialValues={{
-                                                  userName: `${user.firstName +
-                                                       " " +
-                                                       user.lastName}`,
-                                                  phoneNumber: user.phoneNumber,
-                                                  email: user.email,
-                                                  password: user.password,
-                                             }}
-                                             enableReinitialize={true}
-                                        >
-                                             {({
-                                                  values,
-                                                  handleChange,
-                                                  setFieldValue,
-                                             }) => (
                                                   <form className="d-flex justify-content-center align-items-center flex-column mx-2">
+                                                       <Field
+                                                            name="image"
+                                                            type="file"
+                                                            onChange={(
+                                                                 event
+                                                            ) => {
+                                                                 setFieldValue(
+                                                                      "profilePicture",
+                                                                      event
+                                                                           .currentTarget
+                                                                           .files[0]
+                                                                 );
+                                                            }}
+                                                       />
+
+                                                       <div className="w-25 mt-2">
+                                                            <FacetcherSelectComponent
+                                                                 defaultValue={`${user.userRoles[0].role.name}`.toLowerCase()}
+                                                                 options={[
+                                                                      "User",
+                                                                      "Admin",
+                                                                 ]}
+                                                            />
+                                                       </div>
                                                        <div className="row justify-content-center align-items-center h-75">
                                                             <div className="col-6">
                                                                  <input
@@ -156,10 +185,10 @@ const Profile = () => {
                                                             </button>
                                                        </div>
                                                   </form>
-                                             )}
-                                        </Formik>
-                                   </div>
-                              </div>
+                                             </div>
+                                        </div>
+                                   )}
+                              </Formik>
                          )}
                          <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll px-5 pt-3 pb-5">
                               <div className="row justify-content-center align-items-center h-25 w-100">
@@ -199,7 +228,7 @@ const Profile = () => {
                                    </h1>
                                    <div>
                                         <FacetcherTable
-                                        table={1}
+                                             table={1}
                                              headerArray={headerArray}
                                              headerColor="bg-dark-grey2"
                                              bodyColor="bg-dark-grey"

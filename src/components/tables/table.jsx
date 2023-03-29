@@ -14,8 +14,8 @@ const FacetcherTable = (props) => {
                          }`}
                     >
                          <tr>
-                              {props.headerArray.map((header) => (
-                                   <th>{header}</th>
+                              {props.headerArray.map((header, index) => (
+                                   <th key={index}>{header}</th>
                               ))}
                          </tr>
                     </thead>
