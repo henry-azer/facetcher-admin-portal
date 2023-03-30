@@ -25,7 +25,7 @@ const AllAdmins = () => {
                                    <PersonAddAltIcon /> Create New Admin
                               </button>
                          </div>
-                         <from className="w-100 d-flex justify-content-between align-items-end">
+                         <form className="w-100 d-flex justify-content-between align-items-end">
                               <FacetcherSearchComponent placeHolder="Search by admin name" />
                               <div className="w-50 d-flex justify-content-around">
                                    <FacetcherSelectComponent
@@ -61,7 +61,7 @@ const AllAdmins = () => {
                                         Search
                                    </button>
                               </div>
-                         </from>
+                         </form>
 
                          <div className="w-100 my-5">
                               <FacetcherTable

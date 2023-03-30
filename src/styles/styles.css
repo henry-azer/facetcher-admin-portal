@@ -190,6 +190,10 @@ body {
      height: 230px;
 }
 
+td {
+  padding: 20px !important;
+  vertical-align: middle !important;
+}
 /* -------------------------------------------------------- */
 
 /* ---------- MEDIA QUERIES START -------------------- */

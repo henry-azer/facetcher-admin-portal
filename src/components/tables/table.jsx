@@ -2,9 +2,9 @@ import React from "react";
 
 const FacetcherTable = (props) => {
      return (
-          <div className="table-responsive w-100">
+          <div className="w-100">
                <table
-                    className={`table text-light-grey text-center bg-dark-grey${
+                    className={`table custom-table text-light-grey text-center bg-dark-grey${
                          props.table === 2 ? "2" : ""
                     }`}
                >
@@ -15,7 +15,9 @@ const FacetcherTable = (props) => {
                     >
                          <tr>
                               {props.headerArray.map((header, index) => (
-                                   <th key={index}>{header}</th>
+                                   <th className="fw-bold" key={index}>
+                                        {header}
+                                   </th>
                               ))}
                          </tr>
                     </thead>

@@ -23,7 +23,7 @@ const FailedTrials = () => {
                                    Failed Trials
                               </h1>
                          </div>
-                         <from className="w-100 d-flex justify-content-between align-items-end">
+                         <form className="w-100 d-flex justify-content-between align-items-end">
                               <FacetcherSearchComponent placeHolder="Search by drawing title" />
                               <div className="w-50 d-flex justify-content-around">
                                    <FacetcherSelectComponent
@@ -46,7 +46,7 @@ const FailedTrials = () => {
                                         Search
                                    </button>
                               </div>
-                         </from>
+                         </form>
 
                          <div className="w-100 my-5">
                               <FacetcherTable

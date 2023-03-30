@@ -1,40 +1,24 @@
 import axios from "axios";
+import { APIs_URL } from "../../../constants/app_constants";
 
-import {
-    REGISTRATION_REQUEST,
-    REGISTRATION_SUCCEEDED,
-    REGISTRATION_ERROR,
-    CLEAR_REGISTRATION_DETAILS,
-} from "../../types";
+import { CLEAR_REGISTRATION_DETAILS, GET_ALL_USERS } from "../../types";
 
-// const URL = "http://localhost:8080/api/user";
+const URL = APIs_URL.STAGING;
 
-export const userRegistration = (user) => (dispatch) => {
-    dispatch({ type: REGISTRATION_REQUEST });
-
-    axios.post(`${URL}`, user, {
-    })
-        .then((response) => {
-            if (response.data.status === 200) {
-                dispatch({
-                    type: REGISTRATION_SUCCEEDED,
-                    payload: response.data.body,
-                });
-            } else {
-                dispatch({
-                    type: REGISTRATION_ERROR,
-                    payload: response.data.message,
-                });
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+export const getAllUsers = () => (dispatch) => {
+     axios.get(`${URL}/user/find-all`).then((res) => {
+          console.log(res);
+          if (res.data.success)
+               dispatch({
+                    type: GET_ALL_USERS,
+                    payload: res.data.body,
+               });
+     });
 };
 
 export function clearRegistrationDetails() {
-    return {
-        type: CLEAR_REGISTRATION_DETAILS,
-        payload: null,
-    };
+     return {
+          type: CLEAR_REGISTRATION_DETAILS,
+          payload: null,
+     };
 }

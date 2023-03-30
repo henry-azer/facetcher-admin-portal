@@ -14,7 +14,10 @@ const FacetcherCircularChart = (props) => {
                <CircularProgressbar
                     value={props.value}
                     maxValue={props.maxValue}
-                    text={`${(props.value * 100) / props.maxValue}%`}
+                    text={
+                         props.text !== "none" &&
+                         `${(props.value * 100) / props.maxValue}%`
+                    }
                     className={`w-${props.width}`}
                     styles={{
                          path: {
@@ -40,7 +43,7 @@ const FacetcherCircularChart = (props) => {
                     }}
                />
 
-               <svg>
+               <svg style={{ width: 0, height: 0 }}>
                     <defs>
                          <linearGradient
                               id="cyanGradient"
@@ -52,7 +55,7 @@ const FacetcherCircularChart = (props) => {
                          </linearGradient>
                     </defs>
                </svg>
-               <svg>
+               <svg style={{ width: 0, height: 0 }}>
                     <defs>
                          <linearGradient
                               id="orangeGradient"
