@@ -14,6 +14,8 @@ import FacetcherSelectComponent from "../components/select-component";
 const Profile = () => {
      useEffect(() => navigateToLogin(), []);
 
+     const formData = new FormData();
+
      const store = useSelector((state) => state);
      const dispatch = useDispatch();
 
@@ -41,6 +43,7 @@ const Profile = () => {
                               <Formik
                                    initialValues={{
                                         id: user.id,
+                                        roleId: user.roleId,
                                         userName: `${user.firstName +
                                              " " +
                                              user.lastName}`,
@@ -63,6 +66,7 @@ const Profile = () => {
                                                        {values.profilePicture ? (
                                                             <img
                                                                  src={`${values.profilePicture}`}
+                                                                 className="w-100 d-flex justify-content-center align-items-center"
                                                             />
                                                        ) : (
                                                             <PersonIcon
@@ -90,15 +94,27 @@ const Profile = () => {
                                                             onChange={(
                                                                  event
                                                             ) => {
-                                                                 setFieldValue(
-                                                                      "profilePicture",
+                                                                 formData.append(
+                                                                      "image",
                                                                       event
                                                                            .currentTarget
                                                                            .files[0]
                                                                  );
+                                                                 // const imageUrl = URL.createObjectURL(
+                                                                 //      event
+                                                                 //           .currentTarget
+                                                                 //           .files[0]
+                                                                 // );
+                                                                 // setFieldValue(
+                                                                 //      "profilePicture",
+                                                                 //      imageUrl
+                                                                 // );
+                                                                 // return () =>
+                                                                 //      URL.revokeObjectURL(
+                                                                 //           imageUrl
+                                                                 //      );
                                                             }}
                                                        />
-
                                                        <div className="w-25 mt-2">
                                                             <FacetcherSelectComponent
                                                                  defaultValue={`${user.userRoles[0].role.name}`.toLowerCase()}
