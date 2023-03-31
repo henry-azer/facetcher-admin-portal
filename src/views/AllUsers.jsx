@@ -36,9 +36,9 @@ const AllUsers = () => {
      ];
 
      return (
-          <div className="w-100">
+          <div>
                <FacetcherDrawer>
-                    <div className="p-5 w-100 d-flex justify-content-center align-items-center flex-column overflowY-scroll">
+                    <div className="p-5 w-100 d-flex justify-content-center align-items-center flex-column vh-100">
                          <div className="w-100 d-flex justify-content-between align-items-center mb-5">
                               <h1 className="fs-3 fw-bold m-0">All Users</h1>
                               <button className="btn bg-transparent border border-grey light-grey-border fw-bold px-3 rounded-pill text-light-grey">
@@ -83,42 +83,57 @@ const AllUsers = () => {
                               </div>
                          </form>
 
-                         <div className="w-100 my-5">
+                         <div className="w-100 my-5 overflowY-scroll ">
                               <FacetcherTable
                                    table={2}
                                    headerArray={headerArray}
+                                   dataLength={allUsers && allUsers.length}
                               >
                                    {allUsers &&
-                                        allUsers.map((user, index) => (
-                                             <tr className="h-25" key={index}>
-                                                  <td>{user.id}</td>
-                                                  <td className="text-capitalize">
-                                                       {user.firstName +
-                                                            " " +
-                                                            user.lastName}
-                                                  </td>
-                                                  <td className="text-capitalize">
-                                                       {
-                                                            user.userRoles[0]
-                                                                 .role.name
-                                                       }
-                                                  </td>
-                                                  <td className="text-capitalize">
-                                                       {}
-                                                  </td>
-                                                  <td>{user.gender}</td>
-                                                  <td>
-                                                       <FacetcherCircularChart
-                                                            value={50}
-                                                            maxValue={200}
-                                                            color="cyan"
-                                                            width={25}
-                                                            strokeWidth={14}
-                                                            text={"none"}
-                                                       />
-                                                  </td>
-                                             </tr>
-                                        ))}
+                                        allUsers
+                                             .filter((obj) => {
+                                                  return (
+                                                       obj.markedAsDeleted ===
+                                                       false
+                                                  );
+                                             })
+                                             .map((user, index) => (
+                                                  <tr
+                                                       className="h-25"
+                                                       key={index}
+                                                  >
+                                                       <td>{user.id}</td>
+                                                       <td className="text-capitalize">
+                                                            {user.firstName +
+                                                                 " " +
+                                                                 user.lastName}
+                                                       </td>
+                                                       <td className="text-capitalize">
+                                                            {user
+                                                                 .userRoles[0] &&
+                                                                 user
+                                                                      .userRoles[0]
+                                                                      .role
+                                                                      .name}
+                                                       </td>
+                                                       <td className="text-capitalize">
+                                                            {}
+                                                       </td>
+                                                       <td>{user.gender}</td>
+                                                       <td>
+                                                            <FacetcherCircularChart
+                                                                 value={50}
+                                                                 maxValue={200}
+                                                                 color="cyan"
+                                                                 width={25}
+                                                                 strokeWidth={
+                                                                      14
+                                                                 }
+                                                                 text={"none"}
+                                                            />
+                                                       </td>
+                                                  </tr>
+                                             ))}
                               </FacetcherTable>
                          </div>
                     </div>

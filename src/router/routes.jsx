@@ -8,6 +8,7 @@ import Home from "../views/Home";
 import Login from "../views/Login";
 import Profile from "../views/Profile";
 import Submissions from "../views/Submissions";
+import Test from "../views/Test";
 import UserLogs from "../views/UserLogs";
 
 const routes = () => (
@@ -20,6 +21,7 @@ const routes = () => (
           <Route exact path="/all-users" element={<AllUsers />} />
           <Route exact path="/all-admins" element={<AllAdmins />} />
           <Route exact path="/user-logs" element={<UserLogs />} />
+          <Route exact path="/test" element={<Test />} />
           {/* <Route element={<NotFound />} /> */}
      </Routes>
 );

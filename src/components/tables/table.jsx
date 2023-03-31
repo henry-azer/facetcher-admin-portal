@@ -21,7 +21,17 @@ const FacetcherTable = (props) => {
                               ))}
                          </tr>
                     </thead>
-                    <tbody>{props.children}</tbody>
+                    <tbody>
+                         {props.children}
+
+                         {props.dataLength > 0 && (
+                              <tr>
+                                   <td colSpan={props.headerArray.length}>
+                                        1, 2, 3, 4
+                                   </td>
+                              </tr>
+                         )}
+                    </tbody>
                </table>
           </div>
      );

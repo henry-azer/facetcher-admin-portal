@@ -1,6 +1,9 @@
 import {
+     ADDING_USER,
+     ADDING_USER_FAILED,
      CLEAR_REGISTRATION_DETAILS,
      GET_ALL_USERS,
+     USER_ADDED_SUCCESSFULLY,
 } from "../actions/users/users-types";
 
 export default function users_reducer(state = {}, action) {
@@ -9,6 +12,27 @@ export default function users_reducer(state = {}, action) {
                return {
                     ...state,
                     allUsers: action.payload,
+               };
+          case ADDING_USER:
+               return {
+                    ...state,
+                    addingUser: true,
+                    userAddedSuccessfully: false,
+                    failedAddingUser: false,
+               };
+          case USER_ADDED_SUCCESSFULLY:
+               return {
+                    ...state,
+                    addingUser: false,
+                    userAddedSuccessfully: true,
+                    failedAddingUser: false,
+               };
+          case ADDING_USER_FAILED:
+               return {
+                    ...state,
+                    addingUser: false,
+                    userAddedSuccessfully: false,
+                    failedAddingUser: true,
                };
           case CLEAR_REGISTRATION_DETAILS:
                return {
