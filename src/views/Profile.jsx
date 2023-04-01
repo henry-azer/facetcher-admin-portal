@@ -245,6 +245,7 @@ const Profile = () => {
                                    <div>
                                         <FacetcherTable
                                              table={1}
+                                             dataLength={5}
                                              headerArray={headerArray}
                                              headerColor="bg-dark-grey2"
                                              bodyColor="bg-dark-grey"

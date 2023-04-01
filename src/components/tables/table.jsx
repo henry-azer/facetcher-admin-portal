@@ -21,7 +21,7 @@ const FacetcherTable = (props) => {
                               ))}
                          </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="table-hover">
                          {props.children}
 
                          {props.dataLength > 0 && (

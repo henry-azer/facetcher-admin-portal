@@ -17,6 +17,7 @@ const AllUsers = () => {
 
           if (!isUsersFetched) {
                dispatch(getAllUsers());
+               dispatch(getAllUsers());
                setIsUsersFetched(true);
           }
      });
@@ -24,16 +25,8 @@ const AllUsers = () => {
      const allUsers = useSelector((state) => state.user.allUsers);
      console.log(allUsers);
 
-     // const users =
 
-     const headerArray = [
-          "ID",
-          "User Name",
-          "Role",
-          "No. of uses",
-          "Gender",
-          "Efficiency",
-     ];
+     const headerArray = ["ID", "First Name", "Last Name", "Email", "Gender"];
 
      return (
           <div>
@@ -57,15 +50,7 @@ const AllUsers = () => {
                                              "Z-A",
                                         ]}
                                    />
-                                   <FacetcherSelectComponent
-                                        width="25"
-                                        label="Efficiency"
-                                        options={[
-                                             "Efficiency ...",
-                                             "Best",
-                                             "Worst",
-                                        ]}
-                                   />
+
                                    <FacetcherSelectComponent
                                         width="25"
                                         label="Gender"
@@ -77,7 +62,7 @@ const AllUsers = () => {
                                    />
                               </div>
                               <div className="w-25 d-flex justify-content-end">
-                                   <button className="btn bg-cyan rounded-pill px-5 text-light-grey">
+                                   <button className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold">
                                         Search
                                    </button>
                               </div>
@@ -94,7 +79,11 @@ const AllUsers = () => {
                                              .filter((obj) => {
                                                   return (
                                                        obj.markedAsDeleted ===
-                                                       false
+                                                            false &&
+                                                       obj.userRoles[0] &&
+                                                            obj.userRoles[0]
+                                                                 .role.name !==
+                                                                 "ADMIN"
                                                   );
                                              })
                                              .map((user, index) => (
@@ -104,33 +93,17 @@ const AllUsers = () => {
                                                   >
                                                        <td>{user.id}</td>
                                                        <td className="text-capitalize">
-                                                            {user.firstName +
-                                                                 " " +
-                                                                 user.lastName}
+                                                            {user.firstName}
                                                        </td>
                                                        <td className="text-capitalize">
-                                                            {user
-                                                                 .userRoles[0] &&
-                                                                 user
-                                                                      .userRoles[0]
-                                                                      .role
-                                                                      .name}
+                                                            {user.lastName}
                                                        </td>
-                                                       <td className="text-capitalize">
-                                                            {}
+                                                       <td className="text-lowercase">
+                                                            {user.email}
                                                        </td>
-                                                       <td>{user.gender}</td>
-                                                       <td>
-                                                            <FacetcherCircularChart
-                                                                 value={50}
-                                                                 maxValue={200}
-                                                                 color="cyan"
-                                                                 width={25}
-                                                                 strokeWidth={
-                                                                      14
-                                                                 }
-                                                                 text={"none"}
-                                                            />
+
+                                                       <td className="text-lowercase">
+                                                            {user.gender}
                                                        </td>
                                                   </tr>
                                              ))}

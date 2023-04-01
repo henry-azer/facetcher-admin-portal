@@ -42,7 +42,7 @@ const FailedTrials = () => {
                                    />
                               </div>
                               <div className="w-25 d-flex justify-content-end">
-                                   <button className="btn bg-cyan rounded-pill px-5 text-light-grey">
+                                   <button className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold">
                                         Search
                                    </button>
                               </div>

@@ -194,6 +194,17 @@ td {
      padding: 20px !important;
      vertical-align: middle !important;
 }
+.table-hover tr:hover {
+     background-color: var(--grey);
+     color: var(--darkGrey2);
+     cursor: pointer;
+}
+.table-hover tr:last-child:hover {
+     background-color: var(--darkGrey2);
+     color: var(--lightGrey);
+     cursor: default !important;
+}
+
 /* -------------------------------------------------------- */
 
 /* ---------- MEDIA QUERIES START -------------------- */
