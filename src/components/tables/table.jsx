@@ -25,7 +25,11 @@ const FacetcherTable = (props) => {
                          {props.children}
 
                          {props.dataLength > 0 && (
-                              <tr>
+                              <tr
+                                   className={`last-tr-hover${
+                                        props.table === 2 ? "1" : "2"
+                                   }`}
+                              >
                                    <td colSpan={props.headerArray.length}>
                                         1, 2, 3, 4
                                    </td>

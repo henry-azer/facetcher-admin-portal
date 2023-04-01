@@ -10,6 +10,14 @@ import FacetcherCircularChart from "../components/charts/circularChart";
 import { navigateToLogin } from "../utils/util";
 import FacetcherTable from "../components/tables/table";
 import FacetcherSelectComponent from "../components/select-component";
+import EditIcon from "@mui/icons-material/Edit";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { DARKGREY2, LIGHTGREY } from "../constants/app_colors";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Profile = () => {
      useEffect(() => navigateToLogin(), []);
@@ -19,6 +27,9 @@ const Profile = () => {
      const store = useSelector((state) => state);
      const dispatch = useDispatch();
 
+     const [open, setOpen] = useState(false);
+     const [imgW, setImgW] = useState(0);
+     const [imgH, setImgH] = useState(0);
      const [isUserFetched, setIsUserFetched] = useState(false);
 
      useEffect(() => {
@@ -62,11 +73,25 @@ const Profile = () => {
                                         <div className="col-lg-4 col-12 bg-dark-grey mx-2 p-3 position-relative d-flex justify-content-center h-100 overflow-hidden">
                                              <div className=" bg-dark-grey2 w-100 h-20 user-profile-pic position-absolute top-0"></div>
                                              <div className=" rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
-                                                  <div className="w-100 h-100 d-flex justify-content-center align-items-center">
+                                                  <div className="w-100 h-100 d-flex justify-content-center align-items-center overflow-hidden position-relative">
+                                                       <button
+                                                            className="btn bg-dark bg-opacity-75 position-absolute bottom-0 h-100 w-100 rounded-pill text-light-grey custom-btn"
+                                                            onClick={() =>
+                                                                 setOpen(true)
+                                                            }
+                                                       >
+                                                            <EditIcon fontSize="small" />
+                                                            Edit
+                                                       </button>
                                                        {values.profilePicture ? (
                                                             <img
                                                                  src={`${values.profilePicture}`}
-                                                                 className="w-100 d-flex justify-content-center align-items-center"
+                                                                 className={`${
+                                                                      imgH >
+                                                                      imgW
+                                                                           ? "w-100"
+                                                                           : "h-100"
+                                                                 } d-flex justify-content-center align-items-center`}
                                                             />
                                                        ) : (
                                                             <PersonIcon
@@ -77,6 +102,104 @@ const Profile = () => {
                                                        )}
                                                   </div>
                                              </div>
+
+                                             <Dialog
+                                                  open={open}
+                                                  onClose={() => setOpen(false)}
+                                                  PaperProps={{
+                                                       sx: {
+                                                            bgcolor: LIGHTGREY,
+                                                            color: DARKGREY2,
+                                                            paddingY: 2,
+                                                            borderRadius: 3,
+                                                       },
+                                                  }}
+                                             >
+                                                  {" "}
+                                                  <DialogTitle className="d-flex w-100 px-5 justify-content-between fw-bold">
+                                                       Edit Profile Picture
+                                                       <CloseIcon
+                                                            className="cursor-pointer text-dark-grey2"
+                                                            onClick={() =>
+                                                                 setOpen(false)
+                                                            }
+                                                       />
+                                                  </DialogTitle>
+                                                  <DialogContent className="d-flex w-100 px-5 flex-column">
+                                                       <DialogContentText className="pb-3">
+                                                            Please, Add the
+                                                            picture that you
+                                                            want to make a
+                                                            profile picture for
+                                                            the user.
+                                                       </DialogContentText>
+
+                                                       <div>
+                                                            <Field
+                                                                 name="image"
+                                                                 type="file"
+                                                                 onChange={(
+                                                                      event
+                                                                 ) => {
+                                                                      formData.append(
+                                                                           "image",
+                                                                           event
+                                                                                .currentTarget
+                                                                                .files[0]
+                                                                      );
+                                                                      const imageUrl = URL.createObjectURL(
+                                                                           event
+                                                                                .currentTarget
+                                                                                .files[0]
+                                                                      );
+                                                                      setFieldValue(
+                                                                           "profilePicture",
+                                                                           imageUrl
+                                                                      );
+                                                                      setOpen(
+                                                                           false
+                                                                      );
+                                                                      setImgW(
+                                                                           new Image(
+                                                                                event.currentTarget.files[0]
+                                                                           )
+                                                                                .width
+                                                                      );
+                                                                      setImgH(
+                                                                           new Image(
+                                                                                event.currentTarget.files[0]
+                                                                           )
+                                                                                .height
+                                                                      );
+                                                                      return () =>
+                                                                           URL.revokeObjectURL(
+                                                                                imageUrl
+                                                                           );
+                                                                 }}
+                                                            />
+                                                            {values.profilePicture && (
+                                                                 <button
+                                                                      className="btn rounded-pill bg-orange text-light-grey"
+                                                                      onClick={() => {
+                                                                           setFieldValue(
+                                                                                "profilePicture",
+                                                                                null
+                                                                           );
+                                                                           setOpen(
+                                                                                false
+                                                                           );
+                                                                      }}
+                                                                 >
+                                                                      Delete
+                                                                      Profile
+                                                                      Picture
+                                                                 </button>
+                                                            )}
+                                                       </div>
+                                                  </DialogContent>
+                                                  <DialogActions></DialogActions>
+                                             </Dialog>
+
                                              <div className=" align-self-end h-75 pt-5 text-center">
                                                   <h1 className="mt-3 fs-4 fw-bold text-capitalize">
                                                        {user.firstName +
@@ -88,33 +211,6 @@ const Profile = () => {
                                                   </h1>
 
                                                   <form className="d-flex justify-content-center align-items-center flex-column mx-2">
-                                                       <Field
-                                                            name="image"
-                                                            type="file"
-                                                            onChange={(
-                                                                 event
-                                                            ) => {
-                                                                 formData.append(
-                                                                      "image",
-                                                                      event
-                                                                           .currentTarget
-                                                                           .files[0]
-                                                                 );
-                                                                 // const imageUrl = URL.createObjectURL(
-                                                                 //      event
-                                                                 //           .currentTarget
-                                                                 //           .files[0]
-                                                                 // );
-                                                                 // setFieldValue(
-                                                                 //      "profilePicture",
-                                                                 //      imageUrl
-                                                                 // );
-                                                                 // return () =>
-                                                                 //      URL.revokeObjectURL(
-                                                                 //           imageUrl
-                                                                 //      );
-                                                            }}
-                                                       />
                                                        <div className="w-25 mt-2">
                                                             <FacetcherSelectComponent
                                                                  defaultValue={`${user.userRoles[0].role.name}`.toLowerCase()}
@@ -240,7 +336,7 @@ const Profile = () => {
                               </div>
                               <div className="pt-5 mb-5">
                                    <h1 className="fs-3 fw-bold py-4">
-                                        Drawings History
+                                        Submissions History
                                    </h1>
                                    <div>
                                         <FacetcherTable

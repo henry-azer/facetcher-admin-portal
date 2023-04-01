@@ -26,13 +26,16 @@ input:focus-visible {
      outline: none !important;
 }
 .bg-grey {
-     background-color: var(--grey);
+     background-color: var(--grey) !important;
+}
+.bg-light-grey-10T {
+     background-color: var(--lightGrey10T) !important;
 }
 .bg-dark-grey {
-     background-color: var(--darkGrey);
+     background-color: var(--darkGrey) !important;
 }
 .bg-dark-grey2 {
-     background-color: var(--darkGrey2);
+     background-color: var(--darkGrey2) !important;
 }
 .bg-cyan {
      background-color: var(--cyan) !important;
@@ -51,6 +54,9 @@ input:focus-visible {
 }
 .text-light-grey {
      color: var(--lightGrey) !important;
+}
+.text-dark-grey2 {
+     color: var(--darkGrey2) !important;
 }
 ::placeholder {
      /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -199,12 +205,36 @@ td {
      color: var(--darkGrey2);
      cursor: pointer;
 }
-.table-hover tr:last-child:hover {
-     background-color: var(--darkGrey2);
-     color: var(--lightGrey);
+.table-hover tr:last-child {
      cursor: default !important;
+     color: var(--lightGrey);
 }
-
+.table-hover .last-tr-hover1:hover {
+     background-color: var(--darkGrey2);
+}
+.table-hover .last-tr-hover2:hover {
+     background-color: var(--darkGrey);
+}
+.custom-btn {
+     transition: opacity 0.3s !important;
+     opacity: 0%;
+}
+.custom-btn:hover {
+     color: var(--lightGrey) !important;
+     opacity: 100%;
+}
+input[type="file"]::-webkit-file-upload-button {
+     background-color: var(--cyan);
+     color: var(--lightGrey);
+     padding: 10px 12px;
+     margin-right: 15px;
+     border: none;
+     border-radius: var(--bs-border-radius-pill);
+     cursor: pointer;
+}
+.cursor-pointer {
+     cursor: pointer !important;
+}
 /* -------------------------------------------------------- */
 
 /* ---------- MEDIA QUERIES START -------------------- */
