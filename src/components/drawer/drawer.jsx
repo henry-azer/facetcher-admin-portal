@@ -145,7 +145,12 @@ const FacetcherDrawer = (props) => {
                               alignItems: "center",
                          }}
                     >
-                         <div className="d-flex justify-content-center align-items-center">
+                         <div
+                              className="d-flex justify-content-center align-items-center cursor-pointer"
+                              onClick={() => {
+                                   navigate("/");
+                              }}
+                         >
                               <Box
                                    component="img"
                                    src={Logo}

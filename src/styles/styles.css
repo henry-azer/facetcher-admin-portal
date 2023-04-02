@@ -91,6 +91,10 @@ input:focus-visible {
      display: none;
 }
 
+select option:nth-child(2):hover {
+     background: var(--darkCyan) !important;
+}
+
 @font-face {
      font-family: "Century Gothic";
      src: local("GOTHIC"), url(/src/assets/fonts/GOTHIC.TTF) format("TTF");
@@ -205,14 +209,14 @@ td {
      color: var(--darkGrey2);
      cursor: pointer;
 }
-.table-hover tr:last-child {
+.custom-table tr:last-child {
      cursor: default !important;
      color: var(--lightGrey);
 }
-.table-hover .last-tr-hover1:hover {
+.custom-table .last-tr-hover1:hover {
      background-color: var(--darkGrey2);
 }
-.table-hover .last-tr-hover2:hover {
+.custom-table .last-tr-hover2:hover {
      background-color: var(--darkGrey);
 }
 .custom-btn {

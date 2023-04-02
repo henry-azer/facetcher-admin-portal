@@ -11,7 +11,8 @@ const UserLogs = () => {
      return (
           <div className="w-100">
                <FacetcherDrawer route={USERS_LOGS}>
-                    <div className="p-5 w-100 d-flex justify-content-center align-items-center flex-column">
+                                       <div className="p-5 pb-0 w-100 d-flex justify-content-start align-items-center flex-column h-100">
+
                          <div className="w-100 d-flex justify-content-between align-items-center mb-5">
                               <h1 className="fs-3 fw-bold m-0">User Logs</h1>
                          </div>
@@ -44,11 +45,20 @@ const UserLogs = () => {
                               </div>
                          </form>
 
-                         <div className="w-100 my-5">
+                                                  <div className="w-100 mt-5 overflowY-scroll ">
+
                               <FacetcherTable
                                    table={2}
                                    headerArray={headerArray}
+                                   dataLength={2}
+
                               >
+                                   <tr>
+                                        <td>Col1</td>
+                                        <td>Col2</td>
+                                        <td>Col3</td>
+                                        <td>Col4</td>
+                                   </tr>
                                    <tr>
                                         <td>Col1</td>
                                         <td>Col2</td>

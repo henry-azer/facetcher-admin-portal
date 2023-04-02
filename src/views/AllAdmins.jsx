@@ -19,7 +19,8 @@ const AllAdmins = () => {
      return (
           <div className="w-100">
                <FacetcherDrawer route={ALL_ADMINS}>
-                    <div className="p-5 w-100 d-flex justify-content-center align-items-center flex-column">
+                                       <div className="p-5 pb-0 w-100 d-flex justify-content-start align-items-center flex-column h-100">
+
                          <div className="w-100 d-flex justify-content-between align-items-center mb-5">
                               <h1 className="fs-3 fw-bold m-0">All Admins</h1>
                               <button className="btn bg-transparent border border-grey light-grey-border fw-bold px-3 rounded-pill text-light-grey">
@@ -40,15 +41,6 @@ const AllAdmins = () => {
                                    />
                                    <FacetcherSelectComponent
                                         width="25"
-                                        label="Efficiency"
-                                        options={[
-                                             "Efficiency ...",
-                                             "Best",
-                                             "Worst",
-                                        ]}
-                                   />
-                                   <FacetcherSelectComponent
-                                        width="25"
                                         label="Gender"
                                         options={[
                                              "Gender ...",
@@ -64,7 +56,8 @@ const AllAdmins = () => {
                               </div>
                          </form>
 
-                         <div className="w-100 my-5">
+                                                  <div className="w-100 mt-5 overflowY-scroll ">
+
                               <FacetcherTable
                                    table={2}
                                    headerArray={headerArray}

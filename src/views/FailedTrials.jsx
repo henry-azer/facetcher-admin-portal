@@ -18,7 +18,8 @@ const FailedTrials = () => {
      return (
           <div className="w-100">
                <FacetcherDrawer route={FAILED_TRIALS}>
-                    <div className="p-5 w-100 d-flex justify-content-center align-items-center flex-column">
+                                       <div className="p-5 pb-0 w-100 d-flex justify-content-start align-items-center flex-column h-100">
+
                          <div className="w-100 d-flex justify-content-between align-items-center mb-5">
                               <h1 className="fs-3 fw-bold m-0">
                                    Failed Trials
@@ -49,7 +50,8 @@ const FailedTrials = () => {
                               </div>
                          </form>
 
-                         <div className="w-100 my-5">
+                                                  <div className="w-100 mt-5 overflowY-scroll ">
+
                               <FacetcherTable
                                    table={2}
                                    headerArray={headerArray}

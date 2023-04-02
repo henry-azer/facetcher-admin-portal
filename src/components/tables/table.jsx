@@ -4,9 +4,9 @@ const FacetcherTable = (props) => {
      return (
           <div className="w-100">
                <table
-                    className={`table custom-table text-light-grey text-center bg-dark-grey${
+                    className={`table text-light-grey text-center bg-dark-grey${
                          props.table === 2 ? "2" : ""
-                    }`}
+                    } ${props.dataLength && "custom-table"}`}
                >
                     <thead
                          className={`bg-dark-grey${

@@ -31,7 +31,7 @@ const AllUsers = () => {
      return (
           <div>
                <FacetcherDrawer route={ALL_USERS}>
-                    <div className="p-5 w-100 d-flex justify-content-center align-items-center flex-column vh-100">
+                    <div className="p-5 pb-0 w-100 d-flex justify-content-start align-items-center flex-column h-100">
                          <div className="w-100 d-flex justify-content-between align-items-center mb-5">
                               <h1 className="fs-3 fw-bold m-0">All Users</h1>
                               <button className="btn bg-transparent border border-grey light-grey-border fw-bold px-3 rounded-pill text-light-grey">
@@ -68,7 +68,7 @@ const AllUsers = () => {
                               </div>
                          </form>
 
-                         <div className="w-100 my-5 overflowY-scroll ">
+                         <div className="w-100 mt-5 overflowY-scroll ">
                               <FacetcherTable
                                    table={2}
                                    headerArray={headerArray}
@@ -76,15 +76,15 @@ const AllUsers = () => {
                               >
                                    {allUsers &&
                                         allUsers
-                                             .filter((obj) => {
-                                                  return (
-                                                       obj.markedAsDeleted ===
-                                                            false &&
-                                                       obj.userRoles[0] &&
-                                                       obj.userRoles[0].role
-                                                            .name !== "ADMIN"
-                                                  );
-                                             })
+                                             // .filter((obj) => {
+                                             //      return (
+                                             //           obj.markedAsDeleted ===
+                                             //                false &&
+                                             //           obj.userRoles[0] &&
+                                             //           obj.userRoles[0].role
+                                             //                .name !== "ADMIN"
+                                             //      );
+                                             // })
                                              .map((user, index) => (
                                                   <tr
                                                        className="h-25"
