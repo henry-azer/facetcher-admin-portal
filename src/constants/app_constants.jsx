@@ -6,3 +6,10 @@ export const APIs_URL = {
 };
 export const ISUSERAUTH = "%mmNJ9B7K64$";
 export const ACCESSTOKEN = "%807&tI$4Wzm";
+
+export const DASHBOARD = "Dashboard";
+export const ALL_USERS = "All Users";
+export const USERS_LOGS = "Users Logs";
+export const SUBMISSIONS = "Submissions";
+export const FAILED_TRIALS = "Failed Trials";
+export const ALL_ADMINS = "All Admins";

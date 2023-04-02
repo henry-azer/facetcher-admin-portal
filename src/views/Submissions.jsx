@@ -3,6 +3,7 @@ import FacetcherDrawer from "../components/drawer/drawer";
 import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
 import FacetcherTable from "../components/tables/table";
+import { SUBMISSIONS } from "../constants/app_constants";
 
 const Submissions = () => {
      const headerArray = [
@@ -16,7 +17,7 @@ const Submissions = () => {
 
      return (
           <div className="w-100">
-               <FacetcherDrawer>
+               <FacetcherDrawer route={SUBMISSIONS}>
                     <div className="p-5 w-100 d-flex justify-content-center align-items-center flex-column">
                          <div className="w-100 d-flex justify-content-between align-items-center mb-5">
                               <h1 className="fs-3 fw-bold m-0">Submissions</h1>

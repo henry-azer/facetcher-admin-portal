@@ -22,7 +22,7 @@ import {
 } from "../constants/app_colors";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { getAllSubmissions } from "../store/actions/submission/submission-actions";
-
+import { DASHBOARD } from "../constants/app_constants";
 
 const Home = () => {
      const state = useSelector((state) => state);
@@ -50,7 +50,7 @@ const Home = () => {
 
      return (
           <div>
-               <FacetcherDrawer>
+               <FacetcherDrawer route={DASHBOARD}>
                     <div className="mt-5">
                          <h1 className="my-0 fs-4 fw-bold">Dashboard</h1>
                          <p className="text-cyan fs-6">

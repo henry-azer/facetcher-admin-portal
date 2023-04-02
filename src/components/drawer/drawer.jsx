@@ -25,19 +25,28 @@ import {
 } from "../../constants/app_colors";
 import Logo from "../../assets/logo/logo.svg";
 import LogoText from "../../assets/logo/logo-text.svg";
+import {
+     ALL_ADMINS,
+     ALL_USERS,
+     DASHBOARD,
+     FAILED_TRIALS,
+     SUBMISSIONS,
+     USERS_LOGS,
+} from "../../constants/app_constants";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 190;
 
 const drawerCategories = [
-     { header: "Analysis", subHeaders: ["Dashboard"] },
-     { header: "Users", subHeaders: ["All Users", "Users Logs"] },
-     { header: "Drawings", subHeaders: ["Submissions", "Failed Trials"] },
-     { header: "Admins", subHeaders: ["All Admins"] },
+     { header: "Analysis", subHeaders: [DASHBOARD] },
+     { header: "Users", subHeaders: [ALL_USERS, USERS_LOGS] },
+     { header: "Drawings", subHeaders: [SUBMISSIONS, FAILED_TRIALS] },
+     { header: "Admins", subHeaders: [ALL_ADMINS] },
 ];
 
-const FacetcherDrawer = ({ children }) => {
+const FacetcherDrawer = (props) => {
      const ref = useRef(null);
-
+     const navigate = useNavigate();
      const [height, setHeight] = useState(0);
 
      useLayoutEffect(() => {
@@ -169,7 +178,23 @@ const FacetcherDrawer = ({ children }) => {
                                                   key={index}
                                                   disablePadding
                                              >
-                                                  <ListItemButton>
+                                                  <ListItemButton
+                                                       onClick={() =>
+                                                            navigate(
+                                                                 `/${
+                                                                      subHeader !==
+                                                                      DASHBOARD
+                                                                           ? subHeader
+                                                                                  .toLowerCase()
+                                                                                  .replace(
+                                                                                       " ",
+                                                                                       "-"
+                                                                                  )
+                                                                           : ""
+                                                                 }`
+                                                            )
+                                                       }
+                                                  >
                                                        <ListItemText
                                                             primaryTypographyProps={{
                                                                  fontSize:
@@ -178,7 +203,10 @@ const FacetcherDrawer = ({ children }) => {
                                                                       "Bold",
                                                             }}
                                                             primary={subHeader}
-                                                            className="active_sub_header"
+                                                            className={`${props.route &&
+                                                                 props.route ===
+                                                                      subHeader &&
+                                                                 "active_sub_header"}`}
                                                        />
                                                   </ListItemButton>
                                              </ListItem>
@@ -203,9 +231,7 @@ const FacetcherDrawer = ({ children }) => {
                               marginTop: `${height}px`,
                          }}
                     >
-                         <div className="w-100 h-100">
-                              {children}
-                         </div>
+                         <div className="w-100 h-100">{props.children}</div>
                     </div>
                </Box>
           </Box>

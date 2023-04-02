@@ -4,6 +4,7 @@ import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
 import FacetcherTable from "../components/tables/table";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import { ALL_ADMINS } from "../constants/app_constants";
 
 const AllAdmins = () => {
      const headerArray = [
@@ -17,7 +18,7 @@ const AllAdmins = () => {
 
      return (
           <div className="w-100">
-               <FacetcherDrawer>
+               <FacetcherDrawer route={ALL_ADMINS}>
                     <div className="p-5 w-100 d-flex justify-content-center align-items-center flex-column">
                          <div className="w-100 d-flex justify-content-between align-items-center mb-5">
                               <h1 className="fs-3 fw-bold m-0">All Admins</h1>

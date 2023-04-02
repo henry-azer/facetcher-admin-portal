@@ -75,7 +75,7 @@ const Profile = () => {
                                              <div className=" rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
                                                   <div className="w-100 h-100 d-flex justify-content-center align-items-center overflow-hidden position-relative">
                                                        <button
-                                                            className="btn bg-dark bg-opacity-75 position-absolute bottom-0 h-100 w-100 rounded-pill text-light-grey custom-btn"
+                                                            className="btn bg-black bg-opacity-75 position-absolute bottom-0 h-100 w-100 rounded-pill text-light-grey custom-btn"
                                                             onClick={() =>
                                                                  setOpen(true)
                                                             }

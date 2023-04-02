@@ -20,7 +20,7 @@ const routes = () => (
           <Route exact path="/failed-trials" element={<FailedTrials />} />
           <Route exact path="/all-users" element={<AllUsers />} />
           <Route exact path="/all-admins" element={<AllAdmins />} />
-          <Route exact path="/user-logs" element={<UserLogs />} />
+          <Route exact path="/users-logs" element={<UserLogs />} />
           <Route exact path="/test" element={<Test />} />
           {/* <Route element={<NotFound />} /> */}
      </Routes>
