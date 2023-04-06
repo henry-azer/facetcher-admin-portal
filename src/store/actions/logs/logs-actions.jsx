@@ -23,7 +23,6 @@ export const getAllLogs = () => (dispatch) => {
           })
           .catch((err) => {
                console.log(err);
-               if (err.response.status === 400)
                     dispatch({ type: FAILED_GETTING_LOGS });
           });
 };

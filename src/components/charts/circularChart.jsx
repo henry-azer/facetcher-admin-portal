@@ -16,7 +16,7 @@ const FacetcherCircularChart = (props) => {
                     maxValue={props.maxValue}
                     text={
                          props.text !== "none" &&
-                         `${(props.value * 100) / props.maxValue}%`
+                         `${Math.round((props.value * 100) / props.maxValue)}%`
                     }
                     className={`w-${props.width}`}
                     styles={{
