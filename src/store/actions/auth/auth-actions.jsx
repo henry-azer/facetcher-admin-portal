@@ -43,63 +43,12 @@ export const authenticateUser = (values) => (dispatch) => {
           })
           .catch((err) => {
                console.log(err);
-               // if (err.response.status == 400) cookies.set(ISUSERAUTH, "false");
+               if (err.response.status === 400)
+                    cookies.set(ISUSERAUTH, "false");
           });
-     //           .then(function(response) {
-     //                if (response.data.status === 200) {
-     //                     dispatch({
-     //                          type: LOGIN_SUCCEEDED,
-     //                          payload: response.data.body,
-     //                     });
-
-     //                     if (values.keepLogged) {
-     //                          cookies.set("iua_cin", "true");
-     //                          cookies.set("at_cin", `${response.data.body.token}`);
-     //                          cookies.set(
-     //                               "aun_cin",
-     //                               `${response.data.body.user.username}`
-     //                          );
-     //                          cookies.set(
-     //                               "aui_cin",
-     //                               `${response.data.body.user.id}`
-     //                          );
-     //                     } else {
-     //                          cookies.set("iua_cin", "true", {
-     //                               maxAge: "14400",
-     //                          });
-     //                          cookies.set("at_cin", `${response.data.body.token}`, {
-     //                               maxAge: "14400",
-     //                          });
-
-     //                          cookies.set(
-     //                               "aun_cin",
-     //                               `${response.data.body.user.username}`,
-     //                               {
-     //                                    maxAge: "14400",
-     //                               }
-     //                          );
-     //                          cookies.set(
-     //                               "aui_cin",
-     //                               `${response.data.body.user.id}`,
-     //                               {
-     //                                    maxAge: "14400",
-     //                               }
-     //                          );
-     //                     }
-     //                } else {
-     //                     dispatch({
-     //                          type: LOGIN_FAILURE,
-     //                          payload: response.data.message,
-     //                     });
-     //                }
-     //           })
-     //           .catch(function(error) {
-     //                console.log(error);
-     //           });
 };
 
 export const getCurrentUser = () => (dispatch) => {
-     console.log("lol");
      axios.get(`${URL}/auth/current`).then((res) => {
           console.log(res);
           if (res.data.success) {

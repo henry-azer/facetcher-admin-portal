@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,10 +24,21 @@ import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { getAllSubmissions } from "../store/actions/submission/submission-actions";
 import { DASHBOARD } from "../constants/app_constants";
 import FacetcherCircularChart from "../components/charts/circularChart";
+import { getAllLogs } from "../store/actions/logs/logs-actions";
 
 const Home = () => {
      const state = useSelector((state) => state);
      const dispatch = useDispatch();
+     const [fetchingData, setFetchingData] = useState(true);
+
+     useEffect(() => {
+          document.title = "All User | Dashboard";
+
+          if (fetchingData) {
+               dispatch(getAllLogs());
+               setFetchingData(false);
+          }
+     });
 
      console.log(state);
      // const { t } = useTranslation();
@@ -61,9 +72,13 @@ const Home = () => {
                     </div>
                     <div className="row h-100 justify-content-center align-items-center g-2">
                          <div className="col-8 h-100 me-2 d-flex flex-column align-items-center">
-                              <div className="w-100 h-75 bg-dark-grey p-3 mb-2">
+                              <div className="w-100 h-75 bg-dark-grey p-4 mb-2">
+                                   <h1 className="fs-2 my-0 fw-bold">Trails</h1>
+                                   <h1 className="fs-5 fw-bold text-cyan">
+                                        Statistics of last users’ trails
+                                   </h1>
                                    <ResponsiveContainer
-                                        width="70%"
+                                        width="90%"
                                         height={300}
                                    >
                                         <LineChart data={dataView()}>
