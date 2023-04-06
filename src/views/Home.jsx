@@ -23,6 +23,7 @@ import {
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { getAllSubmissions } from "../store/actions/submission/submission-actions";
 import { DASHBOARD } from "../constants/app_constants";
+import FacetcherCircularChart from "../components/charts/circularChart";
 
 const Home = () => {
      const state = useSelector((state) => state);
@@ -38,9 +39,9 @@ const Home = () => {
                const val2 = Math.ceil(Math.random() * 11);
                data.push({
                     day: index + 1,
-                    value: val,
-                    value2: val2,
-                    value3: val + val2,
+                    SucceededTrials: val,
+                    FailedTrials: val2,
+                    TotalTrials: val + val2,
                });
           }
           // console.log(data);
@@ -51,43 +52,46 @@ const Home = () => {
      return (
           <div>
                <FacetcherDrawer route={DASHBOARD}>
-                    <div className="mt-5">
+                    <div className="mt-3">
                          <h1 className="my-0 fs-4 fw-bold">Dashboard</h1>
                          <p className="text-cyan fs-6">
                               Welcome,
                               <span className="fw-bold"> {adminName}</span>
                          </p>
                     </div>
-                    <div className="row justify-content-center align-items-center g-2">
-                         <div className="col-8 bg-dark-grey mx-2 p-3">
-                              <div>
+                    <div className="row h-100 justify-content-center align-items-center g-2">
+                         <div className="col-8 h-100 me-2 d-flex flex-column align-items-center">
+                              <div className="w-100 h-75 bg-dark-grey p-3 mb-2">
                                    <ResponsiveContainer
                                         width="70%"
                                         height={300}
                                    >
                                         <LineChart data={dataView()}>
                                              <Line
+                                                  name="Total Trials"
+                                                  activeDot={{ r: 8 }}
                                                   type="monotone"
-                                                  dataKey="value"
+                                                  dataKey="TotalTrials"
+                                                  stroke={LIGHTGREY}
+                                                  strokeWidth="2"
+                                                  dot={false}
+                                             />
+                                             <Line
+                                                  name="Succeeded Trials"
+                                                  type="monotone"
+                                                  dataKey="SucceededTrials"
                                                   stroke={CYAN}
                                                   strokeWidth="2"
                                                   dot={false}
                                              />
                                              <Line
+                                                  name="Failed Trials"
                                                   type="monotone"
-                                                  dataKey="value2"
+                                                  dataKey="FailedTrials"
                                                   stroke={ORANGE}
                                                   strokeWidth="2"
                                                   dot={false}
                                                   // strokeDasharray="5 5"
-                                             />
-                                             <Line
-                                                  activeDot={{ r: 8 }}
-                                                  type="monotone"
-                                                  dataKey="value3"
-                                                  stroke={LIGHTGREY}
-                                                  strokeWidth="2"
-                                                  dot={false}
                                              />
                                              <XAxis
                                                   dataKey="day"
@@ -96,7 +100,7 @@ const Home = () => {
                                              />
                                              <YAxis
                                                   tickCount={8}
-                                                  dataKey="value3"
+                                                  dataKey="TotalTrials"
                                                   stroke={LIGHTGREY}
                                                   tickLine={false}
                                              />
@@ -120,8 +124,48 @@ const Home = () => {
                                         </LineChart>
                                    </ResponsiveContainer>
                               </div>
+                              <div className=" w-100 mt-2 h-50 d-flex">
+                                   <div className="w-50 h-100 pe-2">
+                                        <div className="w-100 h-75 bg-dark-grey p-3">
+                                             <h1 className="fs-5 m-0 fw-bold d-flex flex-column">
+                                                  Succeed Trails{" "}
+                                                  <span className=" text-cyan">
+                                                       Succeed Percentage
+                                                  </span>
+                                             </h1>
+                                             <div className="w-100 d-flex justify-content-end">
+                                                  <FacetcherCircularChart
+                                                       value={150}
+                                                       maxValue={200}
+                                                       color="cyan"
+                                                       width={25}
+                                                       strokeWidth={14}
+                                                  />
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <div className="w-50 h-100 ps-2">
+                                        <div className="w-100 h-100 bg-dark-grey p-3">
+                                             <h1 className="fs-5 m-0 fw-bold d-flex flex-column">
+                                                  Failed Trails{" "}
+                                                  <span className=" text-orange">
+                                                       Failed Percentage
+                                                  </span>
+                                             </h1>
+                                             <div className="w-100 d-flex justify-content-end">
+                                                  <FacetcherCircularChart
+                                                       value={150}
+                                                       maxValue={200}
+                                                       color="orange"
+                                                       width={25}
+                                                       strokeWidth={14}
+                                                  />
+                                             </div>
+                                        </div>
+                                   </div>
+                              </div>
                          </div>
-                         <div className="col bg-dark-grey mx-2 p-3">
+                         <div className="col h-100 bg-dark-grey ms-2 p-3">
                               <button
                                    onClick={() => dispatch(getCurrentUser())}
                               >

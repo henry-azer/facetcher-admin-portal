@@ -76,15 +76,15 @@ const AllUsers = () => {
                               >
                                    {allUsers &&
                                         allUsers
-                                             // .filter((obj) => {
-                                             //      return (
-                                             //           obj.markedAsDeleted ===
-                                             //                false &&
-                                             //           obj.userRoles[0] &&
-                                             //           obj.userRoles[0].role
-                                             //                .name !== "ADMIN"
-                                             //      );
-                                             // })
+                                             .filter((obj) => {
+                                                  return (
+                                                       obj.markedAsDeleted ===
+                                                            false &&
+                                                       obj.userRoles[0] &&
+                                                       obj.userRoles[0].role
+                                                            .name !== "ADMIN"
+                                                  );
+                                             })
                                              .map((user, index) => (
                                                   <tr
                                                        className="h-25"

@@ -239,6 +239,11 @@ input[type="file"]::-webkit-file-upload-button {
 .cursor-pointer {
      cursor: pointer !important;
 }
+
+.row.vertical-divider div[class^="col-"] + div[class^="col-"] {
+     /* border-left: 3px solid #0396d1; */
+     height: 100%;
+}
 /* -------------------------------------------------------- */
 
 /* ---------- MEDIA QUERIES START -------------------- */
