@@ -165,7 +165,7 @@ const Home = () => {
 
           console.log(data);
 
-          if(data.length >= 7) return data.slice(-7)
+          if (data.length >= 7) return data.slice(-7);
           else return data;
      };
 
@@ -242,7 +242,6 @@ const Home = () => {
                                                        style={{
                                                             fontSize: 10,
                                                        }}
-                                                       
                                                   />
                                                   <YAxis
                                                        tickCount={8}
@@ -345,7 +344,7 @@ const Home = () => {
                                                   <h1 className="fs-5 d-flex flex-column">
                                                        {`${log.user.firstName}`}
 
-                                                       <span className="text-cyan fs-6">
+                                                       <span className="text-cyan fs-6 d-flex justify-content-between w-100">
                                                             {
                                                                  `${log.lastModificationDate}`
                                                                       .replace(
@@ -356,6 +355,9 @@ const Home = () => {
                                                                            "."
                                                                       )[0]
                                                             }
+                                                            <span className="text-capitalize w-25 text-start">
+                                                                 {log.logStatus.toLowerCase()}
+                                                            </span>
                                                        </span>
                                                   </h1>
                                              </div>
