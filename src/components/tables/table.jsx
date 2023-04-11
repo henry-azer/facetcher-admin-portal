@@ -1,4 +1,5 @@
 import React from "react";
+import ReactPaginate from "react-paginate";
 
 const FacetcherTable = (props) => {
      return (
@@ -31,7 +32,18 @@ const FacetcherTable = (props) => {
                                    }`}
                               >
                                    <td colSpan={props.headerArray.length}>
-                                        1, 2, 3, 4
+                                        <div className=" d-flex justify-content-center align-items-center">
+                                             <ReactPaginate
+                                                  pageCount={20}
+                                                  pageRangeDisplayed={5}
+                                                  marginPagesDisplayed={0}
+                                                  previousLabel="<"
+                                                  nextLabel=">"
+                                                  breakLabel=""
+                                                  renderOnZeroPageCount={null}
+                                                  containerClassName="pagination d-flex justify-content-between align-items-center w-25"
+                                             />
+                                        </div>
                                    </td>
                               </tr>
                          )}

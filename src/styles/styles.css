@@ -79,6 +79,9 @@ input:focus-visible {
 .light-grey-border {
      border: solid var(--lightGrey) 1px !important;
 }
+.w-20 {
+     width: 20% !important;
+}
 .h-20 {
      height: 20% !important;
 }
@@ -243,6 +246,10 @@ input[type="file"]::-webkit-file-upload-button {
 .row.vertical-divider div[class^="col-"] + div[class^="col-"] {
      /* border-left: 3px solid #0396d1; */
      height: 100%;
+}
+
+.pagination {
+     list-style: none;
 }
 /* -------------------------------------------------------- */
 

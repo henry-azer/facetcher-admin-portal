@@ -37,7 +37,7 @@ const Login = () => {
      const err = false;
 
      useEffect(() => {
-          document.title = "Sign In | Facetcher";
+          document.title = "Login | Facetcher";
 
           if (isUserAuthenticated()) {
                navigate("/");

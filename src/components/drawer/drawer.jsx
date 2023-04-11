@@ -34,6 +34,7 @@ import {
      USERS_LOGS,
 } from "../../constants/app_constants";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 190;
 
@@ -45,6 +46,9 @@ const drawerCategories = [
 ];
 
 const FacetcherDrawer = (props) => {
+     const state = useSelector((state) => state);
+     const user = state.auth.authenticatedUser;
+
      const ref = useRef(null);
      const navigate = useNavigate();
      const [height, setHeight] = useState(0);
@@ -80,43 +84,80 @@ const FacetcherDrawer = (props) => {
                                         color: `${LIGHTGREY}`,
                                    }}
                               />
-                              <Box
-                                   component="div"
-                                   sx={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                   }}
-                              >
-                                   <Typography
-                                        sx={{
-                                             marginRight: "10px",
-                                             fontSize: "12px",
-                                        }}
-                                   >
-                                        Admin Name
-                                   </Typography>
+                              {user && (
                                    <Box
                                         component="div"
                                         sx={{
-                                             width: "40px",
-                                             height: "40px",
-                                             borderRadius: "50%",
-                                             backgroundColor: `${CYAN}`,
                                              display: "flex",
                                              justifyContent: "center",
                                              alignItems: "center",
+                                             cursor: "pointer",
                                         }}
                                    >
-                                        <PermIdentityIcon
-                                             fontSize="large"
+                                        <Typography
+                                             sx={{
+                                                  marginRight: "10px",
+                                                  fontSize: "12px",
+                                             }}
+                                             onClick={() =>
+                                                  navigate("/profile")
+                                             }
+                                        >
+                                             {user.firstName}
+                                        </Typography>
+                                        {user.profilePictureUrl ? (
+                                             <Box
+                                                  component="div"
+                                                  sx={{
+                                                       width: "40px",
+                                                       height: "40px",
+                                                       borderRadius: "50%",
+                                                       backgroundColor: `${LIGHTGREY}`,
+                                                       display: "flex",
+                                                       justifyContent: "center",
+                                                       alignItems: "center",
+                                                       overflow: "hidden",
+                                                  }}
+                                                  onClick={() =>
+                                                       navigate("/profile")
+                                                  }
+                                             >
+                                                  <img
+                                                       src={
+                                                            user.profilePictureUrl
+                                                       }
+                                                       className="w-100"
+                                                  />
+                                             </Box>
+                                        ) : (
+                                             <Box
+                                                  component="div"
+                                                  sx={{
+                                                       width: "40px",
+                                                       height: "40px",
+                                                       borderRadius: "50%",
+                                                       backgroundColor: `${CYAN}`,
+                                                       display: "flex",
+                                                       justifyContent: "center",
+                                                       alignItems: "center",
+                                                  }}
+                                                  onClick={() =>
+                                                       navigate("/profile")
+                                                  }
+                                             >
+                                                  <PermIdentityIcon
+                                                       fontSize="large"
+                                                       sx={{
+                                                            color: `${LIGHTGREY}`,
+                                                       }}
+                                                  />
+                                             </Box>
+                                        )}
+                                        <KeyboardArrowDownIcon
                                              sx={{ color: `${LIGHTGREY}` }}
                                         />
                                    </Box>
-                                   <KeyboardArrowDownIcon
-                                        sx={{ color: `${LIGHTGREY}` }}
-                                   />
-                              </Box>
+                              )}
                          </Box>
                     </Toolbar>
                </AppBar>

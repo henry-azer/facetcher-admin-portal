@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../store/actions/users/users-actions";
 import FacetcherCircularChart from "../components/charts/circularChart";
 import { ALL_USERS } from "../constants/app_constants";
+import { getCurrentUser } from "../store/actions/auth/auth-actions";
 
 const AllUsers = () => {
      const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const AllUsers = () => {
 
           if (!isUsersFetched) {
                dispatch(getAllUsers());
-               dispatch(getAllUsers());
+               dispatch(getCurrentUser());
                setIsUsersFetched(true);
           }
      });
