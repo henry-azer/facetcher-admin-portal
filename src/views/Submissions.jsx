@@ -3,17 +3,24 @@ import FacetcherDrawer from "../components/drawer/drawer";
 import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
 import FacetcherTable from "../components/tables/table";
-import { SUBMISSIONS } from "../constants/app_constants";
+import { SUBMISSIONS, itemsPerPage } from "../constants/app_constants";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { getAllSubmissions } from "../store/actions/submission/submission-actions";
 import { getAllUsers } from "../store/actions/users/users-actions";
 
 const Submissions = () => {
-     const headerArray = ["ID", "Date", "Submission Title", "Drawing Gender"];
+     const headerArray = [
+          "ID",
+          "Date",
+          "Time",
+          "Submission Title",
+          "Drawing Gender",
+     ];
 
      const dispatch = useDispatch();
      const [fetchingData, setFetchingData] = useState(true);
+     const [currentPage, setCurrentPage] = useState(0);
 
      useEffect(() => {
           document.title = "Submissions | Facetcher";
@@ -66,32 +73,23 @@ const Submissions = () => {
                               <FacetcherTable
                                    table={2}
                                    headerArray={headerArray}
-                                   dataLength={2}
+                                   dataLength={
+                                        allSubmissions && allSubmissions.length
+                                   }
+                                   initialPage={currentPage}
+                                   handlePageClick={(e) =>
+                                        setCurrentPage(
+                                             (e.selected * itemsPerPage) %
+                                                  allSubmissions.length
+                                        )
+                                   }
                               >
                                    {allSubmissions &&
                                         allSubmissions
-                                             .sort(
-                                                  (objA, objB) =>
-                                                       Number(
-                                                            new Date(
-                                                                 objB.creationDate
-                                                            )
-                                                       ) -
-                                                       Number(
-                                                            new Date(
-                                                                 objA.creationDate
-                                                            )
-                                                       )
+                                             .slice(
+                                                  currentPage,
+                                                  currentPage + itemsPerPage
                                              )
-                                             // .filter((obj) => {
-                                             //      return (
-                                             //           obj.markedAsDeleted ===
-                                             //                false &&
-                                             //           obj.userRoles[0] &&
-                                             //           obj.userRoles[0].role
-                                             //                .name !== "ADMIN"
-                                             //      );
-                                             // })
                                              .map((submission, index) => (
                                                   <tr
                                                        className="h-25"
@@ -102,6 +100,11 @@ const Submissions = () => {
                                                             {new Date(
                                                                  submission.creationDate
                                                             ).toDateString()}
+                                                       </td>
+                                                       <td className="text-capitalize">
+                                                            {new Date(
+                                                                 submission.creationDate
+                                                            ).toLocaleTimeString()}
                                                        </td>
                                                        <td className="text-capitalize">
                                                             {submission.title}

@@ -17,12 +17,16 @@ export const getAllLogs = () => (dispatch) => {
                     console.log(res);
                     dispatch({
                          type: ALL_LOGS_FETCHED,
-                         payload: res.data.body,
+                         payload: res.data.body.sort(
+                              (objA, objB) =>
+                                   Number(new Date(objB.creationDate)) -
+                                   Number(new Date(objA.creationDate))
+                         ),
                     });
                }
           })
           .catch((err) => {
                console.log(err);
-                    dispatch({ type: FAILED_GETTING_LOGS });
+               dispatch({ type: FAILED_GETTING_LOGS });
           });
 };

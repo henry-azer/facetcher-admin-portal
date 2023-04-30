@@ -87,16 +87,11 @@ const FacetcherDrawer = (props) => {
                               {user && (
                                    <Box
                                         component="div"
-                                        sx={{
-                                             display: "flex",
-                                             justifyContent: "center",
-                                             alignItems: "center",
-                                             cursor: "pointer",
-                                        }}
+                                        className="d-flex justify-content-center align-items-center cursor-pointer"
                                    >
                                         <Typography
                                              sx={{
-                                                  marginRight: "10px",
+                                                  marginRight: "6px",
                                                   fontSize: "12px",
                                              }}
                                              onClick={() =>
@@ -135,12 +130,8 @@ const FacetcherDrawer = (props) => {
                                                   sx={{
                                                        width: "40px",
                                                        height: "40px",
-                                                       borderRadius: "50%",
-                                                       backgroundColor: `${CYAN}`,
-                                                       display: "flex",
-                                                       justifyContent: "center",
-                                                       alignItems: "center",
                                                   }}
+                                                  className="d-flex bg-cyan justify-content-center align-items-center rounded-circle"
                                                   onClick={() =>
                                                        navigate("/profile")
                                                   }

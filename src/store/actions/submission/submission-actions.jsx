@@ -6,7 +6,7 @@ import {
      GETTING_ALL_USER_SUBMISSIONS,
      FAILED_GETTING_SUBMISSIONS,
      ALL_USER_SUBMISSIONS_FETCHED,
-     FAILED_GETTING_USER_SUBMISSIONS
+     FAILED_GETTING_USER_SUBMISSIONS,
 } from "./submission-types";
 
 const URL = APIs_URL.STAGING;
@@ -19,9 +19,13 @@ export const getAllSubmissions = () => (dispatch) => {
                console.log(res.data.body);
                dispatch({
                     type: ALL_SUBMISSIONS_FETCHED,
-                    payload: res.data.body,
+                    payload: res.data.body.sort(
+                         (objA, objB) =>
+                              Number(new Date(objB.creationDate)) -
+                              Number(new Date(objA.creationDate))
+                    ),
                });
-          }
+          } else dispatch({ type: FAILED_GETTING_SUBMISSIONS });
      });
 };
 
