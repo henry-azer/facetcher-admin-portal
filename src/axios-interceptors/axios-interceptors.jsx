@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ACCESSTOKEN } from "../constants/app_constants";
 import Cookies from "universal-cookie";
+import { navigateToLogin } from "../utils/util";
 
 const cookies = new Cookies();
 
@@ -20,6 +21,7 @@ axios.interceptors.response.use(
           // handle error
           if (error.response.status === 401) {
                // redirect to login page
+               navigateToLogin();
           }
           return Promise.reject(error);
      }

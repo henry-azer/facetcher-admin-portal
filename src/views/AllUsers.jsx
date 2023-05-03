@@ -7,12 +7,15 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../store/actions/users/users-actions";
 import FacetcherCircularChart from "../components/charts/circularChart";
-import { ALL_USERS } from "../constants/app_constants";
+import { ALL_USERS, itemsPerPage } from "../constants/app_constants";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
+import { useNavigate } from "react-router-dom";
 
 const AllUsers = () => {
      const dispatch = useDispatch();
      const [isUsersFetched, setIsUsersFetched] = useState(false);
+     const [currentPage, setCurrentPage] = useState(0);
+     const navigate = useNavigate();
 
      useEffect(() => {
           document.title = "All User | Facetcher";
@@ -74,14 +77,18 @@ const AllUsers = () => {
                                    table={2}
                                    headerArray={headerArray}
                                    dataLength={allUsers && allUsers.length}
+                                   initialPage={currentPage}
+                                   handlePageClick={(e) =>
+                                        setCurrentPage(
+                                             (e.selected * itemsPerPage) %
+                                                  allUsers.length
+                                        )
+                                   }
                               >
                                    {allUsers &&
                                         allUsers
                                              .filter((obj) => {
                                                   return (
-                                                       obj.markedAsDeleted ===
-                                                            false &&
-                                                       obj.userRoles[0] &&
                                                        obj.userRoles[0].role
                                                             .name !== "ADMIN"
                                                   );
@@ -90,6 +97,17 @@ const AllUsers = () => {
                                                   <tr
                                                        className="h-25"
                                                        key={index}
+                                                       onClick={() =>
+                                                            navigate(
+                                                                 "/profile",
+                                                                 {
+                                                                      state: {
+                                                                           id:
+                                                                                user.id,
+                                                                      },
+                                                                 }
+                                                            )
+                                                       }
                                                   >
                                                        <td>{user.id}</td>
                                                        <td className="text-capitalize">

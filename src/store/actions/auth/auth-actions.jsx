@@ -6,6 +6,7 @@ import {
      LOGIN_FAILURE,
      LOGIN_SUCCEEDED,
      CLEAR_LOGIN_DETAILS,
+     USER_NOT_ADMIN,
 } from "../../types";
 
 import Cookies from "universal-cookie";
@@ -31,7 +32,7 @@ export const authenticateUser = (values) => (dispatch) => {
      })
           .then((response) => {
                console.log(response);
-               if (response.status === 200) {
+               if (response.data.success) {
                     console.log(response);
                     console.log("cookies added");
                     cookies.set(ISUSERAUTH, "true");
@@ -39,11 +40,31 @@ export const authenticateUser = (values) => (dispatch) => {
                          ACCESSTOKEN,
                          `${response.data.body.accessToken}`
                     );
+                    axios.get(`${URL}/auth/current`).then((res) => {
+                         console.log(res);
+                         if (res.data.success) {
+                              console.log(res);
+                              dispatch({
+                                   type: LOGIN_SUCCEEDED,
+                                   payload: res.data.body,
+                              });
+                              if (
+                                   res.data.body.userRoles[0].role.name !==
+                                   "ADMIN"
+                              ) {
+                                   cookies.remove(ACCESSTOKEN);
+                                   cookies.remove(ISUSERAUTH);
+
+                                   dispatch({ type: USER_NOT_ADMIN });
+                                   console.log("NOT Admin");
+                              }
+                         }
+                    });
                }
           })
           .catch((err) => {
                console.log(err);
-                    cookies.set(ISUSERAUTH, "false");
+               cookies.set(ISUSERAUTH, "false");
           });
 };
 

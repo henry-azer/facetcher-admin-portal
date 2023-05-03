@@ -36,7 +36,10 @@ const FacetcherTable = (props) => {
                                         props.table === 2 ? "1" : "2"
                                    }`}
                               >
-                                   <td colSpan={props.headerArray.length}>
+                                   <td
+                                        colSpan={props.headerArray.length}
+                                        className="cursor-default"
+                                   >
                                         No{" "}
                                         {location.pathname
                                              .replace("/", "")
@@ -51,7 +54,7 @@ const FacetcherTable = (props) => {
                               <tr
                                    className={`last-tr-hover${
                                         props.table === 2 ? "1" : "2"
-                                   }`}
+                                   } cursor-default`}
                               >
                                    <td colSpan={props.headerArray.length}>
                                         <div className=" d-flex justify-content-center align-items-center">
@@ -61,7 +64,7 @@ const FacetcherTable = (props) => {
                                                        props.dataLength /
                                                             itemsPerPage
                                                   )}
-                                                  pageRangeDisplayed={2}
+                                                  pageRangeDisplayed={3}
                                                   marginPagesDisplayed={1}
                                                   previousLabel={
                                                        <ArrowBackIosIcon fontSize="small" />

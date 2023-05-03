@@ -6,6 +6,7 @@ import {
      ADDING_USER_FAILED,
      CLEAR_REGISTRATION_DETAILS,
      GET_ALL_USERS,
+     GET_USER_BY_ID,
      USER_ADDED_SUCCESSFULLY,
 } from "../../types";
 
@@ -17,6 +18,21 @@ export const getAllUsers = () => (dispatch) => {
           if (res.data.success)
                dispatch({
                     type: GET_ALL_USERS,
+                    payload: res.data.body.filter((obj) => {
+                         return (
+                              obj.markedAsDeleted === false && obj.userRoles[0]
+                              // obj.userRoles[0].role.name !== "ADMIN"
+                         );
+                    }),
+               });
+     });
+};
+export const getUserById = (userId) => (dispatch) => {
+     axios.get(`${URL}/user/find-by-id/${userId}`).then((res) => {
+          console.log(res);
+          if (res.data.success)
+               dispatch({
+                    type: GET_USER_BY_ID,
                     payload: res.data.body,
                });
      });

@@ -8,12 +8,14 @@ import { ALL_ADMINS } from "../constants/app_constants";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { getAllUsers } from "../store/actions/users/users-actions";
+import { useNavigate } from "react-router-dom";
 
 const AllAdmins = () => {
      const headerArray = ["ID", "First Name", "Last Name", "Email", "Gender"];
 
      const [fetchingData, setFetchingData] = useState(true);
      const dispatch = useDispatch();
+     const navigate = useNavigate();
 
      useEffect(() => {
           document.title = "All Admins | Facetcher";
@@ -76,9 +78,6 @@ const AllAdmins = () => {
                                         allUsers
                                              .filter((obj) => {
                                                   return (
-                                                       obj.markedAsDeleted ===
-                                                            false &&
-                                                       obj.userRoles[0] &&
                                                        obj.userRoles[0].role
                                                             .name === "ADMIN"
                                                   );
@@ -87,6 +86,17 @@ const AllAdmins = () => {
                                                   <tr
                                                        className="h-25"
                                                        key={index}
+                                                       onClick={() =>
+                                                            navigate(
+                                                                 "/profile",
+                                                                 {
+                                                                      state: {
+                                                                           id:
+                                                                                user.id,
+                                                                      },
+                                                                 }
+                                                            )
+                                                       }
                                                   >
                                                        <td>{user.id}</td>
                                                        <td className="text-capitalize">
@@ -104,7 +114,6 @@ const AllAdmins = () => {
                                                        </td>
                                                   </tr>
                                              ))}
-                                   
                               </FacetcherTable>
                          </div>
                     </div>

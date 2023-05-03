@@ -21,6 +21,7 @@ const Submissions = () => {
      const dispatch = useDispatch();
      const [fetchingData, setFetchingData] = useState(true);
      const [currentPage, setCurrentPage] = useState(0);
+     
 
      useEffect(() => {
           document.title = "Submissions | Facetcher";

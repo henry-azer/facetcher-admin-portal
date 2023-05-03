@@ -18,6 +18,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { DARKGREY2, LIGHTGREY } from "../constants/app_colors";
 import CloseIcon from "@mui/icons-material/Close";
+import { useLocation } from "react-router-dom";
+import { getUserById } from "../store/actions/users/users-actions";
 
 const Profile = () => {
      useEffect(() => navigateToLogin(), []);
@@ -31,20 +33,26 @@ const Profile = () => {
      const [imgW, setImgW] = useState(0);
      const [imgH, setImgH] = useState(0);
      const [isUserFetched, setIsUserFetched] = useState(false);
+     const location = useLocation();
 
      useEffect(() => {
           document.title = "User Profile | Facetcher";
 
           if (!isUserFetched) {
-               dispatch(getCurrentUser());
+               if (location.state.id) dispatch(getUserById(location.state.id));
+               else dispatch(getCurrentUser());
                setIsUserFetched(true);
           }
      });
 
-     const user = store.auth.authenticatedUser;
+     let user = store.auth.authenticatedUser;
 
-     console.log(user);
-     const headerArray = ["ID", "Date and Time", "Gender", "Preview"];
+     if (location.state.id) user = store.user.userById;
+
+     // console.log(store.user.userById);
+
+     // console.log(location.state.id);
+     const headerArray = ["ID", "Date and Time", "Gender"];
 
      return (
           <div>
@@ -213,7 +221,7 @@ const Profile = () => {
                                                   <form className="d-flex justify-content-center align-items-center flex-column mx-2">
                                                        <div className="w-25 mt-2">
                                                             <FacetcherSelectComponent
-                                                                 defaultValue={`${user.userRoles[0].role.name}`.toLowerCase()}
+                                                                 value={`${user.userRoles[0].role.name}`.toLowerCase()}
                                                                  options={[
                                                                       "User",
                                                                       "Admin",
@@ -230,7 +238,7 @@ const Profile = () => {
                                                                       onChange={
                                                                            handleChange
                                                                       }
-                                                                      defaultValue={
+                                                                      value={
                                                                            values.userName
                                                                       }
                                                                  />
@@ -244,7 +252,7 @@ const Profile = () => {
                                                                       onChange={
                                                                            handleChange
                                                                       }
-                                                                      defaultValue={
+                                                                      value={
                                                                            values.phoneNumber
                                                                       }
                                                                  />
@@ -258,9 +266,7 @@ const Profile = () => {
                                                             onChange={
                                                                  handleChange
                                                             }
-                                                            defaultValue={
-                                                                 values.email
-                                                            }
+                                                            value={values.email}
                                                        />
                                                        <div className="w-100 d-flex justify-content-between align-items-center">
                                                             <Field
@@ -350,55 +356,6 @@ const Profile = () => {
                                                   <td>Col1</td>
                                                   <td>Col2</td>
                                                   <td>Col3</td>
-                                                  <td>Col4</td>
-                                             </tr>
-                                             <tr>
-                                                  <td>Col1</td>
-                                                  <td>Col2</td>
-                                                  <td>Col3</td>
-                                                  <td>Col4</td>
-                                             </tr>
-                                             <tr>
-                                                  <td>Col1</td>
-                                                  <td>Col2</td>
-                                                  <td>Col3</td>
-                                                  <td>Col4</td>
-                                             </tr>
-                                             <tr>
-                                                  <td>Col1</td>
-                                                  <td>Col2</td>
-                                                  <td>Col3</td>
-                                                  <td>Col4</td>
-                                             </tr>
-                                             <tr>
-                                                  <td>Col1</td>
-                                                  <td>Col2</td>
-                                                  <td>Col3</td>
-                                                  <td>Col4</td>
-                                             </tr>
-                                             <tr>
-                                                  <td>Col1</td>
-                                                  <td>Col2</td>
-                                                  <td>Col3</td>
-                                                  <td>Col4</td>
-                                             </tr>
-                                             <tr>
-                                                  <td>Col1</td>
-                                                  <td>Col2</td>
-                                                  <td>Col3</td>
-                                                  <td>Col4</td>
-                                             </tr>
-                                             <tr>
-                                                  <td>Col1</td>
-                                                  <td>Col2</td>
-                                                  <td>Col3</td>
-                                                  <td>Col4</td>
-                                             </tr>
-                                             <tr>
-                                                  <td>Col8</td>
-                                                  <td>Col9</td>
-                                                  <td>Col10</td>
-                                                  <td>Col11</td>
                                              </tr>
                                         </FacetcherTable>
                                    </div>

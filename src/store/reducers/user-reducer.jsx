@@ -3,6 +3,7 @@ import {
      ADDING_USER_FAILED,
      CLEAR_REGISTRATION_DETAILS,
      GET_ALL_USERS,
+     GET_USER_BY_ID,
      USER_ADDED_SUCCESSFULLY,
 } from "../actions/users/users-types";
 
@@ -12,6 +13,11 @@ export default function users_reducer(state = {}, action) {
                return {
                     ...state,
                     allUsers: action.payload,
+               };
+          case GET_USER_BY_ID:
+               return {
+                    ...state,
+                    userById: action.payload,
                };
           case ADDING_USER:
                return {

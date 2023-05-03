@@ -92,7 +92,7 @@ const UserLogs = () => {
                                                   >
                                                        <td>{log.id}</td>
                                                        <td className="text-capitalize">
-                                                            {log.user.firstName}
+                                                            {log.user.firstName} {log.user.lastName}
                                                        </td>
                                                        <td className="text-capitalize">
                                                             {log.logStatus}
