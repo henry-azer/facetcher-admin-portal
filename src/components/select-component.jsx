@@ -6,6 +6,7 @@ const FacetcherSelectComponent = (props) => {
                {props.label && <h1 className="fs-6">{props.label}</h1>}
                <select
                     value={props.value && props.value}
+                    onChange={props.onChange}
                     className="bg-transparent light-grey-border p-1 rounded-pill text-light-grey w-100"
                >
                     {props.options.map((option, index) => (

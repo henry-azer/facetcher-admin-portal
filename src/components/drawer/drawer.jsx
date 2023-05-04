@@ -114,7 +114,11 @@ const FacetcherDrawer = (props) => {
                                                        overflow: "hidden",
                                                   }}
                                                   onClick={() =>
-                                                       navigate("/profile")
+                                                       navigate("/profile", {
+                                                            state: {
+                                                                 id: null,
+                                                            },
+                                                       })
                                                   }
                                              >
                                                   <img

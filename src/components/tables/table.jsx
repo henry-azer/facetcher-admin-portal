@@ -28,7 +28,7 @@ const FacetcherTable = (props) => {
                          </tr>
                     </thead>
                     <tbody className={!props.hover && "table-hover"}>
-                         {props.children ? (
+                         {props.children && props.dataLength !== 0 ? (
                               props.children
                          ) : (
                               <tr
@@ -44,6 +44,7 @@ const FacetcherTable = (props) => {
                                         {location.pathname
                                              .replace("/", "")
                                              .replace("-", " ")
+                                             .replace("profile", "submissions")
                                              .replace("all", "")}{" "}
                                         in this moment
                                    </td>

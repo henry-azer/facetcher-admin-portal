@@ -6,7 +6,7 @@ import {
      //      addUserRole,
      getAllUsers,
 } from "../store/actions/users/users-actions";
-import { getAllSubmissions } from "../store/actions/submission/submission-actions";
+import { getAllSubmissions, getAllUsersSubmissionsById } from "../store/actions/submission/submission-actions";
 
 const Test = () => {
      const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const Test = () => {
      // });
 
      const testFunction = () => {
-          dispatch(getAllSubmissions());
+          dispatch(getAllUsersSubmissionsById(1));
      };
 
      return (

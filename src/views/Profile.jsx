@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import FacetcherDrawer from "../components/drawer/drawer";
 import PersonIcon from "@mui/icons-material/Person";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +20,11 @@ import { DARKGREY2, LIGHTGREY } from "../constants/app_colors";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation } from "react-router-dom";
 import { getUserById } from "../store/actions/users/users-actions";
+import {
+     getAllUsersSubmissionsById,
+     getCurrentUserSubmissions,
+} from "../store/actions/submission/submission-actions";
+import { itemsPerPage } from "../constants/app_constants";
 
 const Profile = () => {
      useEffect(() => navigateToLogin(), []);
@@ -33,26 +38,47 @@ const Profile = () => {
      const [imgW, setImgW] = useState(0);
      const [imgH, setImgH] = useState(0);
      const [isUserFetched, setIsUserFetched] = useState(false);
+     const [currentPage, setCurrentPage] = useState(0);
+
      const location = useLocation();
 
      useEffect(() => {
           document.title = "User Profile | Facetcher";
 
           if (!isUserFetched) {
-               if (location.state.id) dispatch(getUserById(location.state.id));
-               else dispatch(getCurrentUser());
+               dispatch(getCurrentUser());
+               if (location.state) {
+                    dispatch(getUserById(location.state.id));
+                    dispatch(getAllUsersSubmissionsById(location.state.id));
+               } else dispatch(getCurrentUserSubmissions());
                setIsUserFetched(true);
           }
-     });
+     }, [location.state && location.state.id]);
 
-     let user = store.auth.authenticatedUser;
+     let user;
+     let submissions;
 
-     if (location.state.id) user = store.user.userById;
+     if (location.state) {
+          user = store.user.userById;
+          submissions = store.submissions.allSubmissionsById;
+     } else {
+          user = store.auth.authenticatedUser;
+          submissions = store.submissions.allCurrentSubmissions;
+     }
 
-     // console.log(store.user.userById);
+     console.log(store);
+     // Handle image size width and height
+     if (user && user.profilePictureUrl) {
+          const img = new Image();
+          img.onload = () => {
+               setImgH(img.height);
+               setImgW(img.width);
+          };
+          img.src = user.profilePictureUrl;
+     }
 
      // console.log(location.state.id);
-     const headerArray = ["ID", "Date and Time", "Gender"];
+     const headerArray = ["ID", "Title", "Gender", "Date", "Time"];
 
      return (
           <div>
@@ -66,7 +92,8 @@ const Profile = () => {
                                         userName: `${user.firstName +
                                              " " +
                                              user.lastName}`,
-                                        phoneNumber: user.phoneNumber,
+                                        // phoneNumber: user.phoneNumber,
+                                        phoneNumber: "0",
                                         email: user.email,
                                         password: user.password,
                                         profilePicture: user.profilePictureUrl,
@@ -82,15 +109,21 @@ const Profile = () => {
                                              <div className=" bg-dark-grey2 w-100 h-20 user-profile-pic position-absolute top-0"></div>
                                              <div className=" rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
                                                   <div className="w-100 h-100 d-flex justify-content-center align-items-center overflow-hidden position-relative">
-                                                       <button
-                                                            className="btn bg-black bg-opacity-75 position-absolute bottom-0 h-100 w-100 rounded-pill text-light-grey custom-btn"
-                                                            onClick={() =>
-                                                                 setOpen(true)
-                                                            }
-                                                       >
-                                                            <EditIcon fontSize="small" />
-                                                            Edit
-                                                       </button>
+                                                       {store.auth
+                                                            .authenticatedUser
+                                                            .id === user.id && (
+                                                            <button
+                                                                 className="btn bg-black bg-opacity-75 position-absolute bottom-0 h-100 w-100 rounded-pill text-light-grey custom-btn"
+                                                                 onClick={() =>
+                                                                      setOpen(
+                                                                           true
+                                                                      )
+                                                                 }
+                                                            >
+                                                                 <EditIcon fontSize="small" />
+                                                                 Edit
+                                                            </button>
+                                                       )}
                                                        {values.profilePicture ? (
                                                             <img
                                                                  src={`${values.profilePicture}`}
@@ -226,6 +259,9 @@ const Profile = () => {
                                                                       "User",
                                                                       "Admin",
                                                                  ]}
+                                                                 onChange={
+                                                                      handleChange
+                                                                 }
                                                             />
                                                        </div>
                                                        <div className="row justify-content-center align-items-center h-75">
@@ -308,59 +344,124 @@ const Profile = () => {
                                    )}
                               </Formik>
                          )}
-                         <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll px-5 pt-3 pb-5">
-                              <div className="row justify-content-center align-items-center h-25 w-100">
-                                   <div className="col-6 ">
-                                        <h1 className=" fs-3 fw-bold">
-                                             Total Trials: 80
-                                        </h1>
-                                        <h1 className="fs-5 text-cyan fw-bold">
-                                             Succeed Trials: 56
-                                        </h1>
-                                        <h1 className="fs-5 text-orange fw-bold">
-                                             Failed Trials: 24
-                                        </h1>
+                         {user && submissions && (
+                              <div className="col bg-dark-grey mx-2 p-3 h-100 overflowY-scroll px-5 pt-3 pb-5">
+                                   <div className="row justify-content-center align-items-center h-25 w-100">
+                                        <div className="col-6 ">
+                                             <h1 className=" fs-3 fw-bold">
+                                                  Total Trials: 80
+                                             </h1>
+                                             <h1 className="fs-5 text-cyan fw-bold">
+                                                  Succeed Trials: 56
+                                             </h1>
+                                             <h1 className="fs-5 text-orange fw-bold">
+                                                  Failed Trials: 24
+                                             </h1>
+                                        </div>
+                                        <div className="col-3 d-flex justify-content-center align-items-center">
+                                             <FacetcherCircularChart
+                                                  value={150}
+                                                  maxValue={200}
+                                                  color="cyan"
+                                                  width={75}
+                                                  strokeWidth={14}
+                                             />
+                                        </div>
+                                        <div className="col-3 d-flex justify-content-center align-items-center">
+                                             <FacetcherCircularChart
+                                                  value={50}
+                                                  maxValue={200}
+                                                  color="orange"
+                                                  width={75}
+                                                  strokeWidth={14}
+                                             />
+                                        </div>
                                    </div>
-                                   <div className="col-3 d-flex justify-content-center align-items-center">
-                                        <FacetcherCircularChart
-                                             value={150}
-                                             maxValue={200}
-                                             color="cyan"
-                                             width={75}
-                                             strokeWidth={14}
-                                        />
-                                   </div>
-                                   <div className="col-3 d-flex justify-content-center align-items-center">
-                                        <FacetcherCircularChart
-                                             value={50}
-                                             maxValue={200}
-                                             color="orange"
-                                             width={75}
-                                             strokeWidth={14}
-                                        />
+
+                                   <div className="pt-5 mb-5">
+                                        <h1 className="fs-3 fw-bold py-4">
+                                             Submissions History
+                                        </h1>
+                                        <div>
+                                             <FacetcherTable
+                                                  dataLength={
+                                                       submissions.length
+                                                  }
+                                                  initialPage={currentPage}
+                                                  handlePageClick={(e) =>
+                                                       setCurrentPage(
+                                                            (e.selected *
+                                                                 itemsPerPage) %
+                                                                 submissions.length
+                                                       )
+                                                  }
+                                                  table={1}
+                                                  headerArray={headerArray}
+                                                  headerColor="bg-dark-grey2"
+                                                  bodyColor="bg-dark-grey"
+                                             >
+                                                  {submissions
+                                                       .slice(
+                                                            currentPage,
+                                                            currentPage +
+                                                                 itemsPerPage
+                                                       )
+                                                       .map(
+                                                            (
+                                                                 submission,
+                                                                 index
+                                                            ) => (
+                                                                 <tr
+                                                                      className="h-25"
+                                                                      key={
+                                                                           index
+                                                                      }
+                                                                      // onClick={() =>
+                                                                      //      navigate(
+                                                                      //           "/profile",
+                                                                      //           {
+                                                                      //                state: {
+                                                                      //                     id:
+                                                                      //                          submission.id,
+                                                                      //                },
+                                                                      //           }
+                                                                      //      )
+                                                                      // }
+                                                                 >
+                                                                      <td>
+                                                                           {
+                                                                                submission.id
+                                                                           }
+                                                                      </td>
+                                                                      <td className="text-capitalize">
+                                                                           {
+                                                                                submission.title
+                                                                           }
+                                                                      </td>
+
+                                                                      <td className="text-lowercase">
+                                                                           {
+                                                                                submission.gender
+                                                                           }
+                                                                      </td>
+                                                                      <td className="text-capitalize">
+                                                                           {new Date(
+                                                                                submission.creationDate
+                                                                           ).toDateString()}
+                                                                      </td>
+                                                                      <td className="text-capitalize">
+                                                                           {new Date(
+                                                                                submission.creationDate
+                                                                           ).toLocaleTimeString()}
+                                                                      </td>
+                                                                 </tr>
+                                                            )
+                                                       )}
+                                             </FacetcherTable>
+                                        </div>
                                    </div>
                               </div>
-                              <div className="pt-5 mb-5">
-                                   <h1 className="fs-3 fw-bold py-4">
-                                        Submissions History
-                                   </h1>
-                                   <div>
-                                        <FacetcherTable
-                                             table={1}
-                                             dataLength={5}
-                                             headerArray={headerArray}
-                                             headerColor="bg-dark-grey2"
-                                             bodyColor="bg-dark-grey"
-                                        >
-                                             <tr>
-                                                  <td>Col1</td>
-                                                  <td>Col2</td>
-                                                  <td>Col3</td>
-                                             </tr>
-                                        </FacetcherTable>
-                                   </div>
-                              </div>
-                         </div>
+                         )}
                     </div>
                </FacetcherDrawer>
           </div>
