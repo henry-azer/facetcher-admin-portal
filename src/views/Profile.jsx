@@ -1,8 +1,11 @@
-import React, { createRef, useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import FacetcherDrawer from "../components/drawer/drawer";
 import PersonIcon from "@mui/icons-material/Person";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser } from "../store/actions/auth/auth-actions";
+import {
+     addProfilePicture,
+     getCurrentUser,
+} from "../store/actions/auth/auth-actions";
 import { Field, Formik } from "formik";
 
 import "react-circular-progressbar/dist/styles.css";
@@ -25,6 +28,10 @@ import {
      getCurrentUserSubmissions,
 } from "../store/actions/submission/submission-actions";
 import { itemsPerPage } from "../constants/app_constants";
+import {
+     getFailedCurrentTrialsCount,
+     getSucceededCurrentTrialsCount,
+} from "../store/actions/trials/trials-action";
 
 const Profile = () => {
      useEffect(() => navigateToLogin(), []);
@@ -41,16 +48,27 @@ const Profile = () => {
      const [currentPage, setCurrentPage] = useState(0);
 
      const location = useLocation();
+     const [userImage, setUserImage] = useState(null);
+
+     // useEffect(() => {
+     //      dispatch(getCurrentUser());
+     // });
+     useEffect(() => {
+          dispatch(getCurrentUser());
+     }, []);
 
      useEffect(() => {
           document.title = "User Profile | Facetcher";
 
           if (!isUserFetched) {
-               dispatch(getCurrentUser());
                if (location.state) {
                     dispatch(getUserById(location.state.id));
                     dispatch(getAllUsersSubmissionsById(location.state.id));
-               } else dispatch(getCurrentUserSubmissions());
+               } else {
+                    dispatch(getCurrentUserSubmissions());
+                    dispatch(getSucceededCurrentTrialsCount());
+                    dispatch(getFailedCurrentTrialsCount());
+               }
                setIsUserFetched(true);
           }
      }, [location.state && location.state.id]);
@@ -66,7 +84,7 @@ const Profile = () => {
           submissions = store.submissions.allCurrentSubmissions;
      }
 
-     console.log(store);
+     console.log(store.auth.authenticatedUser);
      // Handle image size width and height
      if (user && user.profilePictureUrl) {
           const img = new Image();
@@ -78,6 +96,7 @@ const Profile = () => {
      }
 
      // console.log(location.state.id);
+     console.log(store);
      const headerArray = ["ID", "Title", "Gender", "Date", "Time"];
 
      return (
@@ -86,6 +105,16 @@ const Profile = () => {
                     <div className="row h-100 justify-content-center align-items-center gx-2 mt-5 overflowY-scroll">
                          {user && (
                               <Formik
+                                   onSubmit={() => {
+                                        // e.preventDefault();
+                                        // console.log(userImage);
+                                        const image = new FormData().append(
+                                             "image",
+                                             userImage
+                                        );
+                                        dispatch(addProfilePicture(image));
+                                        console.log("Saved");
+                                   }}
                                    initialValues={{
                                         id: user.id,
                                         roleId: user.roleId,
@@ -104,26 +133,29 @@ const Profile = () => {
                                         values,
                                         handleChange,
                                         setFieldValue,
+                                        handleSubmit,
                                    }) => (
                                         <div className="col-lg-4 col-12 bg-dark-grey mx-2 p-3 position-relative d-flex justify-content-center h-100 overflow-hidden">
                                              <div className=" bg-dark-grey2 w-100 h-20 user-profile-pic position-absolute top-0"></div>
                                              <div className=" rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
                                                   <div className="w-100 h-100 d-flex justify-content-center align-items-center overflow-hidden position-relative">
-                                                       {store.auth
-                                                            .authenticatedUser
-                                                            .id === user.id && (
-                                                            <button
-                                                                 className="btn bg-black bg-opacity-75 position-absolute bottom-0 h-100 w-100 rounded-pill text-light-grey custom-btn"
-                                                                 onClick={() =>
-                                                                      setOpen(
-                                                                           true
-                                                                      )
-                                                                 }
-                                                            >
-                                                                 <EditIcon fontSize="small" />
-                                                                 Edit
-                                                            </button>
-                                                       )}
+                                                       <button
+                                                            className={`btn bg-black bg-opacity-75 position-absolute bottom-0 h-100 w-100 rounded-pill text-light-grey custom-btn ${location.state &&
+                                                                 location.state
+                                                                      .id &&
+                                                                 store.auth
+                                                                      .authenticatedUser
+                                                                      .id !==
+                                                                      values.id &&
+                                                                 "d-none"}`}
+                                                            onClick={() =>
+                                                                 setOpen(true)
+                                                            }
+                                                       >
+                                                            <EditIcon fontSize="small" />
+                                                            Edit
+                                                       </button>
+
                                                        {values.profilePicture ? (
                                                             <img
                                                                  src={`${values.profilePicture}`}
@@ -176,12 +208,17 @@ const Profile = () => {
                                                        </DialogContentText>
 
                                                        <div>
-                                                            <Field
+                                                            <input
                                                                  name="image"
                                                                  type="file"
                                                                  onChange={(
                                                                       event
                                                                  ) => {
+                                                                      setUserImage(
+                                                                           event
+                                                                                .currentTarget
+                                                                                .files[0]
+                                                                      );
                                                                       formData.append(
                                                                            "image",
                                                                            event
@@ -329,11 +366,15 @@ const Profile = () => {
                                                             </button>
                                                        </div>
                                                        <div className="w-100 d-flex justify-content-between mt-4">
-                                                            <input
-                                                                 type="submit"
-                                                                 value="Save Changes"
+                                                            <button
+                                                                 type="button"
+                                                                 onClick={
+                                                                      handleSubmit
+                                                                 }
                                                                  className="btn bg-cyan text-light-grey rounded-pill w-50 me-2 fw-bold"
-                                                            />
+                                                            >
+                                                                 Save Changes
+                                                            </button>
                                                             <button className="btn bg-orange text-light-grey rounded-pill w-50 ms-2 fw-bold">
                                                                  Delete User
                                                             </button>

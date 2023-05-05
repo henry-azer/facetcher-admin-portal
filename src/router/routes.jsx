@@ -10,6 +10,7 @@ import Profile from "../views/Profile";
 import Submissions from "../views/Submissions";
 import Test from "../views/Test";
 import UserLogs from "../views/UserLogs";
+import CreateUser from "../views/CreateUser";
 
 const routes = () => (
      <Routes>
@@ -21,6 +22,7 @@ const routes = () => (
           <Route exact path="/all-users" element={<AllUsers />} />
           <Route exact path="/all-admins" element={<AllAdmins />} />
           <Route exact path="/users-logs" element={<UserLogs />} />
+          <Route exact path="/create-user" element={<CreateUser />} />
           <Route exact path="/test" element={<Test />} />
           {/* <Route element={<NotFound />} /> */}
      </Routes>

@@ -7,6 +7,7 @@ import {
      LOGIN_SUCCEEDED,
      CLEAR_LOGIN_DETAILS,
      USER_NOT_ADMIN,
+     PROFILE_PIC_ADDED_SUCCESSFULLY,
 } from "../../types";
 
 import Cookies from "universal-cookie";
@@ -75,6 +76,19 @@ export const getCurrentUser = () => (dispatch) => {
                console.log(res);
                dispatch({
                     type: LOGIN_SUCCEEDED,
+                    payload: res.data.body,
+               });
+          }
+     });
+};
+
+export const addProfilePicture = (image) => (dispatch) => {
+     axios.post(`${URL}/user/profile-picture`,image).then((res) => {
+          console.log(res);
+          if (res.data.success) {
+               console.log(res);
+               dispatch({
+                    type: PROFILE_PIC_ADDED_SUCCESSFULLY,
                     payload: res.data.body,
                });
           }

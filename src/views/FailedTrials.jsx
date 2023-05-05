@@ -31,7 +31,7 @@ const FailedTrials = () => {
           }
      });
 
-     const failedTrials = state.trials.failedTrails;
+     const failedTrials = state.trials.allFailedTrials;
 
      return (
           <div className="w-100">

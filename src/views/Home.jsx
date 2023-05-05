@@ -56,17 +56,13 @@ const Home = () => {
           const allTrials = trials.allTrials;
           const allFailedTrials = trials.allFailedTrials;
 
-          const result = allTrials.reduce((accumulator, currentValue) => {
-               const date = new Date(currentValue.creationDate).toDateString();
-               (accumulator[date]
-                    ? accumulator[date]
-                    : (accumulator[date] = null || [])
-               ).push(currentValue);
-               return accumulator;
-          }, {});
-
-          const failedResult = allFailedTrials.reduce(
-               (accumulator, currentValue) => {
+          const result = allTrials
+               .sort(
+                    (objA, objB) =>
+                         Number(new Date(objA.creationDate)) -
+                         Number(new Date(objB.creationDate))
+               )
+               .reduce((accumulator, currentValue) => {
                     const date = new Date(
                          currentValue.creationDate
                     ).toDateString();
@@ -75,9 +71,24 @@ const Home = () => {
                          : (accumulator[date] = null || [])
                     ).push(currentValue);
                     return accumulator;
-               },
-               {}
-          );
+               }, {});
+
+          const failedResult = allFailedTrials
+               .sort(
+                    (objA, objB) =>
+                         Number(new Date(objA.creationDate)) -
+                         Number(new Date(objB.creationDate))
+               )
+               .reduce((accumulator, currentValue) => {
+                    const date = new Date(
+                         currentValue.creationDate
+                    ).toDateString();
+                    (accumulator[date]
+                         ? accumulator[date]
+                         : (accumulator[date] = null || [])
+                    ).push(currentValue);
+                    return accumulator;
+               }, {});
 
           Object.keys(result).forEach((trial) => {
                const date = trial;
@@ -108,9 +119,7 @@ const Home = () => {
      return (
           <div>
                {user && (
-                    <FacetcherDrawer
-                         route={DASHBOARD}
-                    >
+                    <FacetcherDrawer route={DASHBOARD}>
                          <div className="mt-3">
                               <h1 className="my-0 fs-4 fw-bold">Dashboard</h1>
                               <p className="text-cyan fs-6">
@@ -204,7 +213,7 @@ const Home = () => {
                                                   <div className="w-100 h-75 bg-dark-grey p-3">
                                                        <h1 className="fs-6 m-0 fw-bold d-flex flex-column">
                                                             Succeed Trails{" "}
-                                                            <span className=" text-cyan">
+                                                            <span className="fw-bold text-cyan">
                                                                  Succeed
                                                                  Percentage
                                                             </span>
@@ -237,7 +246,7 @@ const Home = () => {
                                                   <div className="w-100 h-100 bg-dark-grey p-3">
                                                        <h1 className="fs-6 m-0 fw-bold d-flex flex-column">
                                                             Failed Trails{" "}
-                                                            <span className=" text-orange">
+                                                            <span className="fw-bold text-orange">
                                                                  Failed
                                                                  Percentage
                                                             </span>

@@ -8,6 +8,8 @@ import {
      GETTING_ALL_FAILED_TRIALS,
      FAILED_GETTING_FAILED_TRIALS,
      ALL_FAILED_TRIALS_FETCHED,
+     GET_FAILED_CURRENT_TRIALS_COUNT,
+     GET_SUCCEEDED_CURRENT_TRIALS_COUNT,
 } from "./trials-types";
 
 const URL = APIs_URL.STAGING;
@@ -39,6 +41,40 @@ export const getAllFailedTrials = () => (dispatch) => {
                     console.log(res);
                     dispatch({
                          type: ALL_FAILED_TRIALS_FETCHED,
+                         payload: res.data.body,
+                    });
+               }
+          })
+          .catch((err) => {
+               console.log(err);
+               dispatch({ type: FAILED_GETTING_FAILED_TRIALS });
+          });
+};
+export const getSucceededCurrentTrialsCount = () => (dispatch) => {
+     axios.get(`${URL}/user-trial/current-user/count-succeeded`)
+          .then((res) => {
+               console.log(res);
+               if (res.data.success) {
+                    console.log(res);
+                    dispatch({
+                         type: GET_SUCCEEDED_CURRENT_TRIALS_COUNT,
+                         payload: res.data.body,
+                    });
+               }
+          })
+          .catch((err) => {
+               console.log(err);
+               dispatch({ type: FAILED_GETTING_FAILED_TRIALS });
+          });
+};
+export const getFailedCurrentTrialsCount = () => (dispatch) => {
+     axios.get(`${URL}/user-trial/current-user/count-failed`)
+          .then((res) => {
+               console.log(res);
+               if (res.data.success) {
+                    console.log(res);
+                    dispatch({
+                         type: GET_FAILED_CURRENT_TRIALS_COUNT,
                          payload: res.data.body,
                     });
                }

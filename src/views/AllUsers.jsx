@@ -38,7 +38,14 @@ const AllUsers = () => {
                     <div className="p-5 pb-0 w-100 d-flex justify-content-start align-items-center flex-column h-100">
                          <div className="w-100 d-flex justify-content-between align-items-center mb-5">
                               <h1 className="fs-3 fw-bold m-0">All Users</h1>
-                              <button className="btn bg-transparent border border-grey light-grey-border fw-bold px-3 rounded-pill text-light-grey">
+                              <button
+                                   onClick={() =>
+                                        navigate("/create-user", {
+                                             state: { userType: "User" },
+                                        })
+                                   }
+                                   className="btn bg-transparent border border-grey light-grey-border fw-bold px-3 rounded-pill text-light-grey"
+                              >
                                    <PersonAddAltIcon /> Create New User
                               </button>
                          </div>
