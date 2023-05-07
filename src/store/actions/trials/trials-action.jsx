@@ -10,6 +10,7 @@ import {
      ALL_FAILED_TRIALS_FETCHED,
      GET_SUCCEEDED_USER_TRIALS_COUNT,
      GET_FAILED_USER_TRIALS_COUNT,
+     GET_TRIALS_BY_SUBMISSION_ID,
      // GET_SUCCEEDED_CURRENT_TRIALS_COUNT,
      // GET_FAILED_CURRENT_TRIALS_COUNT,
 } from "./trials-types";
@@ -87,8 +88,8 @@ export const getAllFailedTrials = () => (dispatch) => {
 //           });
 // };
 export const getSucceededUserTrialsCount = (userId) => (dispatch) => {
-     axios.get(`${URL}/user-trial/count-succeeded/user/${userId}`)
-          .then((res) => {
+     axios.get(`${URL}/user-trial/count-succeeded/user/${userId}`).then(
+          (res) => {
                console.log(res);
                if (res.data.success) {
                     console.log(res);
@@ -97,11 +98,8 @@ export const getSucceededUserTrialsCount = (userId) => (dispatch) => {
                          payload: res.data.body,
                     });
                }
-          })
-          .catch((err) => {
-               console.log(err);
-               dispatch({ type: FAILED_GETTING_FAILED_TRIALS });
-          });
+          }
+     );
 };
 export const getFailedUserTrialsCount = (userId) => (dispatch) => {
      axios.get(`${URL}/user-trial/count-failed/user/${userId}`)
@@ -121,20 +119,17 @@ export const getFailedUserTrialsCount = (userId) => (dispatch) => {
           });
 };
 
-// export const d = (userId) => (dispatch) => {
-//      axios.get(`${URL}/api/user-trial/count-failed/user/${userId}`)
-//           .then((res) => {
-//                console.log(res);
-//                if (res.data.success) {
-//                     console.log(res);
-//                     dispatch({
-//                          type: GET_FAILED_CURRENT_TRIALS_COUNT,
-//                          payload: res.data.body,
-//                     });
-//                }
-//           })
-//           .catch((err) => {
-//                console.log(err);
-//                dispatch({ type: FAILED_GETTING_FAILED_TRIALS });
-//           });
-// };
+export const trialsBySubmissionId = (submissionId) => (dispatch) => {
+     axios.get(
+          `${URL}/user-trial/find-all-by-submission-id/${submissionId}`
+     ).then((res) => {
+          console.log(res);
+          if (res.data.success) {
+               console.log(res);
+               dispatch({
+                    type: GET_TRIALS_BY_SUBMISSION_ID,
+                    payload: res.data.body,
+               });
+          }
+     });
+};

@@ -125,7 +125,8 @@ const Profile = () => {
           }
      }, [user && user.id]);
 
-     const successedTrials = <store className="trials"></store>;
+     const succeededTrials = store.trials.succeededUserCount;
+     const failedTrials = store.trials.failedUserCount;
 
      // console.log(location.state.id);
      console.log(store);
@@ -418,19 +419,26 @@ const Profile = () => {
                                    <div className="row justify-content-center align-items-center h-25 w-100">
                                         <div className="col-6 ">
                                              <h1 className=" fs-3 fw-bold">
-                                                  Total Trials: 80
+                                                  Total Trials:{" "}
+                                                  {succeededTrials +
+                                                       failedTrials}
                                              </h1>
                                              <h1 className="fs-5 text-cyan fw-bold">
-                                                  Succeed Trials: 56
+                                                  Succeed Trials:{" "}
+                                                  {succeededTrials}
                                              </h1>
                                              <h1 className="fs-5 text-orange fw-bold">
-                                                  Failed Trials: 24
+                                                  Failed Trials: {failedTrials}
                                              </h1>
                                         </div>
+
                                         <div className="col-3 d-flex justify-content-center align-items-center">
                                              <FacetcherCircularChart
-                                                  value={150}
-                                                  maxValue={200}
+                                                  value={succeededTrials}
+                                                  maxValue={
+                                                       succeededTrials +
+                                                       failedTrials
+                                                  }
                                                   color="cyan"
                                                   width={75}
                                                   strokeWidth={14}
@@ -438,8 +446,11 @@ const Profile = () => {
                                         </div>
                                         <div className="col-3 d-flex justify-content-center align-items-center">
                                              <FacetcherCircularChart
-                                                  value={50}
-                                                  maxValue={200}
+                                                  value={failedTrials}
+                                                  maxValue={
+                                                       succeededTrials +
+                                                       failedTrials
+                                                  }
                                                   color="orange"
                                                   width={75}
                                                   strokeWidth={14}

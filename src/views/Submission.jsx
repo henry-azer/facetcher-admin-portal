@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getSubmissionById } from "../store/actions/submission/submission-actions";
 import FacetcherTable from "../components/tables/table";
 import { itemsPerPage } from "../constants/app_constants";
+import { trialsBySubmissionId } from "../store/actions/trials/trials-action";
 
 const Submission = () => {
      const state = useSelector((state) => state);
@@ -18,9 +19,9 @@ const Submission = () => {
           "ID",
           "Date",
           "Time",
-          "Submission Title",
+          // "Trial Title",
           "Drawing Gender",
-          "Submitted",
+          "Preview",
      ];
      const [currentPage, setCurrentPage] = useState(0);
 
@@ -28,26 +29,26 @@ const Submission = () => {
           document.title = "All User | Dashboard";
 
           if (fetchingData) {
-               //    if (!location.state) {
-               //         navigate("/");
-               //    }
-               // else{
-
-               dispatch(getCurrentUser());
-               dispatch(getSubmissionById(33));
-               setFetchingData(false);
-               // }
+               if (!location.state) {
+                    navigate("/");
+               } else {
+                    dispatch(getCurrentUser());
+                    dispatch(getSubmissionById(location.state.id));
+                    dispatch(trialsBySubmissionId(location.state.id));
+                    setFetchingData(false);
+               }
           }
-     }, []);
+     }, [location.state && location.state.id]);
 
      const submission = useSelector(
           (state) => state.submissions.submissionById
      );
-     console.log(submission);
+     const trials = useSelector((state) => state.trials.trialsBySubmissionId);
+     console.log(trials);
 
      return (
           <FacetcherDrawer>
-               {submission && (
+               {submission && trials && (
                     <div className="w-100 h-100 overflowY-scroll mt-3 p-5">
                          <h1 className="fs-3 fw-bold m-0">
                               Submission Title: {submission.title}
@@ -57,7 +58,7 @@ const Submission = () => {
                                    Gender: {submission.gender}
                               </h1>
                               <h1 className="text-grey fs-6">
-                                   Number Of trials: 0
+                                   Number Of trials: {trials.length}
                               </h1>
                          </div>
                          <h1 className="text-grey fs-6">
@@ -66,16 +67,16 @@ const Submission = () => {
                          <div className="w-100 d-flex justify-content-center align-items-center">
                               {submission.inputImage ||
                               submission.inputImage ? (
-                                   <div className="w-75 my-3 d-flex justify-content-around align-items-center">
+                                   <div className="w-75 my-4 d-flex justify-content-around align-items-center">
                                         <div
-                                             className="overflow-hidden rounded-4"
+                                             className="overflow-hidden rounded-5 grey-border"
                                              style={{
                                                   width: imgSize,
                                                   height: imgSize,
                                              }}
                                         >
                                              <img
-                                                  className="w-100 rounded-4"
+                                                  className="w-100 rounded-5"
                                                   src={
                                                        submission.inputImage
                                                             .imageUrl
@@ -83,14 +84,14 @@ const Submission = () => {
                                              />
                                         </div>
                                         <div
-                                             className="overflow-hidden rounded-4"
+                                             className="overflow-hidden rounded-5 grey-border"
                                              style={{
                                                   width: imgSize,
                                                   height: imgSize,
                                              }}
                                         >
                                              <img
-                                                  className="w-100 rounded-4"
+                                                  className="w-100 rounded-5"
                                                   src={
                                                        submission.outputImage
                                                             .imageUrl
@@ -111,66 +112,64 @@ const Submission = () => {
                               )}
                          </div>
                          <FacetcherTable
+                              hover
                               table={2}
                               headerArray={headerArray}
                               error="No trails in this submission"
-                              // dataLength={
-                              //      allSubmissions && allSubmissions.length
-                              // }
+                              dataLength={trials && trials.length}
                               initialPage={currentPage}
-                              // handlePageClick={(e) =>
-                              //      setCurrentPage(
-                              //           (e.selected * itemsPerPage) %
-                              //                allSubmissions.length
-                              //      )
-                              // }
+                              handlePageClick={(e) =>
+                                   setCurrentPage(
+                                        (e.selected * itemsPerPage) %
+                                             trials.length
+                                   )
+                              }
                          >
-                              {/* {submissionTrails &&
-                                        submissionTrails
-                                             .slice(
-                                                  currentPage,
-                                                  currentPage + itemsPerPage
-                                             )
-                                             .map((submission, index) => (
-                                                  <tr
-                                                       className="h-25"
-                                                       key={index}
-                                                       onClick={() => {
-                                                            navigate(
-                                                                 "/submission",
-                                                                 {
-                                                                      state: {
-                                                                           id:
-                                                                                submission.id,
-                                                                      },
-                                                                 }
-                                                            );
-                                                       }}
-                                                  >
-                                                       <td>{submission.id}</td>
-                                                       <td className="text-capitalize">
-                                                            {new Date(
-                                                                 submission.creationDate
-                                                            ).toDateString()}
-                                                       </td>
-                                                       <td className="text-capitalize">
-                                                            {new Date(
-                                                                 submission.creationDate
-                                                            ).toLocaleTimeString()}
-                                                       </td>
-                                                       <td className="text-capitalize">
-                                                            {submission.title}
-                                                       </td>
-                                                       <td className="text-lowercase">
-                                                            {submission.gender}
-                                                       </td>
-                                                       <td>
-                                                            {submission.submitted
-                                                                 ? "Yes"
-                                                                 : "No"}
-                                                       </td>
-                                                  </tr>
-                                             ))} */}
+                              {trials &&
+                                   trials
+                                        .slice(
+                                             currentPage,
+                                             currentPage + itemsPerPage
+                                        )
+                                        .map((trial, index) => (
+                                             <tr className="h-25" key={index}>
+                                                  <td>{trial.id}</td>
+                                                  <td className="text-capitalize">
+                                                       {new Date(
+                                                            trial.creationDate
+                                                       ).toDateString()}
+                                                  </td>
+                                                  <td className="text-capitalize">
+                                                       {new Date(
+                                                            trial.creationDate
+                                                       ).toLocaleTimeString()}
+                                                  </td>
+                                                  {/* <td className="text-capitalize">
+                                                       {trial.title}
+                                                  </td> */}
+                                                  <td className="text-lowercase">
+                                                       {trial.gender}
+                                                  </td>
+                                                  <td>
+                                                       <img
+                                                            className="rounded-4"
+                                                            src={
+                                                                 trial
+                                                                      .inputImage
+                                                                      .imageUrl
+                                                            }
+                                                            style={{
+                                                                 width:
+                                                                      imgSize /
+                                                                      3,
+                                                                 height:
+                                                                      imgSize /
+                                                                      3,
+                                                            }}
+                                                       />
+                                                  </td>
+                                             </tr>
+                                        ))}
                          </FacetcherTable>
                     </div>
                )}

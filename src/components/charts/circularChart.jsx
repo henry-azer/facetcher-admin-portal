@@ -13,10 +13,14 @@ const FacetcherCircularChart = (props) => {
           <>
                <CircularProgressbar
                     value={props.value}
-                    maxValue={props.maxValue}
+                    maxValue={props.maxValue <= 0 ? 1 : props.maxValue}
                     text={
-                         props.text !== "none" &&
-                         `${Math.round((props.value * 100) / props.maxValue)}%`
+                         props.maxValue <= 0
+                              ? "0%"
+                              : props.text !== "none" &&
+                                `${Math.round(
+                                     (props.value * 100) / props.maxValue
+                                )}%`
                     }
                     className={`w-${props.width}`}
                     styles={{

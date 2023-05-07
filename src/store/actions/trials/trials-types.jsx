@@ -11,3 +11,4 @@ export const GET_SUCCEEDED_USER_TRIALS_COUNT =
      "get_succeeded_user_trials_count";
 export const GET_FAILED_USER_TRIALS_COUNT = "get_failed_user_trials_count";
 export const FAILED_GETTING_FAILED_TRIALS = "failed_getting_failed_trials";
+export const GET_TRIALS_BY_SUBMISSION_ID = "get_trials_by_submission_id";

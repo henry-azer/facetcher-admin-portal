@@ -15,7 +15,10 @@ const FailedTrials = () => {
           "Time",
           "Submission Title",
           "Drawing Gender",
+          "Preview",
      ];
+     const imgSize = 350;
+
 
      const [fetchingData, setFetchingData] = useState(true);
      const dispatch = useDispatch();
@@ -69,33 +72,52 @@ const FailedTrials = () => {
 
                          <div className="w-100 mt-5 overflowY-scroll ">
                               <FacetcherTable
+                                   hover
                                    table={2}
                                    headerArray={headerArray}
                               >
                                    {failedTrials &&
                                         failedTrials.map(
-                                             (submission, index) => (
+                                             (trial, index) => (
                                                   <tr
                                                        className="h-25"
                                                        key={index}
                                                   >
-                                                       <td>{submission.id}</td>
+                                                       <td>{trial.id}</td>
                                                        <td className="text-capitalize">
                                                             {new Date(
-                                                                 submission.creationDate
+                                                                 trial.creationDate
                                                             ).toDateString()}
                                                        </td>
                                                        <td className="text-capitalize">
                                                             {new Date(
-                                                                 submission.creationDate
+                                                                 trial.creationDate
                                                             ).toLocaleTimeString()}
                                                        </td>
                                                        <td className="text-capitalize">
-                                                            {submission.title}
+                                                            {trial.title}
                                                        </td>
                                                        <td className="text-lowercase">
-                                                            {submission.gender}
+                                                            {trial.gender}
                                                        </td>
+                                                       <td>
+                                                       <img
+                                                       className="rounded-4"
+                                                            src={
+                                                                 trial
+                                                                      .inputImage
+                                                                      .imageUrl
+                                                            }
+                                                            style={{
+                                                                 width:
+                                                                      imgSize /
+                                                                      3,
+                                                                 height:
+                                                                      imgSize /
+                                                                      3,
+                                                            }}
+                                                       />
+                                                  </td>
                                                   </tr>
                                              )
                                         )}
