@@ -37,7 +37,7 @@ export const getUserById = (userId) => (dispatch) => {
                });
      });
 };
-export const addUser = (user, roleID) => (dispatch) => {
+export const addUser = (user, roleID, gender) => (dispatch) => {
      dispatch({ type: ADDING_USER });
 
      axios.post(`${URL}/user`, user)
@@ -67,6 +67,11 @@ export const deleteUser = (userID) => () => {
      axios.put(`${URL}/user/${userID}/toggle-deletion`).then((res) => {
           console.log(res);
           console.log("User deleted successfully");
+     });
+};
+
+export const getGenders = () => () => {
+     axios.get(`${URL}/user/find-all-genders`).then((res) => {
      });
 };
 // });

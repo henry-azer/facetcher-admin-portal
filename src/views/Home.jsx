@@ -285,7 +285,7 @@ const Home = () => {
                                    {logs && (
                                         <>
                                              {logs
-                                                  .slice(-8)
+                                                  .slice(0,8)
                                                   .map((log, index) => (
                                                        <div
                                                             key={index}

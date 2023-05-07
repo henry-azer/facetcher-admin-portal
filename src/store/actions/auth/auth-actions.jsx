@@ -28,7 +28,7 @@ const URL = APIs_URL.STAGING;
 export const authenticateUser = (values) => (dispatch) => {
      dispatch({ type: LOGIN_REQUEST });
      axios.post(`${URL}/auth/log-in`, {
-          email: "admin@facetcher.com",
+          email: "bavly@facetcher.com",
           password: "admin@facetcher",
      })
           .then((response) => {

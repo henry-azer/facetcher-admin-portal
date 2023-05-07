@@ -6,6 +6,7 @@ import {
      ALL_USER_SUBMISSIONS_FETCHED,
      FAILED_GETTING_USER_SUBMISSIONS,
      CURRENT_SUBMISSIONS_FETCHED,
+     GET_SUBMISSION_BY_ID,
 } from "../types";
 
 export default function auth_reducer(state = {}, action) {
@@ -57,6 +58,13 @@ export default function auth_reducer(state = {}, action) {
                     failedGettingAllUserSubmissions: false,
                     allUserSubmissions: action.payload,
                     allUserSubmissionsLength: action.payload.length,
+               };
+          case GET_SUBMISSION_BY_ID:
+               return {
+                    ...state,
+                    gettingAllUserSubmissions: false,
+                    failedGettingAllUserSubmissions: false,
+                    submissionById: action.payload,
                };
           case FAILED_GETTING_USER_SUBMISSIONS:
                return {

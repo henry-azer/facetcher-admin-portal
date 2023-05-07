@@ -11,6 +11,7 @@ import Submissions from "../views/Submissions";
 import Test from "../views/Test";
 import UserLogs from "../views/UserLogs";
 import CreateUser from "../views/CreateUser";
+import Submission from "../views/Submission";
 
 const routes = () => (
      <Routes>
@@ -18,6 +19,7 @@ const routes = () => (
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/submissions" element={<Submissions />} />
+          <Route exact path="/submission" element={<Submission />} />
           <Route exact path="/failed-trials" element={<FailedTrials />} />
           <Route exact path="/all-users" element={<AllUsers />} />
           <Route exact path="/all-admins" element={<AllAdmins />} />

@@ -137,7 +137,11 @@ const FacetcherDrawer = (props) => {
                                                   }}
                                                   className="d-flex bg-cyan justify-content-center align-items-center rounded-circle"
                                                   onClick={() =>
-                                                       navigate("/profile")
+                                                       navigate("/profile", {
+                                                            state: {
+                                                                 id: "current",
+                                                            },
+                                                       })
                                                   }
                                              >
                                                   <PermIdentityIcon

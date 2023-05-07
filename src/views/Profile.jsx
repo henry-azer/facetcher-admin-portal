@@ -21,7 +21,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { DARKGREY2, LIGHTGREY } from "../constants/app_colors";
 import CloseIcon from "@mui/icons-material/Close";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getUserById } from "../store/actions/users/users-actions";
 import {
      getAllUsersSubmissionsById,
@@ -30,7 +30,9 @@ import {
 import { itemsPerPage } from "../constants/app_constants";
 import {
      getFailedCurrentTrialsCount,
+     getFailedUserTrialsCount,
      getSucceededCurrentTrialsCount,
+     getSucceededUserTrialsCount,
 } from "../store/actions/trials/trials-action";
 
 const Profile = () => {
@@ -46,43 +48,62 @@ const Profile = () => {
      const [imgH, setImgH] = useState(0);
      const [isUserFetched, setIsUserFetched] = useState(false);
      const [currentPage, setCurrentPage] = useState(0);
+     const navigate = useNavigate();
 
      const location = useLocation();
      const [userImage, setUserImage] = useState(null);
+     const currentUser = store.auth.authenticatedUser;
 
      // useEffect(() => {
      //      dispatch(getCurrentUser());
      // });
      useEffect(() => {
           dispatch(getCurrentUser());
+          setIsUserFetched(true);
+          // if (location.state === "undefined") navigate("/");
      }, []);
 
      useEffect(() => {
           document.title = "User Profile | Facetcher";
 
-          if (!isUserFetched) {
-               if (location.state) {
+          // if (!isUserFetched) {
+          if (location.state) {
+               if (location.state.id !== "current") {
                     dispatch(getUserById(location.state.id));
                     dispatch(getAllUsersSubmissionsById(location.state.id));
                } else {
                     dispatch(getCurrentUserSubmissions());
-                    dispatch(getSucceededCurrentTrialsCount());
-                    dispatch(getFailedCurrentTrialsCount());
+                    // dispatch(getSucceededCurrentTrialsCount());
+                    // dispatch(getFailedCurrentTrialsCount());
                }
-               setIsUserFetched(true);
+          } else {
+               navigate("/");
           }
+
+          // setIsUserFetched(true);
+          // }
      }, [location.state && location.state.id]);
 
      let user;
      let submissions;
 
+     // if (location.state) {
+     //      user = store.user.userById;
+     //      submissions = store.submissions.allSubmissionsById;
+     // } else {
+     //      user = store.auth.authenticatedUser;
+     //      submissions = store.submissions.allCurrentSubmissions;
+     // }
+
      if (location.state) {
-          user = store.user.userById;
-          submissions = store.submissions.allSubmissionsById;
-     } else {
-          user = store.auth.authenticatedUser;
-          submissions = store.submissions.allCurrentSubmissions;
-     }
+          if (location.state.id !== "current") {
+               user = store.user.userById;
+               submissions = store.submissions.allSubmissionsById;
+          } else {
+               user = store.auth.authenticatedUser;
+               submissions = store.submissions.allCurrentSubmissions;
+          }
+     } else navigate("/");
 
      console.log(store.auth.authenticatedUser);
      // Handle image size width and height
@@ -94,6 +115,17 @@ const Profile = () => {
           };
           img.src = user.profilePictureUrl;
      }
+
+     useEffect(() => {
+          if (user) {
+               if (user.id) {
+                    dispatch(getSucceededUserTrialsCount(user.id));
+                    dispatch(getFailedUserTrialsCount(user.id));
+               }
+          }
+     }, [user && user.id]);
+
+     const successedTrials = <store className="trials"></store>;
 
      // console.log(location.state.id);
      console.log(store);
@@ -140,12 +172,8 @@ const Profile = () => {
                                              <div className=" rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
                                                   <div className="w-100 h-100 d-flex justify-content-center align-items-center overflow-hidden position-relative">
                                                        <button
-                                                            className={`btn bg-black bg-opacity-75 position-absolute bottom-0 h-100 w-100 rounded-pill text-light-grey custom-btn ${location.state &&
-                                                                 location.state
-                                                                      .id &&
-                                                                 store.auth
-                                                                      .authenticatedUser
-                                                                      .id !==
+                                                            className={`btn bg-black bg-opacity-75 position-absolute bottom-0 h-100 w-100 rounded-pill text-light-grey custom-btn ${currentUser &&
+                                                                 currentUser.id !==
                                                                       values.id &&
                                                                  "d-none"}`}
                                                             onClick={() =>
@@ -457,17 +485,17 @@ const Profile = () => {
                                                                       key={
                                                                            index
                                                                       }
-                                                                      // onClick={() =>
-                                                                      //      navigate(
-                                                                      //           "/profile",
-                                                                      //           {
-                                                                      //                state: {
-                                                                      //                     id:
-                                                                      //                          submission.id,
-                                                                      //                },
-                                                                      //           }
-                                                                      //      )
-                                                                      // }
+                                                                      onClick={() => {
+                                                                           navigate(
+                                                                                "/submission",
+                                                                                {
+                                                                                     state: {
+                                                                                          id:
+                                                                                               submission.id,
+                                                                                     },
+                                                                                }
+                                                                           );
+                                                                      }}
                                                                  >
                                                                       <td>
                                                                            {

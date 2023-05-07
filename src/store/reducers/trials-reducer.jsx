@@ -5,8 +5,10 @@ import {
      GETTING_ALL_FAILED_TRIALS,
      ALL_FAILED_TRIALS_FETCHED,
      FAILED_GETTING_FAILED_TRIALS,
-     GET_FAILED_CURRENT_TRIALS_COUNT,
-     GET_SUCCEEDED_CURRENT_TRIALS_COUNT,
+     // GET_FAILED_CURRENT_TRIALS_COUNT,
+     // GET_SUCCEEDED_CURRENT_TRIALS_COUNT,
+     GET_FAILED_USER_TRIALS_COUNT,
+     GET_SUCCEEDED_USER_TRIALS_COUNT,
 } from "../types";
 
 export default function auth_reducer(state = {}, action) {
@@ -36,19 +38,19 @@ export default function auth_reducer(state = {}, action) {
                     gettingAllFailedTrials: true,
                     failedGettingAllFailedTrials: false,
                };
-          case GET_SUCCEEDED_CURRENT_TRIALS_COUNT:
+          case GET_SUCCEEDED_USER_TRIALS_COUNT:
                return {
                     ...state,
                     gettingAllFailedTrials: true,
                     failedGettingAllFailedTrials: false,
-                    succeededCurrentTCount: action.payload,
+                    succeededUserTCount: action.payload,
                };
-          case GET_FAILED_CURRENT_TRIALS_COUNT:
+          case GET_FAILED_USER_TRIALS_COUNT:
                return {
                     ...state,
                     gettingAllFailedTrials: true,
                     failedGettingAllFailedTrials: false,
-                    failedCurrentTCount: action.payload,
+                    failedUserCount: action.payload,
                };
           case ALL_FAILED_TRIALS_FETCHED:
                return {

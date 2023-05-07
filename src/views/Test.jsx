@@ -5,17 +5,19 @@ import {
      deleteUser,
      //      addUserRole,
      getAllUsers,
+     getGenders,
 } from "../store/actions/users/users-actions";
 import {
      getAllSubmissions,
      getAllUsersSubmissionsById,
+     getSubmissionById,
 } from "../store/actions/submission/submission-actions";
 import { useRef } from "react";
 
 const Test = () => {
      const dispatch = useDispatch();
-     const [isDataFetched, setIsDataFetched] = useState(false);
-     const fileInput = useRef(null);
+     // const [isDataFetched, setIsDataFetched] = useState(false);
+     // const fileInput = useRef(null);
 
      // useEffect(() => {});
      // const submissions = useSelector((state) => state);
@@ -55,26 +57,22 @@ const Test = () => {
           //           2
           //      )
           // );
+          // dispatch(getSubmissionById(18));
+          // dispatch(getGenders());
      };
 
      return (
-          <form
-               className="vh-100 w-100 d-flex justify-content-center align-items-center"
-               onSubmit={(e) => {
-                    e.preventDefault();
-                    console.log(fileInput.current.files[0]);
-               }}
-          >
-               <input type="file" ref={fileInput} />
+          <div className="vh-100 w-100 d-flex justify-content-center align-items-center">
+               {/* <input type="file" ref={fileInput} /> */}
 
                <button
-                    type="submit"
+                    // type="submit"
                     className="btn btn-lg btn-light"
-                    // onClick={() => testFunction()}
+                    onClick={() => testFunction()}
                >
                     Test
                </button>
-          </form>
+          </div>
      );
 };
 export default Test;

@@ -8,6 +8,7 @@ import {
      ALL_USER_SUBMISSIONS_FETCHED,
      FAILED_GETTING_USER_SUBMISSIONS,
      CURRENT_SUBMISSIONS_FETCHED,
+     GET_SUBMISSION_BY_ID,
 } from "./submission-types";
 
 const URL = APIs_URL.STAGING;
@@ -62,6 +63,22 @@ export const getAllUsersSubmissionsById = (userId) => (dispatch) => {
                                    Number(new Date(objB.creationDate)) -
                                    Number(new Date(objA.creationDate))
                          ),
+                    });
+               }
+          })
+          .catch(() => dispatch({ type: FAILED_GETTING_USER_SUBMISSIONS }));
+};
+
+export const getSubmissionById = (userSubmissionId) => (dispatch) => {
+     dispatch({ type: GETTING_ALL_USER_SUBMISSIONS });
+
+     axios.get(`${URL}/user-submission/find-by-id/${userSubmissionId}`)
+          .then((res) => {
+               if (res.data.success) {
+                    console.log(res.data.body);
+                    dispatch({
+                         type: GET_SUBMISSION_BY_ID,
+                         payload: res.data.body,
                     });
                }
           })

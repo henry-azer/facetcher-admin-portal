@@ -36,18 +36,30 @@ const FacetcherTable = (props) => {
                                         props.table === 2 ? "1" : "2"
                                    }`}
                               >
-                                   <td
-                                        colSpan={props.headerArray.length}
-                                        className="cursor-default"
-                                   >
-                                        No{" "}
-                                        {location.pathname
-                                             .replace("/", "")
-                                             .replace("-", " ")
-                                             .replace("profile", "submissions")
-                                             .replace("all", "")}{" "}
-                                        in this moment
-                                   </td>
+                                   {props.error ? (
+                                        <td
+                                             colSpan={props.headerArray.length}
+                                             className="cursor-default"
+                                        >
+                                             {props.error}
+                                        </td>
+                                   ) : (
+                                        <td
+                                             colSpan={props.headerArray.length}
+                                             className="cursor-default"
+                                        >
+                                             No{" "}
+                                             {location.pathname
+                                                  .replace("/", "")
+                                                  .replace("-", " ")
+                                                  .replace(
+                                                       "profile",
+                                                       "submissions"
+                                                  )
+                                                  .replace("all", "")}{" "}
+                                             in this moment
+                                        </td>
+                                   )}
                               </tr>
                          )}
 

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { getAllSubmissions } from "../store/actions/submission/submission-actions";
 import { getAllUsers } from "../store/actions/users/users-actions";
+import { useNavigate } from "react-router-dom";
 
 const Submissions = () => {
      const headerArray = [
@@ -16,12 +17,13 @@ const Submissions = () => {
           "Time",
           "Submission Title",
           "Drawing Gender",
+          "Submitted",
      ];
 
      const dispatch = useDispatch();
+     const navigate = useNavigate();
      const [fetchingData, setFetchingData] = useState(true);
      const [currentPage, setCurrentPage] = useState(0);
-     
 
      useEffect(() => {
           document.title = "Submissions | Facetcher";
@@ -95,6 +97,17 @@ const Submissions = () => {
                                                   <tr
                                                        className="h-25"
                                                        key={index}
+                                                       onClick={() => {
+                                                            navigate(
+                                                                 "/submission",
+                                                                 {
+                                                                      state: {
+                                                                           id:
+                                                                                submission.id,
+                                                                      },
+                                                                 }
+                                                            );
+                                                       }}
                                                   >
                                                        <td>{submission.id}</td>
                                                        <td className="text-capitalize">
@@ -112,6 +125,11 @@ const Submissions = () => {
                                                        </td>
                                                        <td className="text-lowercase">
                                                             {submission.gender}
+                                                       </td>
+                                                       <td>
+                                                            {submission.submitted
+                                                                 ? "Yes"
+                                                                 : "No"}
                                                        </td>
                                                   </tr>
                                              ))}
