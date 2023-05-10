@@ -13,7 +13,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 // import InboxIcon from "@mui/icons-material/MoveToInbox";
 // import MailIcon from "@mui/icons-material/Mail";
 import {
@@ -79,7 +79,7 @@ const FacetcherDrawer = (props) => {
                                    marginX: "3%",
                               }}
                          >
-                              <LightModeOutlinedIcon
+                              <MailOutlineIcon
                                    sx={{
                                         color: `${LIGHTGREY}`,
                                    }}
@@ -92,13 +92,19 @@ const FacetcherDrawer = (props) => {
                                         <Typography
                                              sx={{
                                                   marginRight: "6px",
-                                                  fontSize: "12px",
+                                                  fontSize: "15px",
                                              }}
                                              onClick={() =>
-                                                  navigate("/profile")
+                                                  navigate("/profile", {
+                                                       state: {
+                                                            id: "current",
+                                                       },
+                                                  })
                                              }
                                         >
-                                             {user.firstName}
+                                             {user.firstName +
+                                                  " " +
+                                                  user.lastName}
                                         </Typography>
                                         {user.profilePictureUrl ? (
                                              <Box
@@ -116,7 +122,7 @@ const FacetcherDrawer = (props) => {
                                                   onClick={() =>
                                                        navigate("/profile", {
                                                             state: {
-                                                                 id: null,
+                                                                 id: "current",
                                                             },
                                                        })
                                                   }

@@ -4,6 +4,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useDispatch, useSelector } from "react-redux";
 import {
      addProfilePicture,
+     deleteUserPic,
      getCurrentUser,
 } from "../store/actions/auth/auth-actions";
 import { Field, Formik } from "formik";
@@ -22,7 +23,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { DARKGREY2, LIGHTGREY } from "../constants/app_colors";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getUserById } from "../store/actions/users/users-actions";
+import {
+     editUser,
+     getUserById,
+} from "../store/actions/users/users-actions";
 import {
      getAllUsersSubmissionsById,
      getCurrentUserSubmissions,
@@ -50,17 +54,22 @@ const Profile = () => {
      const [currentPage, setCurrentPage] = useState(0);
      const navigate = useNavigate();
 
+     const config = {
+          headers: { "content-type": "multipart/form-data" },
+     };
+
      const location = useLocation();
      const [userImage, setUserImage] = useState(null);
      const currentUser = store.auth.authenticatedUser;
 
-     // useEffect(() => {
-     //      dispatch(getCurrentUser());
-     // });
+     const [alert, setAlert] = useState("");
+     const [alertAnimation, setAlertAnimation] = useState("");
+     const [alertColor, setAlertColor] = useState("");
+     const [display, setDisplay] = useState(false);
+
      useEffect(() => {
           dispatch(getCurrentUser());
           setIsUserFetched(true);
-          // if (location.state === "undefined") navigate("/");
      }, []);
 
      useEffect(() => {
@@ -138,15 +147,63 @@ const Profile = () => {
                     <div className="row h-100 justify-content-center align-items-center gx-2 mt-5 overflowY-scroll">
                          {user && (
                               <Formik
-                                   onSubmit={() => {
+                                   onSubmit={(values) => {
                                         // e.preventDefault();
                                         // console.log(userImage);
-                                        const image = new FormData().append(
-                                             "image",
-                                             userImage
+                                        // const image = new FormData();
+
+                                        // formData.append(
+                                        //      "image",
+                                        //      userImage,
+                                        //      `userId${user.id}ProfilePicture.jpg`
+                                        // );
+                                        // dispatch(addProfilePicture(formData));
+                                        console.log(userImage);
+                                        dispatch(addProfilePicture(userImage));
+                                        // console.log("Saved");
+                                        // console.log(userImage);
+                                        // console.log(formData);
+
+                                        // console.log(values);
+                                        // const userData = {
+                                        //      ...values,
+                                        //      gender: String(
+                                        //           values.gender
+                                        //      ).toUpperCase(),
+                                        //      firstName: values.userName.split(
+                                        //           " "
+                                        //      )[0],
+                                        //      lastName: values.split(" ")[1],
+                                        // };
+                                        // delete userData.roleId;
+                                        // delete userData.userName;
+
+                                        // if (
+                                        //      userData.password === user.password
+                                        // ) {
+                                        //      delete userData.password;
+                                        // }
+
+                                        // console.log(userData);
+                                        // console.log(values.roleId);
+                                        // dispatch(
+                                        //      editUser(userData, values.roleId)
+                                        // );
+                                        setAlertAnimation("in");
+                                        setDisplay(true);
+                                        setAlertColor("cyan");
+                                        setAlert(
+                                             "User is added successfully !"
                                         );
-                                        dispatch(addProfilePicture(image));
-                                        console.log("Saved");
+
+                                        setTimeout(() => {
+                                             setAlertAnimation("out");
+                                        }, 2000);
+                                        setTimeout(() => {
+                                             setDisplay(false);
+                                             setAlertColor("");
+                                             setAlert("");
+                                        }, 3000);
                                    }}
                                    initialValues={{
                                         id: user.id,
@@ -154,10 +211,11 @@ const Profile = () => {
                                         userName: `${user.firstName +
                                              " " +
                                              user.lastName}`,
-                                        // phoneNumber: user.phoneNumber,
-                                        phoneNumber: "0",
+                                        phoneNumber: user.phoneNumber,
+                                        // phoneNumber: "0",
                                         email: user.email,
                                         password: user.password,
+                                        gender: user.gender,
                                         profilePicture: user.profilePictureUrl,
                                    }}
                                    enableReinitialize={true}
@@ -240,6 +298,16 @@ const Profile = () => {
                                                             <input
                                                                  name="image"
                                                                  type="file"
+                                                                 disabled={
+                                                                      values.profilePicture
+                                                                           ? true
+                                                                           : false
+                                                                 }
+                                                                 className={
+                                                                      values.profilePicture
+                                                                           ? "disabled"
+                                                                           : ""
+                                                                 }
                                                                  onChange={(
                                                                       event
                                                                  ) => {
@@ -294,6 +362,9 @@ const Profile = () => {
                                                                            );
                                                                            setOpen(
                                                                                 false
+                                                                           );
+                                                                           dispatch(
+                                                                                deleteUserPic()
                                                                            );
                                                                       }}
                                                                  >
@@ -424,7 +495,7 @@ const Profile = () => {
                                                        failedTrials}
                                              </h1>
                                              <h1 className="fs-5 text-cyan fw-bold">
-                                                  Succeed Trials:{" "}
+                                                  Succeeded Trials:{" "}
                                                   {succeededTrials}
                                              </h1>
                                              <h1 className="fs-5 text-orange fw-bold">
@@ -542,6 +613,16 @@ const Profile = () => {
                                    </div>
                               </div>
                          )}
+                         <div
+                              className={`alert bg-${alertColor} text-light-grey position-fixed w-50 bottom-0 text-center ${!display &&
+                                   "d-none"}`}
+                              role="alert"
+                              style={{
+                                   animation: `fade-${alertAnimation} ease-in-out 1s`,
+                              }}
+                         >
+                              {alert}
+                         </div>
                     </div>
                </FacetcherDrawer>
           </div>

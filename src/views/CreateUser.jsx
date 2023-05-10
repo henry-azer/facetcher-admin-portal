@@ -21,9 +21,11 @@ const CreateUser = () => {
      const store = useSelector((state) => state);
      const dispatch = useDispatch();
 
-     const [open, setOpen] = useState(false);
-     const [imgW, setImgW] = useState(0);
-     const [imgH, setImgH] = useState(0);
+     const [alert, setAlert] = useState("");
+     const [alertAnimation, setAlertAnimation] = useState("");
+     const [alertColor, setAlertColor] = useState("");
+     const [display, setDisplay] = useState(false);
+
      const [isUserFetched, setIsUserFetched] = useState(false);
      const [currentPage, setCurrentPage] = useState(0);
 
@@ -63,10 +65,10 @@ const CreateUser = () => {
                                    password: `${String(
                                         location.state.userType
                                    ).toLowerCase()}@facetcher`,
-                                   gender: "",
+                                   gender: "Choose Gender ...",
                               }}
                               // enableReinitialize={true}
-                              onSubmit={(values) => {
+                              onSubmit={(values, { resetForm }) => {
                                    console.log(values);
                                    const user = {
                                         ...values,
@@ -75,9 +77,28 @@ const CreateUser = () => {
                                         ).toUpperCase(),
                                    };
                                    delete user.roleId;
-                                   console.log(user)
-                                   console.log(values.roleId)
+                                   console.log(user);
+                                   console.log(values.roleId);
                                    dispatch(addUser(user, values.roleId));
+                                   setAlertAnimation("in");
+                                   setDisplay(true);
+                                   setAlertColor("cyan");
+                                   setAlert("User is added successfully !");
+
+                                   setTimeout(() => {
+                                        setAlertAnimation("out");
+                                   }, 2000);
+                                   setTimeout(() => {
+                                        setDisplay(false);
+                                        setAlertColor("");
+                                        setAlert("");
+                                   }, 3000);
+
+                                   resetForm();
+                                   // resetForm(
+                                   //      (values.gender = "Choose Gender ...")
+                                   // );
+                                   // values.gender="Choose Gender ..."
                               }}
                          >
                               {({
@@ -154,6 +175,9 @@ const CreateUser = () => {
                                                                  handleChange
                                                             }
                                                             name="gender"
+                                                            value={
+                                                                 values.gender
+                                                            }
                                                             defaultValue="Choose Gender ..."
                                                             options={[
                                                                  "Choose Gender ...",
@@ -168,6 +192,16 @@ const CreateUser = () => {
                                                        className="btn bg-cyan text-light-grey rounded-pill w-50 me-2 fw-bold"
                                                   >{`Create New ${location.state.userType}`}</button>
                                              </form>
+                                        </div>
+                                        <div
+                                             className={`alert bg-${alertColor} text-light-grey position-fixed w-50 bottom-0 text-center ${!display &&
+                                                  "d-none"}`}
+                                             role="alert"
+                                             style={{
+                                                  animation: `fade-${alertAnimation} ease-in-out 1s`,
+                                             }}
+                                        >
+                                             {alert}
                                         </div>
                                    </div>
                               )}

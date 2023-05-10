@@ -219,6 +219,9 @@ input[type="file"]::-webkit-file-upload-button {
      border-radius: var(--bs-border-radius-pill);
      cursor: pointer;
 }
+input[type="file"].disabled::-webkit-file-upload-button {
+     cursor: default !important;
+}
 .cursor-pointer {
      cursor: pointer !important;
 }

@@ -18,7 +18,11 @@ export const getAllUsers = () => (dispatch) => {
           if (res.data.success)
                dispatch({
                     type: GET_ALL_USERS,
-                    payload: res.data.body.filter((obj) => {
+                    payload: res.data.body.sort(
+                         (objA, objB) =>
+                              objA.id -
+                              objB.id
+                    ).filter((obj) => {
                          return (
                               obj.markedAsDeleted === false && obj.userRoles[0]
                               // obj.userRoles[0].role.name !== "ADMIN"
@@ -37,7 +41,7 @@ export const getUserById = (userId) => (dispatch) => {
                });
      });
 };
-export const addUser = (user, roleID, gender) => (dispatch) => {
+export const addUser = (user, roleID) => (dispatch) => {
      dispatch({ type: ADDING_USER });
 
      axios.post(`${URL}/user`, user)
@@ -63,6 +67,32 @@ export const addUser = (user, roleID, gender) => (dispatch) => {
           });
 };
 
+export const editUser = (user, roleID) => (dispatch) => {
+     dispatch({ type: ADDING_USER });
+
+     axios.put(`${URL}/user`, user)
+          .then((res) => {
+               if (res.data.success) {
+                    // axios.post(`${URL}/user-role/assign`, {
+                    //      userId: res.data.body.id,
+                    //      roleId: roleID,
+                    // });
+                    dispatch({
+                         type: USER_ADDED_SUCCESSFULLY,
+                    });
+                    console.log("user added successfully");
+                    // console.log(res);
+               } else console.log("lol");
+          })
+          .catch((err) => {
+               dispatch({
+                    type: ADDING_USER_FAILED,
+               });
+               console.log("failed add user");
+               console.log(err);
+          });
+};
+
 export const deleteUser = (userID) => () => {
      axios.put(`${URL}/user/${userID}/toggle-deletion`).then((res) => {
           console.log(res);
@@ -70,10 +100,6 @@ export const deleteUser = (userID) => () => {
      });
 };
 
-export const getGenders = () => () => {
-     axios.get(`${URL}/user/find-all-genders`).then((res) => {
-     });
-};
 // });
 // };
 // export const addUserRole = (roleID) => () => {

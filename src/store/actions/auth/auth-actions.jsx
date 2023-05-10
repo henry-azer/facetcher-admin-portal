@@ -49,16 +49,16 @@ export const authenticateUser = (values) => (dispatch) => {
                                    type: LOGIN_SUCCEEDED,
                                    payload: res.data.body,
                               });
-                              if (
-                                   res.data.body.userRoles[0].role.name !==
-                                   "ADMIN"
-                              ) {
-                                   cookies.remove(ACCESSTOKEN);
-                                   cookies.remove(ISUSERAUTH);
+                              // if (
+                              //      res.data.body.userRoles[0].role.name !==
+                              //      "ADMIN"
+                              // ) {
+                              //      cookies.remove(ACCESSTOKEN);
+                              //      cookies.remove(ISUSERAUTH);
 
-                                   dispatch({ type: USER_NOT_ADMIN });
-                                   console.log("NOT Admin");
-                              }
+                              //      dispatch({ type: USER_NOT_ADMIN });
+                              //      console.log("NOT Admin");
+                              // }
                          }
                     });
                }
@@ -82,16 +82,30 @@ export const getCurrentUser = () => (dispatch) => {
      });
 };
 
-export const addProfilePicture = (image) => (dispatch) => {
-     axios.post(`${URL}/user/profile-picture`,image).then((res) => {
+export const addProfilePicture = (photo) => async (dispatch) => {
+     console.log("------------------------\nProfile picture ... ");
+     console.log(photo);
+     const formData = new FormData();
+
+     formData.append("photo", photo);
+
+     axios.post(`${URL}/user/profile-picture`, formData).then((res) => {
           console.log(res);
+
           if (res.data.success) {
                console.log(res);
-               dispatch({
-                    type: PROFILE_PIC_ADDED_SUCCESSFULLY,
-                    payload: res.data.body,
-               });
+               // dispatch({
+               //      type: PROFILE_PIC_ADDED_SUCCESSFULLY,
+               //      payload: res.data.body,
+               // });
           }
+     });
+};
+
+export const deleteUserPic = () => () => {
+     axios.delete(`${URL}/user/profile-picture`).then((res) => {
+          console.log(res);
+          console.log("User Picture deleted successfully");
      });
 };
 
