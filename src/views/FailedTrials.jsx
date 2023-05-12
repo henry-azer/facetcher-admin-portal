@@ -7,13 +7,14 @@ import { FAILED_TRIALS, itemsPerPage } from "../constants/app_constants";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllFailedTrials } from "../store/actions/trials/trials-action";
+import { useFormik } from "formik";
 
 const FailedTrials = () => {
      const headerArray = [
           "ID",
+          "Submission Title",
           "Date",
           "Time",
-          "Submission Title",
           "Drawing Gender",
           "Preview",
      ];
@@ -22,6 +23,27 @@ const FailedTrials = () => {
      const [fetchingData, setFetchingData] = useState(true);
      const [isUsersFetched, setIsUsersFetched] = useState(false);
      const [currentPage, setCurrentPage] = useState(0);
+     const startIndex = currentPage * itemsPerPage;
+     const endIndex = startIndex + itemsPerPage;
+     const [filtered, setFiltered] = useState(null);
+     const formik = useFormik({
+          initialValues: {
+               name: "",
+               date: "newest",
+               gender: "gender ...",
+          },
+          onSubmit: (values) => {
+               if (
+                    values.date === "newest" &&
+                    values.gender === "gender ..." &&
+                    values.name === ""
+               ) {
+                    setFiltered(null);
+               } else {
+                    setFiltered(values);
+               }
+          },
+     });
 
      const dispatch = useDispatch();
      const state = useSelector((state) => state);
@@ -36,7 +58,34 @@ const FailedTrials = () => {
           }
      });
 
-     const failedTrials = state.trials.allFailedTrials;
+     const pureFailedTrials = state.trials.allFailedTrials;
+     let failedTrials;
+     if (pureFailedTrials) failedTrials = [...pureFailedTrials];
+     if (filtered) {
+          if (filtered.date !== "newest") {
+               failedTrials = failedTrials.reverse();
+          }
+          if (filtered.gender !== "gender ...") {
+               if (filtered.gender === "male") {
+                    failedTrials = failedTrials.filter((obj) => {
+                         return obj.gender === "MALE";
+                    });
+               } else {
+                    failedTrials = failedTrials.filter((obj) => {
+                         return obj.gender === "FEMALE";
+                    });
+               }
+          }
+          if (filtered.name !== "") {
+               failedTrials = failedTrials.filter((obj) => {
+                    return obj.title
+                         .toLowerCase()
+                         .includes(filtered.name.toLowerCase());
+               });
+          }
+     } else if (filtered === null) {
+          failedTrials = pureFailedTrials;
+     }
 
      return (
           <div className="w-100">
@@ -47,13 +96,24 @@ const FailedTrials = () => {
                                    Failed Trials
                               </h1>
                          </div>
-                         <form className="w-100 d-flex justify-content-between align-items-end">
-                              <FacetcherSearchComponent placeHolder="Search by drawing title" />
+                         <form
+                              onSubmit={formik.handleSubmit}
+                              className="w-100 d-flex justify-content-between align-items-end"
+                         >
+                              <FacetcherSearchComponent
+                                   placeHolder="Search by drawing title"
+                                   name="name"
+                                   value={formik.values.name}
+                                   onChange={formik.handleChange}
+                              />
                               <div className="w-50 d-flex justify-content-around">
                                    <FacetcherSelectComponent
                                         width="25"
                                         label="Date"
                                         options={["Newest", "Latest"]}
+                                        name="date"
+                                        value={formik.values.date}
+                                        onChange={formik.handleChange}
                                    />
                                    <FacetcherSelectComponent
                                         width="25"
@@ -63,10 +123,16 @@ const FailedTrials = () => {
                                              "Male",
                                              "Female",
                                         ]}
+                                        name="gender"
+                                        value={formik.values.gender}
+                                        onChange={formik.handleChange}
                                    />
                               </div>
                               <div className="w-25 d-flex justify-content-end">
-                                   <button className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold">
+                                   <button
+                                        onClick={() => setCurrentPage(0)}
+                                        className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold"
+                                   >
                                         Search
                                    </button>
                               </div>
@@ -82,16 +148,16 @@ const FailedTrials = () => {
                                    }
                                    initialPage={currentPage}
                                    handlePageClick={(e) =>
-                                        setCurrentPage(
-                                             (e.selected * itemsPerPage) %
-                                                  failedTrials.length
-                                        )
+                                        setCurrentPage(e.selected)
                                    }
                               >
                                    {failedTrials &&
-                                        failedTrials.map((trial, index) => (
+                                        failedTrials.slice(startIndex, endIndex).map((trial, index) => (
                                              <tr className="h-25" key={index}>
                                                   <td>{trial.id}</td>
+                                                  <td className="text-capitalize">
+                                                       {trial.title}
+                                                  </td>
                                                   <td className="text-capitalize">
                                                        {new Date(
                                                             trial.creationDate
@@ -101,9 +167,6 @@ const FailedTrials = () => {
                                                        {new Date(
                                                             trial.creationDate
                                                        ).toLocaleTimeString()}
-                                                  </td>
-                                                  <td className="text-capitalize">
-                                                       {trial.title}
                                                   </td>
                                                   <td className="text-lowercase">
                                                        {trial.gender}

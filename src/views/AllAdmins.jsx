@@ -9,15 +9,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { getAllUsers } from "../store/actions/users/users-actions";
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
 
 const AllAdmins = () => {
      const headerArray = ["ID", "First Name", "Last Name", "Email", "Gender"];
 
      const [fetchingData, setFetchingData] = useState(true);
      const [isUsersFetched, setIsUsersFetched] = useState(false);
+     const [filtered, setFiltered] = useState(null);
      const [currentPage, setCurrentPage] = useState(0);
+     const startIndex = currentPage * itemsPerPage;
+     const endIndex = startIndex + itemsPerPage;
      const dispatch = useDispatch();
      const navigate = useNavigate();
+     const formik = useFormik({
+          initialValues: {
+               name: "",
+               alphabetic: "alphabetic ...",
+               gender: "gender ...",
+          },
+          onSubmit: (values) => {
+               if (
+                    values.alphabetic === "alphabetic ..." &&
+                    values.gender === "gender ..." &&
+                    values.name === ""
+               ) {
+                    setFiltered(null);
+               } else {
+                    setFiltered(values);
+               }
+          },
+     });
 
      useEffect(() => {
           document.title = "All Admins | Facetcher";
@@ -29,8 +51,51 @@ const AllAdmins = () => {
           }
      });
 
-     const allUsers = useSelector((state) => state.user.allUsers);
-     // const allUsers = [];
+     const allPureUsers = useSelector((state) => state.user.allUsers);
+     let allUsers;
+     if (allPureUsers) allUsers = [...allPureUsers];
+     if (filtered) {
+          if (filtered.alphabetic !== "alphabetic ...") {
+               if (filtered.alphabetic === "a-z")
+                    allUsers = allUsers.sort(function(a, b) {
+                         if (
+                              a.firstName.toLowerCase() <
+                              b.firstName.toLowerCase()
+                         ) {
+                              return -1;
+                         }
+                    });
+               else if (filtered.alphabetic === "z-a")
+                    allUsers = allUsers.sort(function(a, b) {
+                         if (
+                              a.firstName.toLowerCase() >
+                              b.firstName.toLowerCase()
+                         ) {
+                              return -1;
+                         }
+                    });
+          }
+          if (filtered.gender !== "gender ...") {
+               if (filtered.gender === "male") {
+                    allUsers = allUsers.filter((obj) => {
+                         return obj.gender === "MALE";
+                    });
+               } else {
+                    allUsers = allUsers.filter((obj) => {
+                         return obj.gender === "FEMALE";
+                    });
+               }
+          }
+          if (filtered.name !== "") {
+               allUsers = allUsers.filter((obj) => {
+                    return obj.firstName
+                         .toLowerCase()
+                         .includes(filtered.name.toLowerCase());
+               });
+          }
+     } else if (filtered === null) {
+          allUsers = allPureUsers;
+     }
 
      return (
           <div className="w-100">
@@ -49,21 +114,36 @@ const AllAdmins = () => {
                                    <PersonAddAltIcon /> Create New Admin
                               </button>
                          </div>
-                         <form className="w-100 d-flex justify-content-between align-items-end">
-                              <FacetcherSearchComponent placeHolder="Search by admin name" />
+                         <form
+                              onSubmit={formik.handleSubmit}
+                              className="w-100 d-flex justify-content-between align-items-end"
+                         >
+                              <FacetcherSearchComponent
+                                   name="name"
+                                   value={formik.values.name}
+                                   onChange={formik.handleChange}
+                                   placeHolder="Search by admin name"
+                              />
                               <div className="w-50 d-flex justify-content-around">
                                    <FacetcherSelectComponent
                                         width="25"
                                         label="Alphabetic"
+                                        name="alphabetic"
+                                        value={formik.values.alphabetic}
+                                        onChange={formik.handleChange}
                                         options={[
                                              "Alphabetic ...",
                                              "A-Z",
                                              "Z-A",
                                         ]}
                                    />
+
                                    <FacetcherSelectComponent
                                         width="25"
                                         label="Gender"
+                                        name="gender"
+                                        value={formik.values.gender}
+                                        onChange={formik.handleChange}
                                         options={[
                                              "Gender ...",
                                              "Male",
@@ -72,7 +152,10 @@ const AllAdmins = () => {
                                    />
                               </div>
                               <div className="w-25 d-flex justify-content-end">
-                                   <button className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold">
+                                   <button
+                                        onClick={() => setCurrentPage(0)}
+                                        className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold"
+                                   >
                                         Search
                                    </button>
                               </div>
@@ -93,26 +176,18 @@ const AllAdmins = () => {
                                    }
                                    initialPage={currentPage}
                                    handlePageClick={(e) =>
-                                        setCurrentPage(
-                                             (e.selected * itemsPerPage) %
-                                                  allUsers.filter((obj) => {
-                                                       return (
-                                                            obj.userRoles[0]
-                                                                 .role.name !==
-                                                            "ADMIN"
-                                                       );
-                                                  }).length
-                                        )
+                                        setCurrentPage(e.selected)
                                    }
                               >
                                    {allUsers &&
                                         allUsers
-                                             .filter((obj) => {
-                                                  return (
-                                                       obj.userRoles[0].role
-                                                            .name === "ADMIN"
+                                        .filter((obj) => {
+                                             return (
+                                                  obj.userRoles[0].role
+                                                  .name === "ADMIN"
                                                   );
                                              })
+                                             .slice(startIndex, endIndex)
                                              .map((user, index) => (
                                                   <tr
                                                        className="h-25"

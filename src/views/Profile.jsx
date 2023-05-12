@@ -48,8 +48,9 @@ const Profile = () => {
      const [imgW, setImgW] = useState(0);
      const [imgH, setImgH] = useState(0);
      const [isUserFetched, setIsUserFetched] = useState(false);
-     const [currentPage, setCurrentPage] = useState(0);
-     const navigate = useNavigate();
+const [currentPage, setCurrentPage] = useState(0);
+     const startIndex = currentPage * itemsPerPage;
+     const endIndex = startIndex + itemsPerPage;     const navigate = useNavigate();
 
      const config = {
           headers: { "content-type": "multipart/form-data" },
@@ -534,11 +535,8 @@ const Profile = () => {
                                                   }
                                                   initialPage={currentPage}
                                                   handlePageClick={(e) =>
-                                                       setCurrentPage(
-                                                            (e.selected *
-                                                                 itemsPerPage) %
-                                                                 submissions.length
-                                                       )
+                                                       setCurrentPage(e.selected)
+
                                                   }
                                                   table={1}
                                                   headerArray={headerArray}
@@ -546,11 +544,7 @@ const Profile = () => {
                                                   bodyColor="bg-dark-grey"
                                              >
                                                   {submissions
-                                                       .slice(
-                                                            currentPage,
-                                                            currentPage +
-                                                                 itemsPerPage
-                                                       )
+                                                       .slice(startIndex, endIndex)
                                                        .map(
                                                             (
                                                                  submission,

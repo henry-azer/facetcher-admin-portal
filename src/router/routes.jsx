@@ -12,6 +12,7 @@ import Test from "../views/Test";
 import UserLogs from "../views/UserLogs";
 import CreateUser from "../views/CreateUser";
 import Submission from "../views/Submission";
+import Messages from "../views/Messages";
 
 const routes = () => (
      <Routes>
@@ -25,6 +26,7 @@ const routes = () => (
           <Route exact path="/all-admins" element={<AllAdmins />} />
           <Route exact path="/users-logs" element={<UserLogs />} />
           <Route exact path="/create-user" element={<CreateUser />} />
+          <Route exact path="/messages" element={<Messages />} />
           <Route exact path="/test" element={<Test />} />
           {/* <Route element={<NotFound />} /> */}
      </Routes>

@@ -15,6 +15,8 @@ const AllUsers = () => {
      const dispatch = useDispatch();
      const [isUsersFetched, setIsUsersFetched] = useState(false);
      const [currentPage, setCurrentPage] = useState(0);
+     const startIndex = currentPage * itemsPerPage;
+     const endIndex = startIndex + itemsPerPage;
      const [filtered, setFiltered] = useState(null);
      const navigate = useNavigate();
      const formik = useFormik({
@@ -24,7 +26,15 @@ const AllUsers = () => {
                gender: "gender ...",
           },
           onSubmit: (values) => {
-               setFiltered(values);
+               if (
+                    values.alphabetic === "alphabetic ..." &&
+                    values.gender === "gender ..." &&
+                    values.name === ""
+               ) {
+                    setFiltered(null);
+               } else {
+                    setFiltered(values);
+               }
           },
      });
 
@@ -41,7 +51,8 @@ const AllUsers = () => {
      });
 
      const allPureUsers = useSelector((state) => state.user.allUsers);
-     let allUsers = allPureUsers;
+     let allUsers;
+     if (allPureUsers) allUsers = [...allPureUsers];
      if (filtered) {
           if (filtered.alphabetic !== "alphabetic ...") {
                if (filtered.alphabetic === "a-z")
@@ -81,9 +92,11 @@ const AllUsers = () => {
                          .includes(filtered.name.toLowerCase());
                });
           }
+     } else if (filtered === null) {
+          allUsers = allPureUsers;
      }
 
-     console.log(allUsers);
+     console.log(allPureUsers);
 
      const headerArray = ["ID", "First Name", "Last Name", "Email", "Gender"];
 
@@ -142,7 +155,10 @@ const AllUsers = () => {
                                    />
                               </div>
                               <div className="w-25 d-flex justify-content-end">
-                                   <button className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold">
+                                   <button
+                                        onClick={() => setCurrentPage(0)}
+                                        className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold"
+                                   >
                                         Search
                                    </button>
                               </div>
@@ -163,16 +179,7 @@ const AllUsers = () => {
                                    }
                                    initialPage={currentPage}
                                    handlePageClick={(e) =>
-                                        setCurrentPage(
-                                             (e.selected * itemsPerPage) %
-                                                  allUsers.filter((obj) => {
-                                                       return (
-                                                            obj.userRoles[0]
-                                                                 .role.name !==
-                                                            "ADMIN"
-                                                       );
-                                                  }).length
-                                        )
+                                        setCurrentPage(e.selected)
                                    }
                               >
                                    {allUsers &&
@@ -183,6 +190,7 @@ const AllUsers = () => {
                                                             .name !== "ADMIN"
                                                   );
                                              })
+                                             .slice(startIndex, endIndex)
                                              .map((user, index) => (
                                                   <tr
                                                        className="h-25"

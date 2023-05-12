@@ -87,9 +87,7 @@ const FacetcherTable = (props) => {
                                                   }
                                                   renderOnZeroPageCount={null}
                                                   containerClassName="pagination d-flex justify-content-between align-items-center w-25"
-                                                  initialPage={
-                                                       props.initialPage
-                                                  }
+                                                  forcePage={props.initialPage}
                                                   disabledClassName="disabled"
                                                   disabledLinkClassName="disabled"
                                                   onPageChange={

@@ -27,8 +27,9 @@ const Submission = () => {
 
      const [imgW, setImgW] = useState(0);
      const [imgH, setImgH] = useState(0);
-     const [currentPage, setCurrentPage] = useState(0);
-
+const [currentPage, setCurrentPage] = useState(0);
+     const startIndex = currentPage * itemsPerPage;
+     const endIndex = startIndex + itemsPerPage;
      useEffect(() => {
           document.title = "All User | Dashboard";
 
@@ -136,18 +137,13 @@ const Submission = () => {
                               dataLength={trials && trials.length}
                               initialPage={currentPage}
                               handlePageClick={(e) =>
-                                   setCurrentPage(
-                                        (e.selected * itemsPerPage) %
-                                             trials.length
-                                   )
+                                   setCurrentPage(e.selected)
+
                               }
                          >
                               {trials &&
                                    trials
-                                        .slice(
-                                             currentPage,
-                                             currentPage + itemsPerPage
-                                        )
+                                   .slice(startIndex, endIndex)
                                         .map((trial, index) => (
                                              <tr className="h-25" key={index}>
                                                   <td>{trial.id}</td>

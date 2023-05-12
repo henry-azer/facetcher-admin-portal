@@ -27,7 +27,6 @@ const CreateUser = () => {
      const [display, setDisplay] = useState(false);
 
      const [isUserFetched, setIsUserFetched] = useState(false);
-     const [currentPage, setCurrentPage] = useState(0);
 
      const navigate = useNavigate();
      const location = useLocation();
