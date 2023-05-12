@@ -3,7 +3,7 @@ import FacetcherDrawer from "../components/drawer/drawer";
 import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
 import FacetcherTable from "../components/tables/table";
-import { FAILED_TRIALS } from "../constants/app_constants";
+import { FAILED_TRIALS, itemsPerPage } from "../constants/app_constants";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllFailedTrials } from "../store/actions/trials/trials-action";
@@ -19,8 +19,10 @@ const FailedTrials = () => {
      ];
      const imgSize = 350;
 
-
      const [fetchingData, setFetchingData] = useState(true);
+     const [isUsersFetched, setIsUsersFetched] = useState(false);
+     const [currentPage, setCurrentPage] = useState(0);
+
      const dispatch = useDispatch();
      const state = useSelector((state) => state);
 
@@ -75,34 +77,40 @@ const FailedTrials = () => {
                                    hover
                                    table={2}
                                    headerArray={headerArray}
+                                   dataLength={
+                                        failedTrials && failedTrials.length
+                                   }
+                                   initialPage={currentPage}
+                                   handlePageClick={(e) =>
+                                        setCurrentPage(
+                                             (e.selected * itemsPerPage) %
+                                                  failedTrials.length
+                                        )
+                                   }
                               >
                                    {failedTrials &&
-                                        failedTrials.map(
-                                             (trial, index) => (
-                                                  <tr
-                                                       className="h-25"
-                                                       key={index}
-                                                  >
-                                                       <td>{trial.id}</td>
-                                                       <td className="text-capitalize">
-                                                            {new Date(
-                                                                 trial.creationDate
-                                                            ).toDateString()}
-                                                       </td>
-                                                       <td className="text-capitalize">
-                                                            {new Date(
-                                                                 trial.creationDate
-                                                            ).toLocaleTimeString()}
-                                                       </td>
-                                                       <td className="text-capitalize">
-                                                            {trial.title}
-                                                       </td>
-                                                       <td className="text-lowercase">
-                                                            {trial.gender}
-                                                       </td>
-                                                       <td>
+                                        failedTrials.map((trial, index) => (
+                                             <tr className="h-25" key={index}>
+                                                  <td>{trial.id}</td>
+                                                  <td className="text-capitalize">
+                                                       {new Date(
+                                                            trial.creationDate
+                                                       ).toDateString()}
+                                                  </td>
+                                                  <td className="text-capitalize">
+                                                       {new Date(
+                                                            trial.creationDate
+                                                       ).toLocaleTimeString()}
+                                                  </td>
+                                                  <td className="text-capitalize">
+                                                       {trial.title}
+                                                  </td>
+                                                  <td className="text-lowercase">
+                                                       {trial.gender}
+                                                  </td>
+                                                  <td>
                                                        <img
-                                                       className="rounded-4"
+                                                            className="rounded-4"
                                                             src={
                                                                  trial
                                                                       .inputImage
@@ -118,9 +126,8 @@ const FailedTrials = () => {
                                                             }}
                                                        />
                                                   </td>
-                                                  </tr>
-                                             )
-                                        )}
+                                             </tr>
+                                        ))}
                               </FacetcherTable>
                          </div>
                     </div>

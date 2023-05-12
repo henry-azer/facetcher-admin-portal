@@ -21,8 +21,12 @@ const Submission = () => {
           "Time",
           // "Trial Title",
           "Drawing Gender",
-          "Preview",
+          "Drawing",
+          "Output",
      ];
+
+     const [imgW, setImgW] = useState(0);
+     const [imgH, setImgH] = useState(0);
      const [currentPage, setCurrentPage] = useState(0);
 
      useEffect(() => {
@@ -45,6 +49,15 @@ const Submission = () => {
      );
      const trials = useSelector((state) => state.trials.trialsBySubmissionId);
      console.log(trials);
+
+     if (submission && submission.inputImage) {
+          const img = new Image();
+          img.onload = () => {
+               setImgH(img.height);
+               setImgW(img.width);
+          };
+          img.src = submission.inputImage.imageUrl;
+     }
 
      return (
           <FacetcherDrawer>
@@ -69,14 +82,18 @@ const Submission = () => {
                               submission.inputImage ? (
                                    <div className="w-75 my-4 d-flex justify-content-around align-items-center">
                                         <div
-                                             className="overflow-hidden rounded-5 grey-border"
+                                             className="overflow-hidden rounded-5 grey-border bg-white d-flex justify-content-center align-items-center"
                                              style={{
                                                   width: imgSize,
                                                   height: imgSize,
                                              }}
                                         >
                                              <img
-                                                  className="w-100 rounded-5"
+                                                  className={`${
+                                                       imgH > imgW
+                                                            ? "h-100"
+                                                            : "w-100"
+                                                  }`}
                                                   src={
                                                        submission.inputImage
                                                             .imageUrl
@@ -156,6 +173,24 @@ const Submission = () => {
                                                             src={
                                                                  trial
                                                                       .inputImage
+                                                                      .imageUrl
+                                                            }
+                                                            style={{
+                                                                 width:
+                                                                      imgSize /
+                                                                      3,
+                                                                 height:
+                                                                      imgSize /
+                                                                      3,
+                                                            }}
+                                                       />
+                                                  </td>
+                                                  <td>
+                                                       <img
+                                                            className="rounded-4"
+                                                            src={
+                                                                 trial
+                                                                      .outputImage
                                                                       .imageUrl
                                                             }
                                                             style={{

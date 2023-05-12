@@ -128,7 +128,11 @@ export const trialsBySubmissionId = (submissionId) => (dispatch) => {
                console.log(res);
                dispatch({
                     type: GET_TRIALS_BY_SUBMISSION_ID,
-                    payload: res.data.body,
+                    payload: res.data.body.sort(
+                         (objA, objB) =>
+                              Number(new Date(objB.creationDate)) -
+                              Number(new Date(objA.creationDate))
+                    ),
                });
           }
      });

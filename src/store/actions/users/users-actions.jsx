@@ -18,16 +18,15 @@ export const getAllUsers = () => (dispatch) => {
           if (res.data.success)
                dispatch({
                     type: GET_ALL_USERS,
-                    payload: res.data.body.sort(
-                         (objA, objB) =>
-                              objA.id -
-                              objB.id
-                    ).filter((obj) => {
-                         return (
-                              obj.markedAsDeleted === false && obj.userRoles[0]
-                              // obj.userRoles[0].role.name !== "ADMIN"
-                         );
-                    }),
+                    payload: res.data.body
+                         .sort((objA, objB) => objA.id - objB.id)
+                         .filter((obj) => {
+                              return (
+                                   obj.markedAsDeleted === false &&
+                                   obj.userRoles[0]
+                                   // obj.userRoles[0].role.name !== "ADMIN"
+                              );
+                         }),
                });
      });
 };
@@ -67,7 +66,7 @@ export const addUser = (user, roleID) => (dispatch) => {
           });
 };
 
-export const editUser = (user, roleID) => (dispatch) => {
+export const editUser = (user, roleID) => async (dispatch) => {
      dispatch({ type: ADDING_USER });
 
      axios.put(`${URL}/user`, user)
@@ -80,17 +79,28 @@ export const editUser = (user, roleID) => (dispatch) => {
                     dispatch({
                          type: USER_ADDED_SUCCESSFULLY,
                     });
-                    console.log("user added successfully");
+                    console.log("user edited successfully");
                     // console.log(res);
-               } else console.log("lol");
+               } else console.log("failed edit user");
           })
           .catch((err) => {
                dispatch({
                     type: ADDING_USER_FAILED,
                });
-               console.log("failed add user");
+               console.log("failed edit user");
                console.log(err);
           });
+};
+
+export const editUserPassword = (password, newPassword) => async (dispatch) => {
+     axios.put(`${URL}/user/update-password`, {
+          password: password,
+          newPassword: newPassword,
+     }).then((res) => {
+          if (res.data.success) {
+               console.log("password edited successfully");
+          } else console.log("failed edit password");
+     });
 };
 
 export const deleteUser = (userID) => () => {

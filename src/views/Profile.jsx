@@ -23,10 +23,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { DARKGREY2, LIGHTGREY } from "../constants/app_colors";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-     editUser,
-     getUserById,
-} from "../store/actions/users/users-actions";
+import { editUser, getUserById } from "../store/actions/users/users-actions";
 import {
      getAllUsersSubmissionsById,
      getCurrentUserSubmissions,
@@ -82,8 +79,6 @@ const Profile = () => {
                     dispatch(getAllUsersSubmissionsById(location.state.id));
                } else {
                     dispatch(getCurrentUserSubmissions());
-                    // dispatch(getSucceededCurrentTrialsCount());
-                    // dispatch(getFailedCurrentTrialsCount());
                }
           } else {
                navigate("/");
@@ -158,37 +153,33 @@ const Profile = () => {
                                         //      `userId${user.id}ProfilePicture.jpg`
                                         // );
                                         // dispatch(addProfilePicture(formData));
-                                        console.log(userImage);
-                                        dispatch(addProfilePicture(userImage));
-                                        // console.log("Saved");
-                                        // console.log(userImage);
-                                        // console.log(formData);
 
-                                        // console.log(values);
-                                        // const userData = {
-                                        //      ...values,
-                                        //      gender: String(
-                                        //           values.gender
-                                        //      ).toUpperCase(),
-                                        //      firstName: values.userName.split(
-                                        //           " "
-                                        //      )[0],
-                                        //      lastName: values.split(" ")[1],
-                                        // };
-                                        // delete userData.roleId;
-                                        // delete userData.userName;
+                                        // dispatch(addProfilePicture(userImage));
+
+                                        console.log(values);
+                                        const userData = {
+                                             ...values,
+                                             gender: String(
+                                                  values.gender
+                                             ).toUpperCase(),
+                                        };
+                                        delete userData.roleId;
 
                                         // if (
-                                        //      userData.password === user.password
+                                        //      userData.password !== user.password
                                         // ) {
                                         //      delete userData.password;
                                         // }
 
-                                        // console.log(userData);
-                                        // console.log(values.roleId);
-                                        // dispatch(
-                                        //      editUser(userData, values.roleId)
-                                        // );
+                                        console.log(userData);
+                                        console.log(values.roleId);
+                                        console.log(
+                                             "------------------------------------------------------"
+                                        );
+                                        dispatch(
+                                             editUser(userData, values.roleId)
+                                        );
+
                                         setAlertAnimation("in");
                                         setDisplay(true);
                                         setAlertColor("cyan");
@@ -208,14 +199,14 @@ const Profile = () => {
                                    initialValues={{
                                         id: user.id,
                                         roleId: user.roleId,
-                                        userName: `${user.firstName +
-                                             " " +
-                                             user.lastName}`,
+                                        firstName: user.firstName,
+                                        lastName: user.lastName,
                                         phoneNumber: user.phoneNumber,
-                                        // phoneNumber: "0",
+                                        // phoneNumber: "+20 122 834 1111",
                                         email: user.email,
                                         password: user.password,
                                         gender: user.gender,
+                                        // gender: "MALE",
                                         profilePicture: user.profilePictureUrl,
                                    }}
                                    enableReinitialize={true}
@@ -412,39 +403,42 @@ const Profile = () => {
                                                                            handleChange
                                                                       }
                                                                       value={
-                                                                           values.userName
+                                                                           values.firstName
                                                                       }
                                                                  />
                                                             </div>
                                                             <div className="col-lg-6 col-12">
                                                                  <input
                                                                       type="text"
-                                                                      name="phoneNumber"
-                                                                      placeholder="Phone number"
+                                                                      name="lastName"
+                                                                      placeholder="Last Name"
                                                                       className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100"
                                                                       onChange={
                                                                            handleChange
                                                                       }
                                                                       value={
-                                                                           values.phoneNumber
+                                                                           values.lastName
                                                                       }
                                                                  />
                                                             </div>
                                                        </div>
                                                        <input
-                                                            type="email"
-                                                            name="email"
-                                                            placeholder="Email address"
+                                                            type="text"
+                                                            name="phoneNumber"
+                                                            placeholder="Phone Number"
                                                             className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100"
                                                             onChange={
                                                                  handleChange
                                                             }
-                                                            value={values.email}
+                                                            value={
+                                                                 values.phoneNumber
+                                                            }
                                                        />
                                                        <div className="w-100 d-flex justify-content-between align-items-center">
                                                             <Field
                                                                  type="password"
                                                                  name="password"
+                                                                 // disabled
                                                                  className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-50 me-2"
                                                             />
                                                             <button

@@ -13,7 +13,6 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
 // import InboxIcon from "@mui/icons-material/MoveToInbox";
 // import MailIcon from "@mui/icons-material/Mail";
 import {
@@ -30,6 +29,7 @@ import {
      ALL_USERS,
      DASHBOARD,
      FAILED_TRIALS,
+     MESSAGES,
      SUBMISSIONS,
      USERS_LOGS,
 } from "../../constants/app_constants";
@@ -43,6 +43,7 @@ const drawerCategories = [
      { header: "Users", subHeaders: [ALL_USERS, USERS_LOGS] },
      { header: "Drawings", subHeaders: [SUBMISSIONS, FAILED_TRIALS] },
      { header: "Admins", subHeaders: [ALL_ADMINS] },
+     { header: "Support", subHeaders: [MESSAGES] },
 ];
 
 const FacetcherDrawer = (props) => {
@@ -55,7 +56,7 @@ const FacetcherDrawer = (props) => {
 
      useLayoutEffect(() => {
           setHeight(ref.current.offsetHeight);
-     }, []);
+     });
 
      return (
           <Box sx={{ display: "flex" }}>
@@ -74,20 +75,15 @@ const FacetcherDrawer = (props) => {
                               sx={{
                                    display: "flex",
                                    alignItems: "center",
-                                   justifyContent: "space-between",
+                                   justifyContent: "end",
                                    width: "17%",
                                    marginX: "3%",
                               }}
                          >
-                              <MailOutlineIcon
-                                   sx={{
-                                        color: `${LIGHTGREY}`,
-                                   }}
-                              />
                               {user && (
                                    <Box
                                         component="div"
-                                        className="d-flex justify-content-center align-items-center cursor-pointer"
+                                        className="d-flex justify-content-end align-items-center cursor-pointer"
                                    >
                                         <Typography
                                              sx={{

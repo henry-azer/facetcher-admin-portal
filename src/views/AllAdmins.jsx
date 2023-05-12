@@ -4,7 +4,7 @@ import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
 import FacetcherTable from "../components/tables/table";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import { ALL_ADMINS } from "../constants/app_constants";
+import { ALL_ADMINS, itemsPerPage } from "../constants/app_constants";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { getAllUsers } from "../store/actions/users/users-actions";
@@ -14,6 +14,8 @@ const AllAdmins = () => {
      const headerArray = ["ID", "First Name", "Last Name", "Email", "Gender"];
 
      const [fetchingData, setFetchingData] = useState(true);
+     const [isUsersFetched, setIsUsersFetched] = useState(false);
+     const [currentPage, setCurrentPage] = useState(0);
      const dispatch = useDispatch();
      const navigate = useNavigate();
 
@@ -28,6 +30,7 @@ const AllAdmins = () => {
      });
 
      const allUsers = useSelector((state) => state.user.allUsers);
+     // const allUsers = [];
 
      return (
           <div className="w-100">
@@ -79,7 +82,28 @@ const AllAdmins = () => {
                               <FacetcherTable
                                    table={2}
                                    headerArray={headerArray}
-                                   dataLength={2}
+                                   dataLength={
+                                        allUsers &&
+                                        allUsers.filter((obj) => {
+                                             return (
+                                                  obj.userRoles[0].role.name !==
+                                                  "ADMIN"
+                                             );
+                                        }).length
+                                   }
+                                   initialPage={currentPage}
+                                   handlePageClick={(e) =>
+                                        setCurrentPage(
+                                             (e.selected * itemsPerPage) %
+                                                  allUsers.filter((obj) => {
+                                                       return (
+                                                            obj.userRoles[0]
+                                                                 .role.name !==
+                                                            "ADMIN"
+                                                       );
+                                                  }).length
+                                        )
+                                   }
                               >
                                    {allUsers &&
                                         allUsers

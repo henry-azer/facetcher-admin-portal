@@ -63,7 +63,7 @@ const FacetcherTable = (props) => {
                               </tr>
                          )}
 
-                         {props.dataLength > itemsPerPage && (
+                         {props.dataLength > 0 && (
                               <tr
                                    className={`last-tr-hover${
                                         props.table === 2 ? "1" : "2"

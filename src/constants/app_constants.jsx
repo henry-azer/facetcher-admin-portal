@@ -14,6 +14,7 @@ export const USERS_LOGS = "Users Logs";
 export const SUBMISSIONS = "Submissions";
 export const FAILED_TRIALS = "Failed Trials";
 export const ALL_ADMINS = "All Admins";
+export const MESSAGES = "Messages";
 
-export const itemsPerPage = 7;
+export const itemsPerPage = 5;
  

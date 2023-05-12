@@ -123,10 +123,9 @@ const Home = () => {
                          <div className="mt-3">
                               <h1 className="my-0 fs-4 fw-bold">Dashboard</h1>
                               <p className="text-cyan fs-6">
-                                   Welcome,
+                                   Welcome,{" "}
                                    <span className="fw-bold">
-                                        {" "}
-                                        {user.firstName}
+                                        {user.firstName + " " + user.lastName}
                                    </span>
                               </p>
                          </div>
@@ -140,7 +139,7 @@ const Home = () => {
                                              </h1>
                                              <h1 className="fs-6 fw-bold text-cyan">
                                                   Statistics of last users’
-                                                  trails
+                                                  trials
                                              </h1>
                                              <ResponsiveContainer
                                                   width="90%"
@@ -212,7 +211,7 @@ const Home = () => {
                                              <div className="w-50 h-100 pe-2">
                                                   <div className="w-100 h-75 bg-dark-grey p-3">
                                                        <h1 className="fs-6 m-0 fw-bold d-flex flex-column">
-                                                            Succeed Trails{" "}
+                                                            Succeed trials{" "}
                                                             <span className="fw-bold text-cyan">
                                                                  Succeed
                                                                  Percentage
@@ -245,7 +244,7 @@ const Home = () => {
                                              <div className="w-50 h-100 ps-2">
                                                   <div className="w-100 h-100 bg-dark-grey p-3">
                                                        <h1 className="fs-6 m-0 fw-bold d-flex flex-column">
-                                                            Failed Trails{" "}
+                                                            Failed trials{" "}
                                                             <span className="fw-bold text-orange">
                                                                  Failed
                                                                  Percentage
@@ -285,14 +284,18 @@ const Home = () => {
                                    {logs && (
                                         <>
                                              {logs
-                                                  .slice(0,8)
+                                                  .slice(0, 8)
                                                   .map((log, index) => (
                                                        <div
                                                             key={index}
                                                             className="my-3"
                                                        >
                                                             <h1 className="fs-5 d-flex flex-column">
-                                                                 {`${log.user.firstName}`}
+                                                                 {`${log.user
+                                                                      .firstName +
+                                                                      " " +
+                                                                      log.user
+                                                                           .lastName}`}
 
                                                                  <span className="text-cyan fs-6 d-flex justify-content-between w-100">
                                                                       {
