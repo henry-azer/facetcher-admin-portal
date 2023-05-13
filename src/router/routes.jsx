@@ -8,11 +8,11 @@ import Home from "../views/Home";
 import Login from "../views/Login";
 import Profile from "../views/Profile";
 import Submissions from "../views/Submissions";
-import Test from "../views/Test";
 import UserLogs from "../views/UserLogs";
 import CreateUser from "../views/CreateUser";
 import Submission from "../views/Submission";
 import Messages from "../views/Messages";
+import PageNotFound from "../views/PageNotFound";
 
 const routes = () => (
      <Routes>
@@ -27,8 +27,11 @@ const routes = () => (
           <Route exact path="/users-logs" element={<UserLogs />} />
           <Route exact path="/create-user" element={<CreateUser />} />
           <Route exact path="/messages" element={<Messages />} />
-          <Route exact path="/test" element={<Test />} />
-          {/* <Route element={<NotFound />} /> */}
+
+          <Route path="/error" element={<PageNotFound />} />
+          <Route path="" element={<PageNotFound />} />
+          <Route path="*" element={<PageNotFound />} />
+          <Route element={<PageNotFound />} />
      </Routes>
 );
 
