@@ -1,117 +1,125 @@
 import axios from "axios";
-// import delayAdapterEnhancer from "axios-delay";
 
 import {
-     LOGIN_REQUEST,
-     LOGIN_FAILURE,
-     LOGIN_SUCCEEDED,
-     CLEAR_LOGIN_DETAILS,
-     USER_NOT_ADMIN,
-     PROFILE_PIC_ADDED_SUCCESSFULLY,
+    LOGIN_REQUEST,
+    LOGIN_FAILURE,
+    LOGIN_SUCCEEDED,
+    GET_CURRENT_USER_REQUEST,
+    GET_CURRENT_USER_SUCCEEDED,
+    GET_CURRENT_USER_FAILURE,
+    LOGOUT_REQUEST,
+    LOGOUT_SUCCEEDED,
+    LOGOUT_FAILURE,
 } from "../../types";
 
 import Cookies from "universal-cookie";
 import {
-     ACCESSTOKEN,
-     APIs_URL,
-     ISUSERAUTH,
+    APIs_URL,
+    ACCESS_TOKEN,
+    IS_USER_AUTHENTICATED,
 } from "../../../constants/app_constants";
 
 const cookies = new Cookies();
 
 const URL = APIs_URL.STAGING;
 
-// const api = axios.create({
-//      adapter: delayAdapterEnhancer(axios.defaults.adapter),
-// });
-
-export const authenticateUser = (values) => (dispatch) => {
-     dispatch({ type: LOGIN_REQUEST });
-     axios.post(`${URL}/auth/log-in`, {
-          email: "bavly@facetcher.com",
-          password: "admin@facetcher",
-     })
-          .then((response) => {
-               console.log(response);
-               if (response.data.success) {
-                    console.log(response);
-                    console.log("cookies added");
-                    cookies.set(ISUSERAUTH, "true");
-                    cookies.set(
-                         ACCESSTOKEN,
-                         `${response.data.body.accessToken}`
-                    );
-                    axios.get(`${URL}/auth/current`).then((res) => {
-                         console.log(res);
-                         if (res.data.success) {
-                              console.log(res);
-                              dispatch({
-                                   type: LOGIN_SUCCEEDED,
-                                   payload: res.data.body,
-                              });
-                              // if (
-                              //      res.data.body.userRoles[0].role.name !==
-                              //      "ADMIN"
-                              // ) {
-                              //      cookies.remove(ACCESSTOKEN);
-                              //      cookies.remove(ISUSERAUTH);
-
-                              //      dispatch({ type: USER_NOT_ADMIN });
-                              //      console.log("NOT Admin");
-                              // }
-                         }
-                    });
-               }
-          })
-          .catch((err) => {
-               console.log(err);
-               cookies.set(ISUSERAUTH, "false");
-          });
-};
-
 export const getCurrentUser = () => (dispatch) => {
-     axios.get(`${URL}/auth/current`).then((res) => {
-          console.log(res);
-          if (res.data.success) {
-               console.log(res);
-               dispatch({
-                    type: LOGIN_SUCCEEDED,
-                    payload: res.data.body,
-               });
-          }
-     });
+    dispatch({ type: GET_CURRENT_USER_REQUEST });
+    axios
+        .get(`${URL}/auth/current`)
+        .then((response) => {
+            if (response.data.success) {
+                dispatch({
+                    type: GET_CURRENT_USER_SUCCEEDED,
+                    payload: response.data.body,
+                });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: GET_CURRENT_USER_FAILURE,
+                payload: error.response.data.message,
+            });
+        });
 };
 
-export const addProfilePicture = (photo) => async (dispatch) => {
-     console.log("------------------------\nProfile picture ... ");
-     console.log(photo);
-     const formData = new FormData();
-
-     formData.append("photo", photo);
-
-     axios.post(`${URL}/user/profile-picture`, formData).then((res) => {
-          console.log(res);
-
-          if (res.data.success) {
-               console.log(res);
-               // dispatch({
-               //      type: PROFILE_PIC_ADDED_SUCCESSFULLY,
-               //      payload: res.data.body,
-               // });
-          }
-     });
+export const authenticateUser = (user) => (dispatch) => {
+    dispatch({ type: LOGIN_REQUEST });
+    axios
+        .post(`${URL}/auth/log-in`, {
+            email: user.email,
+            password: user.password,
+        })
+        .then((response1) => {
+            if (response1.data.success) {
+                cookies.set(ACCESS_TOKEN, `${response1.data.body.accessToken}`);
+                axios.get(`${URL}/auth/current`).then((response2) => {
+                    if (response2.data.success) {
+                        const userRoles = response2.data.body.userRoles;
+                        if (userRoles && userRoles.length > 0) {
+                            let isAdmin = false;
+                            for (const userRole of userRoles) {
+                                const role = userRole.role;
+                                if (role && role.name === "ADMIN") {
+                                    isAdmin = true;
+                                    break;
+                                }
+                            }
+                            if (isAdmin) {
+                                cookies.set(IS_USER_AUTHENTICATED, "true");
+                                cookies.set(
+                                    ACCESS_TOKEN,
+                                    `${response1.data.body.accessToken}`
+                                );
+                                dispatch({
+                                    type: LOGIN_SUCCEEDED,
+                                    payload: response2.data.body,
+                                });
+                            } else {
+                                cookies.set(IS_USER_AUTHENTICATED, "false");
+                                dispatch({
+                                    type: LOGIN_FAILURE,
+                                    payload: "Access denied",
+                                });
+                            }
+                        } else {
+                            cookies.set(IS_USER_AUTHENTICATED, "false");
+                            dispatch({
+                                type: LOGIN_FAILURE,
+                                payload: "Access denied",
+                            });
+                        }
+                    }
+                });
+            }
+        })
+        .catch((error) => {
+            cookies.set(IS_USER_AUTHENTICATED, "false");
+            dispatch({
+                type: LOGIN_FAILURE,
+                payload: error.response.data.message,
+            });
+        });
 };
 
-export const deleteUserPic = () => () => {
-     axios.delete(`${URL}/user/profile-picture`).then((res) => {
-          console.log(res);
-          console.log("User Picture deleted successfully");
-     });
+export const logoutUser = () => (dispatch) => {
+    dispatch({ type: LOGOUT_REQUEST });
+    axios
+        .get(`${URL}/auth/log-out`)
+        .then((response) => {
+            if (response.data.success) {
+                cookies.remove(ACCESS_TOKEN);
+                cookies.set(IS_USER_AUTHENTICATED, "false");
+                dispatch({
+                    type: LOGOUT_SUCCEEDED,
+                    payload: response.data.body,
+                });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: LOGOUT_FAILURE,
+                payload: error.response.data.message,
+            });
+        });
 };
-
-export function clearLoginDetails() {
-     return {
-          type: CLEAR_LOGIN_DETAILS,
-          payload: null,
-     };
-}
