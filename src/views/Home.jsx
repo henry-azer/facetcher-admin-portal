@@ -1,6 +1,21 @@
 import React, { useEffect, useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
+import { getAllLogs } from "../store/actions/logs/logs-actions";
+import { getCurrentUser } from "../store/actions/auth/auth-actions";
+
+import FacetcherCircularChart from "../components/charts/circularChart";
+import FacetcherDrawer from "../components/drawer/drawer";
+
+import checkAuthentication from "../Authentication/check-authentication";
+import { DASHBOARD } from "../constants/app_constants";
+
+import {
+     getAllFailedTrials,
+     getAllTrials,
+} from "../store/actions/trials/trials-action";
+
 import {
      Tooltip,
      CartesianGrid,
@@ -11,7 +26,7 @@ import {
      YAxis,
      Legend,
 } from "recharts";
-import FacetcherDrawer from "../components/drawer/drawer";
+
 import {
      CYAN,
      DARKGREY2,
@@ -19,38 +34,30 @@ import {
      LIGHTGREY10T,
      ORANGE,
 } from "../constants/app_colors";
-import { getCurrentUser } from "../store/actions/auth/auth-actions";
-import { DASHBOARD } from "../constants/app_constants";
-import FacetcherCircularChart from "../components/charts/circularChart";
-import { getAllLogs } from "../store/actions/logs/logs-actions";
-import { Link } from "react-router-dom";
-import {
-     getAllFailedTrials,
-     getAllTrials,
-} from "../store/actions/trials/trials-action";
 
 const Home = () => {
-     const state = useSelector((state) => state);
      const dispatch = useDispatch();
-     const [fetchingData, setFetchingData] = useState(true);
+
+     const [isDataFetched, setIsFetchedData] = useState(false);
 
      useEffect(() => {
-          document.title = "All User | Dashboard";
-
-          if (fetchingData) {
-               dispatch(getAllLogs());
-               dispatch(getCurrentUser());
-               dispatch(getAllTrials());
-               dispatch(getAllFailedTrials());
-               setFetchingData(false);
-          }
+          document.title = "Home | Dashboard";
      });
 
-     const user = state.auth.authenticatedUser;
-     const logs = state.logs.allLogs;
-     const trials = state.trials;
+     useEffect(() => {
+          if (!isDataFetched) {
+              dispatch(getCurrentUser());
+              dispatch(getAllLogs());
+              dispatch(getAllTrials());
+              dispatch(getAllFailedTrials());
+              setIsFetchedData(true);
+          }
+      }, [dispatch, isDataFetched]);
 
-     console.log(state);
+     const user = useSelector((state) => state.auth.currentUser);
+     const logs = useSelector((state) => state.logs.allLogs);
+     const trials = useSelector((state) => state.trials);
+
      const dataView = () => {
           const data = [];
           const allTrials = trials.allTrials;
@@ -109,8 +116,6 @@ const Home = () => {
                     ft: FailedTrials,
                });
           });
-
-          console.log(data);
 
           if (data.length >= 7) return data.slice(-7);
           else return data;
@@ -332,4 +337,4 @@ const Home = () => {
      );
 };
 
-export default Home;
+export default checkAuthentication(Home);
