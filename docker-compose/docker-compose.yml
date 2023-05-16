@@ -1,0 +1,6 @@
+version: '3'
+services:
+  facetcher-admin-portal:
+    image: seniorsteam23/facetcher-admin-portal:1.0-latest
+    ports:
+      - "3000:80"
