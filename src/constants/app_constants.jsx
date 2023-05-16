@@ -1,7 +1,16 @@
 export const APIs_URL = {
-     STAGING:
-          "http://ec2-3-138-186-26.us-east-2.compute.amazonaws.com:8010/facetcher-service/api",
+     STAGING: "http://ec2-18-216-155-91.us-east-2.compute.amazonaws.com:8010/facetcher-service/api",
      PRODUCTION: "http://127.0.0.1:8080",
 };
-export const ISUSERAUTH = "%mmNJ9B7K64$";
-export const ACCESSTOKEN = "%807&tI$4Wzm";
+export const ACCESS_TOKEN = "%807&tI$4Wzm";
+export const IS_USER_AUTHENTICATED = "%mmNJ9B7K64$";
+
+export const USERS = "Users";
+export const ADMINS = "Admins";
+export const DASHBOARD = "Dashboard";
+export const USERS_LOGS = "Users Logs";
+export const SUBMISSIONS = "Submissions";
+export const FAILED_TRIALS = "Failed Trials";
+export const USERS_MESSAGES = "Users Messages";
+
+export const itemsPerPage = 5;

@@ -1,217 +1,283 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-// import CssBaseline from '@mui/material/CssBaseline';
+import React, { useLayoutEffect, useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { logoutUser } from "../../store/actions/auth/auth-actions";
+
 import AppBar from "@mui/material/AppBar";
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-// import Divider from "@mui/material/Divider";
+
+import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-// import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-// import InboxIcon from "@mui/icons-material/MoveToInbox";
-// import MailIcon from "@mui/icons-material/Mail";
+
 import {
-     CYAN,
-     DARKGREY,
-     GREY,
-     LIGHTGREY,
-     LIGHTGREY10T,
+    GREY,
+    ORANGE,
+    DARKGREY,
+    LIGHTGREY,
+    LIGHTGREY10T,
 } from "../../constants/app_colors";
+
+import {
+    USERS,
+    ADMINS,
+    DASHBOARD,
+    FAILED_TRIALS,
+    SUBMISSIONS,
+    USERS_LOGS,
+    USERS_MESSAGES,
+} from "../../constants/app_constants";
+
 import Logo from "../../assets/logo/logo.svg";
 import LogoText from "../../assets/logo/logo-text.svg";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const drawerCategories = [
-     { header: "Analysis", subHeaders: ["Dashboard"] },
-     { header: "Drawings", subHeaders: ["All Drawings", "Recent Drawings"] },
-     { header: "Analysis", subHeaders: ["All Users", "Top Users"] },
-     { header: "Admins", subHeaders: ["All Admins"] },
+    { header: "Analysis", subHeaders: [DASHBOARD] },
+    { header: "Users", subHeaders: [USERS, USERS_LOGS] },
+    { header: "Drawings", subHeaders: [SUBMISSIONS, FAILED_TRIALS] },
+    { header: "Admins", subHeaders: [ADMINS] },
+    { header: "Support", subHeaders: [USERS_MESSAGES] },
 ];
 
-const FacetcherDrawer = () => {
-     return (
-          <Box sx={{ display: "flex" }}>
-               {/* <CssBaseline /> */}
-               <AppBar
-                    elevation={0}
-                    position="fixed"
-                    sx={{
-                         width: `calc(100% - ${drawerWidth}px)`,
-                         ml: `${drawerWidth}px`,
-                         backgroundColor: `${LIGHTGREY10T}`,
-                    }}
-               >
-                    <Toolbar sx={{ width: "100%", justifyContent: "end" }}>
-                         <Box
-                              sx={{
-                                   display: "flex",
-                                   alignItems: "center",
-                                   justifyContent: "space-between",
-                                   width: "17%",
-                                   marginX: "3%",
-                              }}
-                         >
-                              <LightModeOutlinedIcon
-                                   sx={{
-                                        color: `${LIGHTGREY}`,
-                                   }}
-                              />
-                              <Box
-                                   component="div"
-                                   sx={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                   }}
-                              >
-                                   <Typography sx={{ marginRight: "10px" }}>
-                                        Admin Name
-                                   </Typography>
-                                   <Box
+const FacetcherDrawer = (props) => {
+    const ref = useRef(null);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const [height, setHeight] = useState(0);
+
+    const currentUser = useSelector((state) => state.auth.currentUser);
+    const logoutRequest = useSelector((state) => state.auth.logoutRequest);
+    const logoutError = useSelector((state) => state.auth.logoutError);
+    const logoutErrorOccurred = useSelector((state) => state.auth.logoutErrorOccurred);
+
+    useLayoutEffect(() => {
+        setHeight(ref.current.offsetHeight);
+    });
+
+    return (
+        <Box sx={{ display: "flex" }}>
+            <AppBar
+                elevation={0}
+                position="fixed"
+                sx={{
+                    width: `calc(100% - ${drawerWidth}px)`,
+                    ml: `${drawerWidth}px`,
+                    backgroundColor: `${LIGHTGREY10T}`,
+                }}
+            >
+                <Toolbar sx={{ width: "100%", justifyContent: "end" }}>
+                    <Box
+                        ref={ref}
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "end",
+                            width: "100%",
+                            marginRight: "3%",
+                        }}
+                    >
+                        {currentUser && (
+                            <Box
+                                component="div"
+                                className="d-flex justify-content-end align-items-center cursor-pointer"
+                            >
+                                <Typography
+                                    sx={{
+                                        fontSize: "15px",
+                                        width: "100%",
+                                    }}
+                                    onClick={() =>
+                                        navigate("/profile", {
+                                            state: {
+                                                id: "current",
+                                            },
+                                        })
+                                    }
+                                >
+                                    {currentUser.firstName +
+                                        " " +
+                                        currentUser.lastName}
+                                </Typography>
+                                {currentUser.profilePictureUrl ? (
+                                    <div style={{
+                                        width: '50px',
+                                        height: '40px',
+                                        borderRadius: '50%',
+                                        overflow: 'hidden',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'start'
+                                    }}>
+                                        <img src={currentUser.profilePictureUrl}
+                                            alt="User Profile"
+                                            style={{
+                                                width: '60px',
+                                                height: '50px',
+                                                objectFit: 'cover'
+                                            }} />
+                                    </div>
+                                ) : (
+                                    <Box
                                         component="div"
                                         sx={{
-                                             width: "40px",
-                                             height: "40px",
-                                             borderRadius: "50%",
-                                             backgroundColor: `${CYAN}`,
-                                             display: "flex",
-                                             justifyContent: "center",
-                                             alignItems: "center",
+                                            width: "55px",
+                                            height: "40px",
                                         }}
-                                   >
+                                        className="d-flex bg-cyan justify-content-center align-items-center rounded-circle"
+                                        onClick={() =>
+                                            navigate("/profile", {
+                                                state: {
+                                                    id: "current",
+                                                },
+                                            })
+                                        }
+                                    >
                                         <PermIdentityIcon
-                                             fontSize="large"
-                                             sx={{ color: `${LIGHTGREY}` }}
+                                            fontSize="large"
+                                            sx={{
+                                                color: `${LIGHTGREY}`,
+                                            }}
                                         />
-                                   </Box>
-                                   <KeyboardArrowDownIcon
-                                        sx={{ color: `${LIGHTGREY}` }}
-                                   />
-                              </Box>
-                         </Box>
-                    </Toolbar>
-               </AppBar>
-               <Drawer
-                    sx={{
-                         width: drawerWidth,
-                         border: "none",
-                         flexShrink: 0,
-                         "& .MuiDrawer-paper": {
-                              border: "none",
-                              color: `${LIGHTGREY}`,
-                              backgroundColor: `${DARKGREY}`,
-                              width: drawerWidth,
-                              boxSizing: "border-box",
-                         },
-                    }}
-                    variant="permanent"
-                    anchor="left"
-               >
-                    <Toolbar
-                         sx={{
-                              backgroundColor: `${LIGHTGREY10T}`,
-                              display: "flex",
-                         }}
-                    >
-                         <Box
-                              component="img"
-                              src={Logo}
-                              sx={{ marginRight: "15px" }}
-                         />
-                         <Box component="img" src={LogoText} />
-                    </Toolbar>
-                    <Box
-                         component="div"
-                         sx={{
-                              marginTop: "5%",
-                              marginLeft: "5%",
-                         }}
-                    >
-                         {drawerCategories.map((category, index) => (
-                              <List disablePadding key={index}>
-                                   <ListItem>
-                                        <ListItemText
-                                             primaryTypographyProps={{
-                                                  fontSize: "15px",
-                                             }}
-                                             sx={{ color: `${GREY}` }}
-                                             primary={category.header}
-                                        />
-                                   </ListItem>
-                                   {category.subHeaders.map(
-                                        (subHeader, index) => (
-                                             <ListItem
-                                                  key={index}
-                                                  disablePadding
-                                             >
-                                                  <ListItemButton>
-                                                       <ListItemText
-                                                            primaryTypographyProps={{
-                                                                 fontSize:
-                                                                      "20px",
-                                                                 fontWeight:
-                                                                      "Bold",
-                                                            }}
-                                                            primary={subHeader}
-                                                            className='active_sub_header'
-                                                       />
-                                                  </ListItemButton>
-                                             </ListItem>
-                                        )
-                                   )}
-                              </List>
-                         ))}
+                                    </Box>
+                                )}
+                            </Box>
+                        )}
                     </Box>
-               </Drawer>
-               <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                    <Toolbar />
-                    <Typography paragraph>
-                         Lorem ipsum dolor sit amet, consectetur adipiscing
-                         elit, sed do eiusmod tempor incididunt ut labore et
-                         dolore magna aliqua. Rhoncus dolor purus non enim
-                         praesent elementum facilisis leo vel. Risus at ultrices
-                         mi tempus imperdiet. Semper risus in hendrerit gravida
-                         rutrum quisque non tellus. Convallis convallis tellus
-                         id interdum velit laoreet id donec ultrices. Odio morbi
-                         quis commodo odio aenean sed adipiscing. Amet nisl
-                         suscipit adipiscing bibendum est ultricies integer
-                         quis. Cursus euismod quis viverra nibh cras. Metus
-                         vulputate eu scelerisque felis imperdiet proin
-                         fermentum leo. Mauris commodo quis imperdiet massa
-                         tincidunt. Cras tincidunt lobortis feugiat vivamus at
-                         augue. At augue eget arcu dictum varius duis at
-                         consectetur lorem. Velit sed ullamcorper morbi
-                         tincidunt. Lorem donec massa sapien faucibus et
-                         molestie ac.
-                    </Typography>
-                    <Typography paragraph>
-                         Consequat mauris nunc congue nisi vitae suscipit.
-                         Fringilla est ullamcorper eget nulla facilisi etiam
-                         dignissim diam. Pulvinar elementum integer enim neque
-                         volutpat ac tincidunt. Ornare suspendisse sed nisi
-                         lacus sed viverra tellus. Purus sit amet volutpat
-                         consequat mauris. Elementum eu facilisis sed odio
-                         morbi. Euismod lacinia at quis risus sed vulputate
-                         odio. Morbi tincidunt ornare massa eget egestas purus
-                         viverra accumsan in. In hendrerit gravida rutrum
-                         quisque non tellus orci ac. Pellentesque nec nam
-                         aliquam sem et tortor. Habitant morbi tristique
-                         senectus et. Adipiscing elit duis tristique
-                         sollicitudin nibh sit. Ornare aenean euismod elementum
-                         nisi quis eleifend. Commodo viverra maecenas accumsan
-                         lacus vel facilisis. Nulla posuere sollicitudin aliquam
-                         ultrices sagittis orci a.
-                    </Typography>
-               </Box>
-          </Box>
-     );
+                </Toolbar>
+            </AppBar>
+            <Drawer
+                sx={{
+                    width: drawerWidth,
+                    border: "none",
+                    flexShrink: 0,
+                    "& .MuiDrawer-paper": {
+                        border: "none",
+                        color: `${LIGHTGREY}`,
+                        backgroundColor: `${DARKGREY}`,
+                        width: drawerWidth,
+                        boxSizing: "border-box",
+                        overflowY: "hidden",
+                    },
+                }}
+                variant="permanent"
+                anchor="left"
+            >
+                <Toolbar
+                    sx={{
+                        backgroundColor: `${LIGHTGREY10T}`,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <div
+                        className="d-flex justify-content-center align-items-center cursor-pointer"
+                        onClick={() => {
+                            navigate("/");
+                        }}
+                    >
+                        <Box
+                            component="img"
+                            src={Logo}
+                            sx={{ marginRight: "15px" }}
+                        />
+                        <Box component="img" src={LogoText} />
+                    </div>
+                </Toolbar>
+                <Box
+                    component="div"
+                    sx={{
+                        marginTop: "5%",
+                        marginLeft: "8%",
+                    }}
+                >
+                    {drawerCategories.map((category, index) => (
+                        <List disablePadding key={index}>
+                            <ListItem>
+                                <ListItemText
+                                    primaryTypographyProps={{
+                                        fontSize: "12px",
+                                    }}
+                                    sx={{ color: `${GREY}` }}
+                                    primary={category.header}
+                                />
+                            </ListItem>
+                            {category.subHeaders.map((subHeader, index) => (
+                                <ListItem key={index} disablePadding>
+                                    <ListItemButton
+                                        onClick={() =>
+                                            navigate(
+                                                `/${subHeader !== DASHBOARD
+                                                    ? subHeader
+                                                        .toLowerCase()
+                                                        .replace(" ", "-")
+                                                    : ""
+                                                }`
+                                            )
+                                        }
+                                    >
+                                        <ListItemText
+                                            primaryTypographyProps={{
+                                                fontSize: "15px",
+                                                fontWeight: "Bold",
+                                            }}
+                                            primary={subHeader}
+                                            className={`${props.route &&
+                                                props.route === subHeader &&
+                                                "active_sub_header"}`}
+                                        />
+                                    </ListItemButton>
+                                </ListItem>
+                            ))}
+                        </List>
+                    ))}
+                </Box>
+                <Box
+                    sx={{
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                        marginBottom: "20%",
+                        marginRight: "10%",
+                    }}
+                >
+                    {logoutErrorOccurred && <h6>* {logoutError}</h6>}
+                    <Button variant="contained" style={{ backgroundColor: ORANGE }} onClick={() => dispatch(logoutUser())}>{logoutRequest ? "Loading..." : "Logout"}</Button>
+                </Box>
+            </Drawer>
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    overflow: "hidden",
+                    height: `calc(100vh - ${height}px)`,
+                }}
+            >
+                <div
+                    className=" overflow-hidden d-flex justify-content-center align-items-center h-100"
+                    style={{
+                        marginTop: `${height}px`,
+                    }}
+                >
+                    <div className="w-100 h-100">{props.children}</div>
+                </div>
+            </Box>
+        </Box>
+    );
 };
 
 export default FacetcherDrawer;
