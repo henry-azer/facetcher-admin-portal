@@ -1,64 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import { FaCaretRight } from "react-icons/fa";
-
-import Typography from "@mui/material/Typography";
+import checkAuthentication from "../authentication/check-authentication";
 
 const PageNotFound = () => {
     const navigate = useNavigate();
-
     useEffect(() => {
-        document.title = "Page Not Found | Henry Golden Cinema";
-    });
+        const events = ['resize', 'load'];
+        const visual = document.getElementById('visual');
+
+        events.forEach((e) => {
+            window.addEventListener(e, () => {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                const ratio = 45 / (width / height);
+                visual.style.transform = `translate(-50%, -50%) rotate(-${ratio}deg)`;
+            });
+        });
+    }, []);
 
     return (
-        <section className="not-found-route">
-            <div className="not-found-wrapper content-fit">
-                <div className="heading-wrapper display-flex flex-row">
-                    <FaCaretRight className="heading-icon" />
-                    <Typography
-                        className="heading-title"
-                        variant="h4"
-                        component="div"
-                    >
-                        Page Not Found
-                    </Typography>
-                </div>
-
-                <div className="not-found-container display-flex">
-                    <img
-                        src="https://aioseo.com/wp-content/uploads/2021/04/how-to-find-and-fix-404-errors-in-wordpress.png.webp"
-                        className="not-found-img"
-                        alt="page-not-found"
-                    />
-
-                    <div className="not-found-text display-flex">
-                        <Typography
-                            className="heading-title"
-                            variant="h4"
-                            component="div"
-                        >
-                            Look like you're lost!
-                        </Typography>
-
-                        <Typography
-                            className="heading-title"
-                            variant="h7"
-                            component="div"
-                            gutterBottom
-                        >
-                            The page you are looking for is not available.
-                        </Typography>
-                    </div>
-
-                    <button className="btn-1" onClick={() => navigate("/")}>
-                        Back
-                    </button>
-                </div>
+        <div className="page-not-found-body">
+            <button onClick={() => { navigate("/") }} className="page-not-found-link">
+                <svg height="0.8em" width="0.8em" viewBox="0 0 2 1" preserveAspectRatio="none">
+                    <polyline fill="none" stroke="#555" strokeWidth="0.1" points="0.9,0.1 0.1,0.5 0.9,0.9" />
+                </svg>
+                Back Home
+            </button>
+            <div className="page-not-found-background-wrapper">
+                <h1 id="visual" className="page-not-found-h1">404</h1>
             </div>
-        </section>
+            <p className="page-not-found-text">You seems lost! <br /> Page not found.</p>
+        </div>
     );
 };
 
-export default PageNotFound;
+export default checkAuthentication(PageNotFound);
+

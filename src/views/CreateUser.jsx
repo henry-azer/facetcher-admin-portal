@@ -1,213 +1,171 @@
-import React, { useEffect, useState } from "react";
-import FacetcherDrawer from "../components/drawer/drawer";
-import PersonIcon from "@mui/icons-material/Person";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+
+import { createUser } from "../store/actions/users/users-actions";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
-import { Form, Formik } from "formik";
 
-import "react-circular-progressbar/dist/styles.css";
-
-import { navigateToLogin } from "../utils/util";
+import checkAuthentication from "../authentication/check-authentication";
 
 import FacetcherSelectComponent from "../components/select-component";
 
-import { useLocation, useNavigate } from "react-router-dom";
-import { addUser } from "../store/actions/users/users-actions";
+import FacetcherDrawer from "../components/drawer/drawer";
+import PersonIcon from "@mui/icons-material/Person";
+
 const CreateUser = () => {
-     useEffect(() => navigateToLogin(), []);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
-     const formData = new FormData();
+    const createdUserMessage = useSelector((state) => state.user.createdUserMessage);
+    const createUserRequest = useSelector((state) => state.user.createUserRequest);
+    const createUserError = useSelector((state) => state.user.createUserError);
+    const createUserErrorOccurred = useSelector((state) => state.user.createUserErrorOccurred);
 
-     const store = useSelector((state) => state);
-     const dispatch = useDispatch();
+    useEffect(() => {
+        if (location.state === null) navigate("/error");
+        else {
+            document.title = location.state.userType
+                ? `Create ${location.state.userType} | Facetcher`
+                : "Create | Facetcher";
+            dispatch(getCurrentUser());
+        }
+    }, [dispatch, location]);
 
-     const [alert, setAlert] = useState("");
-     const [alertAnimation, setAlertAnimation] = useState("");
-     const [alertColor, setAlertColor] = useState("");
-     const [display, setDisplay] = useState(false);
+    const validationSchema = Yup.object().shape({
+        firstName: Yup.string().required('First Name is required'),
+        lastName: Yup.string().required('Last Name is required'),
+        email: Yup.string().email('Invalid email').required('Email is required'),
+        password: Yup.string().required('Password is required'),
+        phoneNumber: Yup.string().required('Phone Number is required'),
+        gender: Yup.string().oneOf(['Male', 'Female'], 'Invalid gender').required('Gender is required'),
+        maritalStatus: Yup.string().oneOf(['Single', 'Married'], 'Invalid marital status').required('Marital Status is required'),
+    });
 
-     const [isUserFetched, setIsUserFetched] = useState(false);
+    const initialValues = {
+        roleId: `${String(location.state.userType).toLowerCase() === 'user' ? 1 : 2}`,
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        email: '',
+        password: '',
+        gender: 'Gender',
+        maritalStatus: 'Marital Status',
+    };
 
-     const navigate = useNavigate();
-     const location = useLocation();
+    const handleSubmit = (values, { resetForm }) => {
+        const user = {
+            ...values,
+            gender: String(values.gender).toUpperCase(),
+            maritalStatus: String(values.maritalStatus).toUpperCase(),
+        };
+        delete user.roleId;
+        dispatch(createUser(user, values.roleId));
+        resetForm();
+    };
 
-     console.log(location);
-
-     useEffect(() => {
-          document.title = "Create | Facetcher";
-          //     if (location.state === null) navigate("/");
-          if (!isUserFetched) {
-               dispatch(getCurrentUser());
-               setIsUserFetched(true);
-          }
-     });
-
-     // console.log(location.state.id);
-     //      console.log(store);
-     return (
-          <div>
-               <FacetcherDrawer>
-                    <div className="row h-100 justify-content-center align-items-center gx-2 mt-5 overflowY-scroll">
-                         <Formik
-                              initialValues={{
-                                   roleId: `${
-                                        String(
-                                             location.state.userType
-                                        ).toLowerCase() === "user"
-                                             ? 1
-                                             : 2
-                                   }`,
-                                   firstName: "",
-                                   lastName: "",
-                                   phoneNumber: "",
-                                   email: "",
-                                   password: `${String(
-                                        location.state.userType
-                                   ).toLowerCase()}@facetcher`,
-                                   gender: "Choose Gender ...",
-                              }}
-                              // enableReinitialize={true}
-                              onSubmit={(values, { resetForm }) => {
-                                   console.log(values);
-                                   const user = {
-                                        ...values,
-                                        gender: String(
-                                             values.gender
-                                        ).toUpperCase(),
-                                   };
-                                   delete user.roleId;
-                                   console.log(user);
-                                   console.log(values.roleId);
-                                   dispatch(addUser(user, values.roleId));
-                                   setAlertAnimation("in");
-                                   setDisplay(true);
-                                   setAlertColor("cyan");
-                                   setAlert("User is added successfully !");
-
-                                   setTimeout(() => {
-                                        setAlertAnimation("out");
-                                   }, 2000);
-                                   setTimeout(() => {
-                                        setDisplay(false);
-                                        setAlertColor("");
-                                        setAlert("");
-                                   }, 3000);
-
-                                   resetForm();
-                                   // resetForm(
-                                   //      (values.gender = "Choose Gender ...")
-                                   // );
-                                   // values.gender="Choose Gender ..."
-                              }}
-                         >
-                              {({
-                                   values,
-                                   handleChange,
-                                   setFieldValue,
-                                   handleSubmit,
-                              }) => (
-                                   <div className="col-lg-4 col-12 bg-dark-grey mx-2 p-3 position-relative d-flex justify-content-center h-100 overflow-hidden">
-                                        <div className=" bg-dark-grey2 w-100 h-20 user-profile-pic position-absolute top-0"></div>
-                                        <div className=" rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
-                                             <div className="w-100 h-100 d-flex justify-content-center align-items-center overflow-hidden position-relative">
-                                                  <PersonIcon
-                                                       sx={{
-                                                            fontSize: 160,
-                                                       }}
-                                                  />
-                                             </div>
+    return (
+        <div>
+            <FacetcherDrawer>
+                <div className="row h-100 justify-content-center align-items-center mt-3 overflowY-scroll">
+                    <Formik
+                        onSubmit={handleSubmit}
+                        initialValues={initialValues}
+                        validationSchema={validationSchema}
+                    >
+                        {({ values, handleChange, handleSubmit, errors, touched }) => (
+                            <div className="w-50 bg-dark-grey mx-5 position-relative d-flex justify-content-center align-items-center flex-column h-100 overflow-hidden">
+                                <div className="bg-dark-grey2 w-100 h-25 user-profile-pic position-absolute top-0"></div>
+                                <div className="rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
+                                    <div className="w-100 h-100 d-flex justify-content-center align-items-center overflow-hidden position-relative">
+                                        <PersonIcon sx={{ fontSize: 160 }} />
+                                    </div>
+                                </div>
+                                <Form className="w-50 mx-5 d-flex justify-content-center flex-column align-items-center text-center" style={{marginTop: 180}}>
+                                    {!createUserErrorOccurred && !createUserRequest && createdUserMessage && (<h6>* {createdUserMessage}</h6>)}
+                                    {createUserErrorOccurred && <h6>* {createUserError}</h6>}
+                                    <div className="row justify-content-center align-items-center">
+                                        <div className="col-lg-6 col-12">
+                                            <Field
+                                                type="text"
+                                                name="firstName"
+                                                placeholder="First Name"
+                                                className={`form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100 ${errors.firstName && touched.firstName ? 'is-invalid' : ''}`}
+                                            />
+                                            <ErrorMessage name="firstName" component="div" className="invalid-feedback" />
                                         </div>
-
-                                        <div className=" align-self-end h-75 pt-5 text-center">
-                                             <form className="d-flex justify-content-center align-items-center flex-column mx-2">
-                                                  <div className="row justify-content-center align-items-center h-75">
-                                                       <div className="col-6">
-                                                            <input
-                                                                 type="text"
-                                                                 name="firstName"
-                                                                 placeholder="First Name"
-                                                                 className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100"
-                                                                 onChange={
-                                                                      handleChange
-                                                                 }
-                                                                 value={
-                                                                      values.firstName
-                                                                 }
-                                                            />
-                                                       </div>
-                                                       <div className="col-lg-6 col-12">
-                                                            <input
-                                                                 type="text"
-                                                                 name="lastName"
-                                                                 placeholder="Last Name"
-                                                                 className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100"
-                                                                 onChange={
-                                                                      handleChange
-                                                                 }
-                                                                 value={
-                                                                      values.lastName
-                                                                 }
-                                                            />
-                                                       </div>
-                                                  </div>
-                                                  <input
-                                                       type="email"
-                                                       name="email"
-                                                       placeholder="Email address"
-                                                       className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100"
-                                                       onChange={handleChange}
-                                                       value={values.email}
-                                                  />
-                                                  <input
-                                                       type="text"
-                                                       name="phoneNumber"
-                                                       placeholder="Phone Number"
-                                                       className="form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100"
-                                                       onChange={handleChange}
-                                                       value={
-                                                            values.phoneNumber
-                                                       }
-                                                  />
-                                                  <div className="w-100 my-5">
-                                                       <FacetcherSelectComponent
-                                                            onChange={
-                                                                 handleChange
-                                                            }
-                                                            name="gender"
-                                                            value={
-                                                                 values.gender
-                                                            }
-                                                            defaultValue="Choose Gender ..."
-                                                            options={[
-                                                                 "Choose Gender ...",
-                                                                 "Male",
-                                                                 "Female",
-                                                            ]}
-                                                       />
-                                                  </div>
-
-                                                  <button
-                                                       onClick={handleSubmit}
-                                                       className="btn bg-cyan text-light-grey rounded-pill w-50 me-2 fw-bold"
-                                                  >{`Create New ${location.state.userType}`}</button>
-                                             </form>
+                                        <div className="col-lg-6 col-12">
+                                            <Field
+                                                type="text"
+                                                name="lastName"
+                                                placeholder="Last Name"
+                                                className={`form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100 ${errors.lastName && touched.lastName ? 'is-invalid' : ''}`}
+                                            />
+                                            <ErrorMessage name="lastName" component="div" className="invalid-feedback" />
                                         </div>
-                                        <div
-                                             className={`alert bg-${alertColor} text-light-grey position-fixed w-50 bottom-0 text-center ${!display &&
-                                                  "d-none"}`}
-                                             role="alert"
-                                             style={{
-                                                  animation: `fade-${alertAnimation} ease-in-out 1s`,
-                                             }}
-                                        >
-                                             {alert}
+                                    </div>
+                                    <Field
+                                        type="email"
+                                        name="email"
+                                        placeholder="Email address"
+                                        className={`form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100 ${errors.email && touched.email ? 'is-invalid' : ''}`}
+                                    />
+                                    <ErrorMessage name="email" component="div" className="invalid-feedback" />
+                                    <Field
+                                        type="password"
+                                        name="password"
+                                        placeholder="Password"
+                                        className={`form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100 ${errors.password && touched.password ? 'is-invalid' : ''}`}
+                                    />
+                                    <ErrorMessage name="password" component="div" className="invalid-feedback" />
+                                    <Field
+                                        type="text"
+                                        name="phoneNumber"
+                                        placeholder="Phone Number"
+                                        className={`form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100 ${errors.phoneNumber && touched.phoneNumber ? 'is-invalid' : ''}`}
+                                    />
+                                    <ErrorMessage name="phoneNumber" component="div" className="invalid-feedback" />
+                                    <div className="w-100 d-flex justify-content-between gap-5 align-items-start">
+                                        <div className="w-100 my-4">
+                                            <FacetcherSelectComponent
+                                                onChange={handleChange}
+                                                name="gender"
+                                                value={values.gender}
+                                                defaultValue="Gender"
+                                                options={["Gender", "Male", "Female"]}
+                                                className={`form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100 ${errors.gender && touched.gender ? 'is-invalid' : ''}`}
+                                            />
+                                            <ErrorMessage name="gender" component="div" className="invalid-feedback" />
                                         </div>
-                                   </div>
-                              )}
-                         </Formik>
-                    </div>
-               </FacetcherDrawer>
-          </div>
-     );
+                                        <div className="w-100 my-4">
+                                            <FacetcherSelectComponent
+                                                onChange={handleChange}
+                                                name="Marital Status"
+                                                value={values.maritalStatus}
+                                                defaultValue="Marital Status"
+                                                options={["Marital Status", "Single", "Married"]}
+                                                className={`form-control bg-transparent fs-6 grey-border border-top-0 border-start-0 border-end-0 w-75 px-2 fs-5 text-light-grey my-3 rounded-0 w-100 ${errors.maritalStatus && touched.maritalStatus ? 'is-invalid' : ''}`}
+                                            />
+                                            <ErrorMessage name="maritalStatus" component="div" className="invalid-feedback" />
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        onClick={handleSubmit}
+                                        className="btn bg-cyan text-light-grey rounded-pill w-50 mt-4 fw-bold"
+                                    >
+                                        {createUserRequest ? "Loading ..." : `Create New ${location.state.userType}`}
+                                    </button>
+                                </Form>
+                            </div>
+                        )}
+                    </Formik>
+                </div>
+            </FacetcherDrawer>
+        </div>
+    );
 };
-export default CreateUser;
+export default checkAuthentication(CreateUser);

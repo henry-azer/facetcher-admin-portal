@@ -1,131 +1,226 @@
 import axios from "axios";
-import { APIs_URL } from "../../../constants/app_constants";
 
 import {
-     ADDING_USER,
-     ADDING_USER_FAILED,
-     CLEAR_REGISTRATION_DETAILS,
-     GET_ALL_USERS,
-     GET_USER_BY_ID,
-     USER_ADDED_SUCCESSFULLY,
+    GET_USER_BY_ID,
+    CLEAR_GET_USER_BY_ID,
+
+    GET_ADMINS_REQUEST,
+    GET_ADMINS_SUCCEEDED,
+    GET_ADMINS_FAILURE,
+
+    GET_USERS_REQUEST,
+    GET_USERS_SUCCEEDED,
+    GET_USERS_FAILURE,
+
+    CREATE_USER_REQUEST,
+    CREATE_USER_SUCCEEDED,
+    CREATE_USER_FAILURE,
+
+    UPDATE_USER_REQUEST,
+    UPDATE_USER_SUCCEEDED,
+    UPDATE_USER_FAILURE,
+    CLEAR_UPDATE_USER,
+
+    TOGGLE_DELETION_USER_REQUEST,
+    TOGGLE_DELETION_USER_SUCCEEDED,
+    TOGGLE_DELETION_USER_FAILURE,
+    CLEAR_TOGGLE_DELETION_USER,
+
+    USER_PROFILE_PICTURE_REQUEST,
+    USER_PROFILE_PICTURE_SUCCEEDED,
+    USER_PROFILE_PICTURE_ERROR,
+
 } from "../../types";
+
+import { APIs_URL } from "../../../constants/app_constants";
 
 const URL = APIs_URL.STAGING;
 
-export const getAllUsers = () => (dispatch) => {
-     axios.get(`${URL}/user/find-all`).then((res) => {
-          console.log(res);
-          if (res.data.success)
-               dispatch({
-                    type: GET_ALL_USERS,
-                    payload: res.data.body
-                         .sort((objA, objB) => objA.id - objB.id)
-                         .filter((obj) => {
-                              return (
-                                   obj.markedAsDeleted === false &&
-                                   obj.userRoles[0]
-                                   // obj.userRoles[0].role.name !== "ADMIN"
-                              );
-                         }),
-               });
-     });
+export const getAdmins = () => (dispatch) => {
+    dispatch({ type: GET_ADMINS_REQUEST });
+    axios
+        .get(`${URL}/user/find-all`)
+        .then((response) => {
+            if (response.data.success) {
+                const admins = response.data.body.filter((user) => {
+                    const userRoles = user.userRoles;
+                    if (userRoles && userRoles.length > 0) {
+                        for (const userRole of userRoles) {
+                            const role = userRole.role;
+                            if (role && role.name === "ADMIN") {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                });
+                dispatch({
+                    type: GET_ADMINS_SUCCEEDED,
+                    payload: admins,
+                });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: GET_ADMINS_FAILURE,
+                payload: error.response.data.message,
+            });
+        });
 };
+
+export const getUsers = () => (dispatch) => {
+    dispatch({ type: GET_USERS_REQUEST });
+    axios
+        .get(`${URL}/user/find-all`)
+        .then((response) => {
+            if (response.data.success) {
+                const users = response.data.body.filter((user) => {
+                    const userRoles = user.userRoles;
+                    if (userRoles && userRoles.length > 0) {
+                        for (const userRole of userRoles) {
+                            const role = userRole.role;
+                            if (role && role.name === "USER") {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                });
+                dispatch({
+                    type: GET_USERS_SUCCEEDED,
+                    payload: users,
+                });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: GET_USERS_FAILURE,
+                payload: error.response.data.message,
+            });
+        });
+};
+
 export const getUserById = (userId) => (dispatch) => {
-     axios.get(`${URL}/user/find-by-id/${userId}`).then((res) => {
-          console.log(res);
-          if (res.data.success)
-               dispatch({
-                    type: GET_USER_BY_ID,
-                    payload: res.data.body,
-               });
-     });
+    axios.get(`${URL}/user/find-by-id/${userId}`).then((res) => {
+        if (res.data.success)
+            dispatch({
+                type: GET_USER_BY_ID,
+                payload: res.data.body,
+            });
+    });
 };
-export const addUser = (user, roleID) => (dispatch) => {
-     dispatch({ type: ADDING_USER });
 
-     axios.post(`${URL}/user`, user)
-          .then((res) => {
-               if (res.data.success) {
-                    axios.post(`${URL}/user-role/assign`, {
-                         userId: res.data.body.id,
-                         roleId: roleID,
+export const createUser = (user, roleID) => (dispatch) => {
+    dispatch({ type: CREATE_USER_REQUEST });
+    axios.post(`${URL}/user`, user)
+        .then((response1) => {
+            if (response1.data.success) {
+                axios.post(`${URL}/user-role/assign`, {
+                    userId: response1.data.body.id,
+                    roleId: roleID,
+                }).then((response2) => {
+                    if (response2.data.success) {
+                        dispatch({
+                            type: CREATE_USER_SUCCEEDED,
+                            payload: response1.data,
+                        });
+                    }
+                })
+                    .catch((error) => {
+                        dispatch({
+                            type: CREATE_USER_FAILURE,
+                            payload: error.response.data.message,
+                        });
                     });
-                    dispatch({
-                         type: USER_ADDED_SUCCESSFULLY,
-                    });
-                    console.log("user added successfully");
-                    // console.log(res);
-               }
-          })
-          .catch((err) => {
-               dispatch({
-                    type: ADDING_USER_FAILED,
-               });
-               console.log("failed add user");
-               console.log(err);
-          });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: CREATE_USER_FAILURE,
+                payload: error.response.data.message,
+            });
+        });
 };
 
-export const editUser = (user, roleID) => async (dispatch) => {
-     dispatch({ type: ADDING_USER });
+export const updateUser = (user) => async (dispatch) => {
+    dispatch({ type: UPDATE_USER_REQUEST });
+    axios.put(`${URL}/user`, user)
+        .then((response) => {
 
-     axios.put(`${URL}/user`, user)
-          .then((res) => {
-               if (res.data.success) {
-                    // axios.post(`${URL}/user-role/assign`, {
-                    //      userId: res.data.body.id,
-                    //      roleId: roleID,
-                    // });
-                    dispatch({
-                         type: USER_ADDED_SUCCESSFULLY,
-                    });
-                    console.log("user edited successfully");
-                    // console.log(res);
-               } else console.log("failed edit user");
-          })
-          .catch((err) => {
-               dispatch({
-                    type: ADDING_USER_FAILED,
-               });
-               console.log("failed edit user");
-               console.log(err);
-          });
+            if (response.data.success) {
+                dispatch({
+                    type: UPDATE_USER_SUCCEEDED,
+                    payload: response.data,
+                });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: UPDATE_USER_FAILURE,
+                payload: error.response.data.message,
+            });
+        });
 };
 
-export const editUserPassword = (password, newPassword) => async (dispatch) => {
-     axios.put(`${URL}/user/update-password`, {
-          password: password,
-          newPassword: newPassword,
-     }).then((res) => {
-          if (res.data.success) {
-               console.log("password edited successfully");
-          } else console.log("failed edit password");
-     });
+export const toggleUserAccountDeletion = (userId) => (dispatch) => {
+    dispatch({ type: TOGGLE_DELETION_USER_REQUEST });
+    axios
+        .put(`${URL}/user/${userId}/toggle-deletion`)
+        .then((response) => {
+            if (response.data.success) {
+                dispatch({
+                    type: TOGGLE_DELETION_USER_SUCCEEDED,
+                    payload: response.data,
+                });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: TOGGLE_DELETION_USER_FAILURE,
+                payload: error.response.data.message,
+            });
+        });
 };
 
-export const deleteUser = (userID) => () => {
-     axios.put(`${URL}/user/${userID}/toggle-deletion`).then((res) => {
-          console.log(res);
-          console.log("User deleted successfully");
-     });
+export const uploadUserProfilePicture = (photo) => async (dispatch) => {
+    dispatch({ type: USER_PROFILE_PICTURE_REQUEST });
+    const formData = new FormData();
+    formData.append("photo", photo);
+    axios
+        .post(`${URL}/user/profile-picture`, formData)
+        .then((response) => {
+            if (response.data.success) {
+                dispatch({
+                    type: USER_PROFILE_PICTURE_SUCCEEDED,
+                    payload: response.data.body,
+                });
+            }
+        })
+        .catch((error) => {
+            dispatch({
+                type: USER_PROFILE_PICTURE_ERROR,
+                payload: error.response.data.message,
+            });
+        });
 };
 
-// });
-// };
-// export const addUserRole = (roleID) => () => {
-//      axios.put(`${URL}/role/${roleID}/toggle-deletion`).then((res) => {
-//           console.log(res.data.body);
-//           if (res.data.success)
-//                axios.put(`${URL}/role`, res.data.body).then((response) => {
-//                     console.log(response);
-//                     // if (res.data.success) return res.data.body;
-//                });
-//      });
-// };
+export function clearGetUserById() {
+    return {
+        type: CLEAR_GET_USER_BY_ID,
+        payload: null,
+    };
+};
 
-export function clearRegistrationDetails() {
-     return {
-          type: CLEAR_REGISTRATION_DETAILS,
-          payload: null,
-     };
-}
+export function clearUpdateUser() {
+    return {
+        type: CLEAR_UPDATE_USER,
+        payload: null,
+    };
+};
+
+export function clearToggleUserAccountDeletion() {
+    return {
+        type: CLEAR_TOGGLE_DELETION_USER,
+        payload: null,
+    };
+};

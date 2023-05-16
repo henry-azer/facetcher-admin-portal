@@ -1,210 +1,199 @@
 import React, { useEffect, useState } from "react";
-import FacetcherDrawer from "../components/drawer/drawer";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser } from "../store/actions/auth/auth-actions";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getSubmissionById } from "../store/actions/submission/submission-actions";
+
+import { getSubmissionById, clearSubmissionById } from "../store/actions/submission/submission-actions";
+import { trialsBySubmissionId, clearTrialsBySubmissionId } from "../store/actions/trials/trials-action";
+import { getCurrentUser } from "../store/actions/auth/auth-actions";
+
+import checkAuthentication from "../authentication/check-authentication";
+
 import FacetcherTable from "../components/tables/table";
+import FacetcherDrawer from "../components/drawer/drawer";
+
 import { itemsPerPage } from "../constants/app_constants";
-import { trialsBySubmissionId } from "../store/actions/trials/trials-action";
 
 const Submission = () => {
-     const state = useSelector((state) => state);
-     const navigate = useNavigate();
-     const dispatch = useDispatch();
-     const [fetchingData, setFetchingData] = useState(true);
-     const location = useLocation();
-     const imgSize = 350;
-     const headerArray = [
-          "ID",
-          "Date",
-          "Time",
-          // "Trial Title",
-          "Drawing Gender",
-          "Drawing",
-          "Output",
-     ];
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const navigate = useNavigate();
 
-     const [imgW, setImgW] = useState(0);
-     const [imgH, setImgH] = useState(0);
-const [currentPage, setCurrentPage] = useState(0);
-     const startIndex = currentPage * itemsPerPage;
-     const endIndex = startIndex + itemsPerPage;
-     useEffect(() => {
-          document.title = "All User | Dashboard";
+    const [currentPage, setCurrentPage] = useState(0);
+    const [isDataFetched, setIsDataFetched] = useState(false);
 
-          if (fetchingData) {
-               if (!location.state) {
-                    navigate("/");
-               } else {
-                    dispatch(getCurrentUser());
-                    dispatch(getSubmissionById(location.state.id));
-                    dispatch(trialsBySubmissionId(location.state.id));
-                    setFetchingData(false);
-               }
-          }
-     }, [location.state && location.state.id]);
+    const submission = useSelector((state) => state.submissions.submissionById);
+    const submissionTrials = useSelector((state) => state.trials.trialsBySubmissionId);
 
-     const submission = useSelector(
-          (state) => state.submissions.submissionById
-     );
-     const trials = useSelector((state) => state.trials.trialsBySubmissionId);
-     console.log(trials);
+    useEffect(() => {
+        document.title = "Submission Details | Facetcher";
+    });
 
-     if (submission && submission.inputImage) {
-          const img = new Image();
-          img.onload = () => {
-               setImgH(img.height);
-               setImgW(img.width);
-          };
-          img.src = submission.inputImage.imageUrl;
-     }
+    useEffect(() => {
+        if (location.state === null) navigate("/error");
+        else {
+            let submission = location.state.submission;
+            if (!isDataFetched) {
+                dispatch(getCurrentUser());
+                dispatch(getSubmissionById(submission.id));
+                dispatch(trialsBySubmissionId(submission.id));
+                setIsDataFetched(true);
+            }
+        }
+    }, [dispatch, isDataFetched, location]);
 
-     return (
-          <FacetcherDrawer>
-               {submission && trials && (
+    useEffect(() => {
+        return () => {
+            dispatch(clearSubmissionById());
+            dispatch(clearTrialsBySubmissionId());
+        };
+    }, []);
+
+    const imgSize = 300;
+    const startIndex = currentPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const headerArray = ["ID", "User ID", "Date", "Time", "Gender", "Drawing", "Output"];
+
+    return (
+        <div className="w-100">
+            <FacetcherDrawer>
+                {submission && submissionTrials && (
                     <div className="w-100 h-100 overflowY-scroll mt-3 p-5">
-                         <h1 className="fs-3 fw-bold m-0">
-                              Submission Title: {submission.title}
-                         </h1>
-                         <div className="w-50 d-flex justify-content-between my-4">
-                              <h1 className="text-grey fs-6">
-                                   Gender: {submission.gender}
-                              </h1>
-                              <h1 className="text-grey fs-6">
-                                   Number Of trials: {trials.length}
-                              </h1>
-                         </div>
-                         <h1 className="text-grey fs-6">
-                              Description: {submission.description}
-                         </h1>
-                         <div className="w-100 d-flex justify-content-center align-items-center">
-                              {submission.inputImage ||
-                              submission.inputImage ? (
-                                   <div className="w-75 my-4 d-flex justify-content-around align-items-center">
+                        <div className="w-100 d-flex justify-content-between align-items-center mb-4">
+                            <h1 className="fs-3 fw-bold m-0">Submission Details</h1>
+                        </div>
+                        <div className="w-100 d-flex justify-content-center align-items-center">
+                            <table className="w-50 mx-3 mb-4" style={{ borderCollapse: "collapse" }}>
+                                <tbody>
+                                    <tr style={{ border: "1px solid white" }}>
+                                        <td style={{ border: "1px solid white", width: "1" }}>ID</td>
+                                        <td style={{ border: "1px solid white", width: "3" }}>{submission.id}</td>
+                                    </tr>
+                                    <tr style={{ border: "1px solid white" }}>
+                                        <td style={{ border: "1px solid white", width: "1" }}>User ID</td>
+                                        <td style={{ border: "1px solid white", width: "3" }}>{submission.userId}</td>
+                                    </tr>
+                                    <tr style={{ border: "1px solid white" }}>
+                                        <td style={{ border: "1px solid white", width: "1" }}>Gender</td>
+                                        <td className="text-lowercase" style={{ border: "1px solid white", width: "3" }}>{submission.gender}</td>
+                                    </tr>
+                                    <tr style={{ border: "1px solid white" }}>
+                                        <td style={{ border: "1px solid white", width: "1" }}>Submitted</td>
+                                        <td style={{ border: "1px solid white", width: "3" }}>{`${submission.submitted}`}</td>
+                                    </tr>
+                                    <tr style={{ border: "1px solid white" }}>
+                                        <td style={{ border: "1px solid white", width: "1" }}>Trials Count</td>
+                                        <td style={{ border: "1px solid white", width: "3" }}>{submission.trialCount === null ? 0 : submission.trialCount}</td>
+                                    </tr>
+                                    <tr style={{ border: "1px solid white" }}>
+                                        <td style={{ border: "1px solid white", width: "1" }}>Submission Title</td>
+                                        <td style={{ border: "1px solid white", width: "3" }}>{submission.title}</td>
+                                    </tr>
+                                    <tr style={{ border: "1px solid white" }}>
+                                        <td style={{ border: "1px solid white", width: "1" }}>Submission Description</td>
+                                        <td style={{ border: "1px solid white", width: "3" }}>{submission.description}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            {submission.inputImage ||
+                                submission.inputImage ? (
+                                <div className="gap-5 my-4 d-flex justify-content-around align-items-center">
+                                    <div className="text-center">
+                                        <h2>Drawing</h2>
                                         <div
-                                             className="overflow-hidden rounded-5 grey-border bg-white d-flex justify-content-center align-items-center"
-                                             style={{
-                                                  width: imgSize,
-                                                  height: imgSize,
-                                             }}
+                                            className="overflow-hidden rounded-5 grey-border bg-white d-flex justify-content-center align-items-center"
+                                            style={{
+                                                width: imgSize,
+                                                height: imgSize,
+                                            }}
                                         >
-                                             <img
-                                                  className={`${
-                                                       imgH > imgW
-                                                            ? "h-100"
-                                                            : "w-100"
-                                                  }`}
-                                                  src={
-                                                       submission.inputImage
-                                                            .imageUrl
-                                                  }
-                                             />
+                                            <img
+                                                style={{
+                                                    width: imgSize,
+                                                    height: imgSize,
+                                                }}
+                                                alt="drawing"
+                                                src={submission.inputImage.imageUrl}
+                                            />
                                         </div>
+                                    </div>
+                                    <div className="text-center">
+                                        <h2>Output</h2>
                                         <div
-                                             className="overflow-hidden rounded-5 grey-border"
-                                             style={{
-                                                  width: imgSize,
-                                                  height: imgSize,
-                                             }}
+                                            className="overflow-hidden rounded-5 grey-border"
+                                            style={{
+                                                width: imgSize,
+                                                height: imgSize,
+                                            }}
                                         >
-                                             <img
-                                                  className="w-100 rounded-5"
-                                                  src={
-                                                       submission.outputImage
-                                                            .imageUrl
-                                                  }
-                                             />
+                                            <img
+                                                className="w-100 rounded-5"
+                                                src={submission.outputImage.imageUrl}
+                                                alt="output"
+                                            />
                                         </div>
-                                   </div>
-                              ) : (
-                                   <div
-                                        className="d-flex justify-content-center align-items-center"
-                                        style={{ height: imgSize / 1.5 }}
-                                   >
-                                        {" "}
-                                        <h1 className="fs-5">
-                                             No Images for this Submission
-                                        </h1>
-                                   </div>
-                              )}
-                         </div>
-                         <FacetcherTable
-                              hover
-                              table={2}
-                              headerArray={headerArray}
-                              error="No trails in this submission"
-                              dataLength={trials && trials.length}
-                              initialPage={currentPage}
-                              handlePageClick={(e) =>
-                                   setCurrentPage(e.selected)
+                                    </div>
+                                </div>
+                            ) : (<div></div>)}
+                        </div>
+                        <FacetcherTable
+                            hover
+                            table={2}
+                            headerArray={headerArray}
+                            error="No trails in this submission"
+                            dataLength={submissionTrials && submissionTrials.length}
+                            initialPage={currentPage}
+                            handlePageClick={(e) =>
+                                setCurrentPage(e.selected)
 
-                              }
-                         >
-                              {trials &&
-                                   trials
-                                   .slice(startIndex, endIndex)
-                                        .map((trial, index) => (
-                                             <tr className="h-25" key={index}>
-                                                  <td>{trial.id}</td>
-                                                  <td className="text-capitalize">
-                                                       {new Date(
-                                                            trial.creationDate
-                                                       ).toDateString()}
-                                                  </td>
-                                                  <td className="text-capitalize">
-                                                       {new Date(
-                                                            trial.creationDate
-                                                       ).toLocaleTimeString()}
-                                                  </td>
-                                                  {/* <td className="text-capitalize">
-                                                       {trial.title}
-                                                  </td> */}
-                                                  <td className="text-lowercase">
-                                                       {trial.gender}
-                                                  </td>
-                                                  <td>
-                                                       <img
-                                                            className="rounded-4"
-                                                            src={
-                                                                 trial
-                                                                      .inputImage
-                                                                      .imageUrl
-                                                            }
-                                                            style={{
-                                                                 width:
-                                                                      imgSize /
-                                                                      3,
-                                                                 height:
-                                                                      imgSize /
-                                                                      3,
-                                                            }}
-                                                       />
-                                                  </td>
-                                                  <td>
-                                                       <img
-                                                            className="rounded-4"
-                                                            src={
-                                                                 trial
-                                                                      .outputImage
-                                                                      .imageUrl
-                                                            }
-                                                            style={{
-                                                                 width:
-                                                                      imgSize /
-                                                                      3,
-                                                                 height:
-                                                                      imgSize /
-                                                                      3,
-                                                            }}
-                                                       />
-                                                  </td>
-                                             </tr>
-                                        ))}
-                         </FacetcherTable>
+                            }
+                        >
+                            {submissionTrials &&
+                                submissionTrials
+                                    .slice(startIndex, endIndex)
+                                    .map((trial, index) => (
+                                        <tr className="h-25" key={index}>
+                                            <td>{trial.id}</td>
+                                            <td>
+                                                {trial.userId}
+                                            </td>
+                                            <td>
+                                                {new Date(trial.creationDate).toDateString()}
+                                            </td>
+                                            <td>
+                                                {new Date(trial.creationDate).toLocaleTimeString()}
+                                            </td>
+                                            <td className="text-lowercase">
+                                                {trial.gender}
+                                            </td>
+                                            <td>
+                                                <img
+                                                    className="rounded-4"
+                                                    alt="drawing"
+                                                    src={trial.inputImage.imageUrl}
+                                                    style={{
+                                                        width: imgSize / 3,
+                                                        height: imgSize / 3,
+                                                    }}
+                                                />
+                                            </td>
+                                            <td>
+                                                <img
+                                                    className="rounded-4"
+                                                    alt="output"
+                                                    src={trial.outputImage.imageUrl}
+                                                    style={{
+                                                        width: imgSize / 3,
+                                                        height: imgSize / 3,
+                                                    }}
+                                                />
+                                            </td>
+                                        </tr>
+                                    ))}
+                        </FacetcherTable>
                     </div>
-               )}
-          </FacetcherDrawer>
-     );
+                )}
+            </FacetcherDrawer>
+        </div>
+    );
 };
-export default Submission;
+export default checkAuthentication(Submission);

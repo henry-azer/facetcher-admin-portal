@@ -1,10 +1,8 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { logoutUser } from "../../store/actions/auth/auth-actions";
-
-import checkAuthentication from "../../Authentication/check-authentication"
 
 import AppBar from "@mui/material/AppBar";
 import Drawer from "@mui/material/Drawer";
@@ -29,13 +27,13 @@ import {
 } from "../../constants/app_colors";
 
 import {
-    ALL_ADMINS,
-    ALL_USERS,
+    USERS,
+    ADMINS,
     DASHBOARD,
     FAILED_TRIALS,
-    MESSAGES,
     SUBMISSIONS,
     USERS_LOGS,
+    USERS_MESSAGES,
 } from "../../constants/app_constants";
 
 import Logo from "../../assets/logo/logo.svg";
@@ -45,27 +43,27 @@ const drawerWidth = 200;
 
 const drawerCategories = [
     { header: "Analysis", subHeaders: [DASHBOARD] },
-    { header: "Users", subHeaders: [ALL_USERS, USERS_LOGS] },
+    { header: "Users", subHeaders: [USERS, USERS_LOGS] },
     { header: "Drawings", subHeaders: [SUBMISSIONS, FAILED_TRIALS] },
-    { header: "Admins", subHeaders: [ALL_ADMINS] },
-    { header: "Support", subHeaders: [MESSAGES] },
+    { header: "Admins", subHeaders: [ADMINS] },
+    { header: "Support", subHeaders: [USERS_MESSAGES] },
 ];
 
 const FacetcherDrawer = (props) => {
-    const currentUser = useSelector((state) => state.auth.currentUser);
-
     const ref = useRef(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const [height, setHeight] = useState(0);
+
+    const currentUser = useSelector((state) => state.auth.currentUser);
+    const logoutRequest = useSelector((state) => state.auth.logoutRequest);
+    const logoutError = useSelector((state) => state.auth.logoutError);
+    const logoutErrorOccurred = useSelector((state) => state.auth.logoutErrorOccurred);
 
     useLayoutEffect(() => {
         setHeight(ref.current.offsetHeight);
     });
-
-    const logoutRequest = useSelector((state) => state.auth.logoutRequest);
-    const logoutError = useSelector((state) => state.auth.logoutError);
-    const logoutErrorOccurred = useSelector((state) => state.auth.logoutErrorOccurred);
 
     return (
         <Box sx={{ display: "flex" }}>
@@ -86,7 +84,7 @@ const FacetcherDrawer = (props) => {
                             alignItems: "center",
                             justifyContent: "end",
                             width: "100%",
-                            marginX: "3%",
+                            marginRight: "3%",
                         }}
                     >
                         {currentUser && (
@@ -96,7 +94,6 @@ const FacetcherDrawer = (props) => {
                             >
                                 <Typography
                                     sx={{
-                                        marginRight: "10px",
                                         fontSize: "15px",
                                         width: "100%",
                                     }}
@@ -113,32 +110,23 @@ const FacetcherDrawer = (props) => {
                                         currentUser.lastName}
                                 </Typography>
                                 {currentUser.profilePictureUrl ? (
-                                    <Box
-                                        component="div"
-                                        sx={{
-                                            width: "40px",
-                                            height: "40px",
-                                            borderRadius: "50%",
-                                            backgroundColor: `${LIGHTGREY}`,
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            overflow: "hidden",
-                                        }}
-                                        onClick={() =>
-                                            navigate("/profile", {
-                                                state: {
-                                                    id: "current",
-                                                },
-                                            })
-                                        }
-                                    >
-                                        <img
-                                            src={currentUser.profilePictureUrl}
-                                            className="w-100"
-                                            alt="user profile picture"
-                                        />
-                                    </Box>
+                                    <div style={{
+                                        width: '50px',
+                                        height: '40px',
+                                        borderRadius: '50%',
+                                        overflow: 'hidden',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'start'
+                                    }}>
+                                        <img src={currentUser.profilePictureUrl}
+                                            alt="User Profile"
+                                            style={{
+                                                width: '60px',
+                                                height: '50px',
+                                                objectFit: 'cover'
+                                            }} />
+                                    </div>
                                 ) : (
                                     <Box
                                         component="div"
@@ -230,12 +218,11 @@ const FacetcherDrawer = (props) => {
                                     <ListItemButton
                                         onClick={() =>
                                             navigate(
-                                                `/${
-                                                    subHeader !== DASHBOARD
-                                                        ? subHeader
-                                                              .toLowerCase()
-                                                              .replace(" ", "-")
-                                                        : ""
+                                                `/${subHeader !== DASHBOARD
+                                                    ? subHeader
+                                                        .toLowerCase()
+                                                        .replace(" ", "-")
+                                                    : ""
                                                 }`
                                             )
                                         }
@@ -268,7 +255,7 @@ const FacetcherDrawer = (props) => {
                     }}
                 >
                     {logoutErrorOccurred && <h6>* {logoutError}</h6>}
-                    <Button variant="contained" style={{ backgroundColor: ORANGE }} onClick={() => dispatch(logoutUser())}>{logoutRequest? "Loading..." : "Logout"}</Button>
+                    <Button variant="contained" style={{ backgroundColor: ORANGE }} onClick={() => dispatch(logoutUser())}>{logoutRequest ? "Loading..." : "Logout"}</Button>
                 </Box>
             </Drawer>
             <Box
@@ -293,4 +280,4 @@ const FacetcherDrawer = (props) => {
     );
 };
 
-export default checkAuthentication(FacetcherDrawer);
+export default FacetcherDrawer;

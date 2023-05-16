@@ -1,23 +1,19 @@
 import React from "react";
 import ReactPaginate from "react-paginate";
-import { useLocation } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { itemsPerPage } from "../../constants/app_constants";
 
 const FacetcherTable = (props) => {
-     const location = useLocation();
      return (
           <div className="w-100 disableSelection">
                <table
-                    className={`table text-light-grey text-center bg-dark-grey${
-                         props.table === 2 ? "2" : ""
-                    } ${props.dataLength && "custom-table"}`}
+                    className={`table text-light-grey text-center bg-dark-grey${props.table === 2 ? "2" : ""
+                         } ${props.dataLength && "custom-table"}`}
                >
                     <thead
-                         className={`bg-dark-grey${
-                              props.table === 1 ? "2" : ""
-                         }`}
+                         className={`bg-dark-grey${props.table === 1 ? "2" : ""
+                              }`}
                     >
                          <tr>
                               {props.headerArray.map((header, index) => (
@@ -31,11 +27,7 @@ const FacetcherTable = (props) => {
                          {props.children && props.dataLength !== 0 ? (
                               props.children
                          ) : (
-                              <tr
-                                   className={`last-tr-hover${
-                                        props.table === 2 ? "1" : "2"
-                                   }`}
-                              >
+                              <tr>
                                    {props.error ? (
                                         <td
                                              colSpan={props.headerArray.length}
@@ -48,26 +40,14 @@ const FacetcherTable = (props) => {
                                              colSpan={props.headerArray.length}
                                              className="cursor-default"
                                         >
-                                             No{" "}
-                                             {location.pathname
-                                                  .replace("/", "")
-                                                  .replace("-", " ")
-                                                  .replace(
-                                                       "profile",
-                                                       "submissions"
-                                                  )
-                                                  .replace("all", "")}{" "}
-                                             in this moment
+                                             No data is present within this table.
                                         </td>
                                    )}
                               </tr>
                          )}
-
                          {props.dataLength > 0 && (
                               <tr
-                                   className={`last-tr-hover${
-                                        props.table === 2 ? "1" : "2"
-                                   } cursor-default`}
+                                   className={`last-tr-hover${props.table === 2 ? "1" : "2"} cursor-default`}
                               >
                                    <td colSpan={props.headerArray.length}>
                                         <div className=" d-flex justify-content-center align-items-center">
@@ -75,7 +55,7 @@ const FacetcherTable = (props) => {
                                                   breakLabel="..."
                                                   pageCount={Math.ceil(
                                                        props.dataLength /
-                                                            itemsPerPage
+                                                       itemsPerPage
                                                   )}
                                                   pageRangeDisplayed={3}
                                                   marginPagesDisplayed={1}

@@ -1,201 +1,180 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+
+import { getAllFailedTrials } from "../store/actions/trials/trials-action";
+import { getCurrentUser } from "../store/actions/auth/auth-actions";
+
+import checkAuthentication from "../authentication/check-authentication";
+
+import FacetcherTable from "../components/tables/table";
 import FacetcherDrawer from "../components/drawer/drawer";
 import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
-import FacetcherTable from "../components/tables/table";
+
 import { FAILED_TRIALS, itemsPerPage } from "../constants/app_constants";
-import { getCurrentUser } from "../store/actions/auth/auth-actions";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllFailedTrials } from "../store/actions/trials/trials-action";
-import { useFormik } from "formik";
 
 const FailedTrials = () => {
-     const headerArray = [
-          "ID",
-          "Submission Title",
-          "Date",
-          "Time",
-          "Drawing Gender",
-          "Preview",
-     ];
-     const imgSize = 350;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-     const [fetchingData, setFetchingData] = useState(true);
-     const [isUsersFetched, setIsUsersFetched] = useState(false);
-     const [currentPage, setCurrentPage] = useState(0);
-     const startIndex = currentPage * itemsPerPage;
-     const endIndex = startIndex + itemsPerPage;
-     const [filtered, setFiltered] = useState(null);
-     const formik = useFormik({
-          initialValues: {
-               name: "",
-               date: "newest",
-               gender: "gender ...",
-          },
-          onSubmit: (values) => {
-               if (
-                    values.date === "newest" &&
-                    values.gender === "gender ..." &&
-                    values.name === ""
-               ) {
-                    setFiltered(null);
-               } else {
-                    setFiltered(values);
-               }
-          },
-     });
+    const [filter, setFilter] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [isDataFetched, setIsDataFetched] = useState(false);
 
-     const dispatch = useDispatch();
-     const state = useSelector((state) => state);
+    const failedTrials = useSelector((state) => state.trials.allFailedTrials);
 
-     useEffect(() => {
-          document.title = "All Admins | Facetcher";
+    useEffect(() => {
+        document.title = "Failed Trials | Facetcher";
+    });
 
-          if (fetchingData) {
-               dispatch(getCurrentUser());
-               dispatch(getAllFailedTrials());
-               setFetchingData(false);
-          }
-     });
+    useEffect(() => {
+        if (!isDataFetched) {
+            dispatch(getCurrentUser());
+            dispatch(getAllFailedTrials());
+            setIsDataFetched(true);
+        }
+    }, [dispatch, isDataFetched]);
 
-     const pureFailedTrials = state.trials.allFailedTrials;
-     let failedTrials;
-     if (pureFailedTrials) failedTrials = [...pureFailedTrials];
-     if (filtered) {
-          if (filtered.date !== "newest") {
-               failedTrials = failedTrials.reverse();
-          }
-          if (filtered.gender !== "gender ...") {
-               if (filtered.gender === "male") {
-                    failedTrials = failedTrials.filter((obj) => {
-                         return obj.gender === "MALE";
-                    });
-               } else {
-                    failedTrials = failedTrials.filter((obj) => {
-                         return obj.gender === "FEMALE";
-                    });
-               }
-          }
-          if (filtered.name !== "") {
-               failedTrials = failedTrials.filter((obj) => {
-                    return obj.title
-                         .toLowerCase()
-                         .includes(filtered.name.toLowerCase());
-               });
-          }
-     } else if (filtered === null) {
-          failedTrials = pureFailedTrials;
-     }
+    const formik = useFormik({
+        initialValues: {
+            title: "",
+            gender: "all",
+            date: "default",
+        },
+        onSubmit: (values) => {
+            if (values.title === "" && values.gender === "all" && values.date === "default") resetFilter();
+            else setFilter(values);
+        },
+    });
 
-     return (
-          <div className="w-100">
-               <FacetcherDrawer route={FAILED_TRIALS}>
-                    <div className="p-5 pb-0 w-100 d-flex justify-content-start align-items-center flex-column h-100">
-                         <div className="w-100 d-flex justify-content-between align-items-center mb-5">
-                              <h1 className="fs-3 fw-bold m-0">
-                                   Failed Trials
-                              </h1>
-                         </div>
-                         <form
-                              onSubmit={formik.handleSubmit}
-                              className="w-100 d-flex justify-content-between align-items-end"
-                         >
-                              <FacetcherSearchComponent
-                                   placeHolder="Search by drawing title"
-                                   name="name"
-                                   value={formik.values.name}
-                                   onChange={formik.handleChange}
-                              />
-                              <div className="w-50 d-flex justify-content-around">
-                                   <FacetcherSelectComponent
-                                        width="25"
-                                        label="Date"
-                                        options={["Newest", "Latest"]}
-                                        name="date"
-                                        value={formik.values.date}
-                                        onChange={formik.handleChange}
-                                   />
-                                   <FacetcherSelectComponent
-                                        width="25"
-                                        label="Gender"
-                                        options={[
-                                             "Gender ...",
-                                             "Male",
-                                             "Female",
-                                        ]}
-                                        name="gender"
-                                        value={formik.values.gender}
-                                        onChange={formik.handleChange}
-                                   />
-                              </div>
-                              <div className="w-25 d-flex justify-content-end">
-                                   <button
-                                        onClick={() => setCurrentPage(0)}
-                                        className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold"
-                                   >
-                                        Search
-                                   </button>
-                              </div>
-                         </form>
+    const resetFilter = () => {
+        formik.resetForm();
+        setFilter(null);
+    };
 
-                         <div className="w-100 mt-5 overflowY-scroll ">
-                              <FacetcherTable
-                                   hover
-                                   table={2}
-                                   headerArray={headerArray}
-                                   dataLength={
-                                        failedTrials && failedTrials.length
-                                   }
-                                   initialPage={currentPage}
-                                   handlePageClick={(e) =>
-                                        setCurrentPage(e.selected)
-                                   }
-                              >
-                                   {failedTrials &&
-                                        failedTrials.slice(startIndex, endIndex).map((trial, index) => (
-                                             <tr className="h-25" key={index}>
-                                                  <td>{trial.id}</td>
-                                                  <td className="text-capitalize">
-                                                       {trial.title}
-                                                  </td>
-                                                  <td className="text-capitalize">
-                                                       {new Date(
-                                                            trial.creationDate
-                                                       ).toDateString()}
-                                                  </td>
-                                                  <td className="text-capitalize">
-                                                       {new Date(
-                                                            trial.creationDate
-                                                       ).toLocaleTimeString()}
-                                                  </td>
-                                                  <td className="text-lowercase">
-                                                       {trial.gender}
-                                                  </td>
-                                                  <td>
-                                                       <img
-                                                            className="rounded-4"
-                                                            src={
-                                                                 trial
-                                                                      .inputImage
-                                                                      .imageUrl
-                                                            }
-                                                            style={{
-                                                                 width:
-                                                                      imgSize /
-                                                                      3,
-                                                                 height:
-                                                                      imgSize /
-                                                                      3,
-                                                            }}
-                                                       />
-                                                  </td>
-                                             </tr>
-                                        ))}
-                              </FacetcherTable>
-                         </div>
+    let filteredFailedTrials = [];
+    if (failedTrials) filteredFailedTrials = [...failedTrials];
+    if (filter) {
+        if (filter.date === "latest") {
+            filteredFailedTrials = filteredFailedTrials.reverse();
+        }
+        if (filter.gender !== "all") {
+            if (filter.gender === "male") {
+                filteredFailedTrials = filteredFailedTrials.filter((failedTrial) => {
+                    return failedTrial.gender === "MALE";
+                });
+            } else if (filter.gender === "female") {
+                filteredFailedTrials = filteredFailedTrials.filter((failedTrial) => {
+                    return failedTrial.gender === "FEMALE";
+                });
+            }
+        }
+        if (filter.title !== "") {
+            filteredFailedTrials = filteredFailedTrials.filter((failedTrial) => {
+                return (failedTrial.title.toLowerCase().includes(filter.title.toLowerCase()));
+            });
+        }
+    } else if (filter === null) {
+        filteredFailedTrials = failedTrials;
+    }
+
+    const startIndex = currentPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const headerArray = ["ID", "User ID", "Title", "Date", "Time", "Gender", "Exception Occurred"];
+
+    return (
+        <div className="w-100">
+            <FacetcherDrawer route={FAILED_TRIALS}>
+                <div className="p-5 pb-0 w-100 d-flex justify-content-start align-items-center flex-column h-100">
+                    <div className="w-100 d-flex justify-content-between align-items-center mb-5">
+                        <h1 className="fs-3 fw-bold m-0">Failed Trials</h1>
                     </div>
-               </FacetcherDrawer>
-          </div>
-     );
+                    <form
+                        onSubmit={formik.handleSubmit}
+                        className="w-100 d-flex justify-content-between align-items-end"
+                    >
+                        <FacetcherSearchComponent
+                            name="title"
+                            value={formik.values.title}
+                            onChange={formik.handleChange}
+                            placeHolder="Trial Title"
+                        />
+                        <div className="w-50 d-flex justify-content-around">
+                            <FacetcherSelectComponent
+                                width="25"
+                                label="Gender"
+                                name="gender"
+                                value={formik.values.gender}
+                                onChange={formik.handleChange}
+                                options={[
+                                    "All",
+                                    "Male",
+                                    "Female",
+                                ]}
+                            />
+                            <FacetcherSelectComponent
+                                width="25"
+                                label="Date"
+                                name="date"
+                                value={formik.values.date}
+                                onChange={formik.handleChange}
+                                options={[
+                                    "Default",
+                                    "Newest",
+                                    "Latest",
+                                ]}
+                            />
+                        </div>
+                        <div className="w-25 d-flex justify-content-end">
+                            <button
+                                onClick={() => resetFilter()}
+                                className="btn bg-orange rounded-pill px-5 text-light-grey fw-bold me-2"
+                            >
+                                Reset
+                            </button>
+                            <button
+                                type="submit"
+                                onClick={() => setCurrentPage(0)}
+                                className="btn bg-cyan rounded-pill px-5 text-light-grey fw-bold"
+                            >
+                                Search
+                            </button>
+                        </div>
+                    </form>
+                    {filteredFailedTrials && <div className="w-100 mt-5 overflowY-scroll ">
+                        <FacetcherTable
+                            table={2}
+                            headerArray={headerArray}
+                            dataLength={filteredFailedTrials.length}
+                            initialPage={currentPage}
+                            handlePageClick={(e) =>
+                                setCurrentPage(e.selected)
+                            }
+                        >
+                            {filteredFailedTrials
+                                .slice(startIndex, endIndex)
+                                .map((trial, index) => (
+                                    <tr className="h-25" key={index} onClick={() => {
+                                        navigate(`/failed-trials/` + trial.title.replace(/\s+/g, "-").toLowerCase(),
+                                            { state: { trial: trial, }, }
+                                        );
+                                    }}>
+                                        <td>{trial.id}</td>
+                                        <td>{trial.userId}</td>
+                                        <td>{trial.title}</td>
+                                        <td>{new Date(trial.creationDate).toDateString()}</td>
+                                        <td>{new Date(trial.creationDate).toLocaleTimeString()}</td>
+                                        <td className="text-lowercase">{trial.gender}</td>
+                                        <td>{`${trial.exceptionOccurred}`}</td>
+                                    </tr>
+                                ))}
+                        </FacetcherTable>
+                    </div>}
+                </div>
+            </FacetcherDrawer>
+        </div>
+    );
 };
-export default FailedTrials;
+export default checkAuthentication(FailedTrials);

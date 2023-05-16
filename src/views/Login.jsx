@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { authenticateUser } from "../store/actions/auth/auth-actions";
-import { isUserAuthenticated } from "../Authentication/check-authentication";
+import { isUserAuthenticated } from "../authentication/check-authentication";
 
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -22,7 +22,7 @@ const Login = () => {
     useEffect(() => {
         document.title = "Login | Facetcher";
 
-        if (isUserAuthenticated() == "true") {
+        if (isUserAuthenticated() === "true") {
             navigate("/");
         }
     });
@@ -61,13 +61,13 @@ const Login = () => {
                 </p>
             </div>
             <div className="col bg-dark-grey vh-100 d-flex justify-content-center align-items-center flex-column">
-                <p className="fs-2 w-75 text-center mb-5">
+                <p className="fs-4 w-75 text-center mb-5">
                     Please Login with your generated account that you received
                 </p>
                 {loginErrorOccurred && <h6>* {loginError}</h6>}
                 <form
                     onSubmit={formik.handleSubmit}
-                    className="d-flex justify-content-center align-items-center flex-column w-100 h-25 justify-content-between"
+                    className="d-flex justify-content-center align-items-center flex-column w-75 h-25 justify-content-between"
                 >
                     <input
                         type="text"

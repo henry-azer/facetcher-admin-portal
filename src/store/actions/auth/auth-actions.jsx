@@ -66,27 +66,38 @@ export const authenticateUser = (user) => (dispatch) => {
                                 }
                             }
                             if (isAdmin) {
-                                cookies.set(IS_USER_AUTHENTICATED, "true");
-                                cookies.set(
-                                    ACCESS_TOKEN,
-                                    `${response1.data.body.accessToken}`
-                                );
-                                dispatch({
-                                    type: LOGIN_SUCCEEDED,
-                                    payload: response2.data.body,
-                                });
+                                if (response2.data.body.markedAsDeleted) {
+                                    cookies.set(IS_USER_AUTHENTICATED, "false"); 
+                                    cookies.set(ACCESS_TOKEN, ACCESS_TOKEN);
+                                    dispatch({
+                                        type: LOGIN_FAILURE,
+                                        payload: "This account has been deactivated, Please contact the administrator.",
+                                    });
+                                } else {
+                                    cookies.set(IS_USER_AUTHENTICATED, "true");
+                                    cookies.set(
+                                        ACCESS_TOKEN,
+                                        `${response1.data.body.accessToken}`
+                                    );
+                                    dispatch({
+                                        type: LOGIN_SUCCEEDED,
+                                        payload: response2.data.body,
+                                    });
+                                }
                             } else {
                                 cookies.set(IS_USER_AUTHENTICATED, "false");
+                                cookies.set(ACCESS_TOKEN, ACCESS_TOKEN);
                                 dispatch({
                                     type: LOGIN_FAILURE,
-                                    payload: "Access denied",
+                                    payload: "Access denied, Please contact the administrator.",
                                 });
                             }
                         } else {
                             cookies.set(IS_USER_AUTHENTICATED, "false");
+                            cookies.set(ACCESS_TOKEN, ACCESS_TOKEN);
                             dispatch({
                                 type: LOGIN_FAILURE,
-                                payload: "Access denied",
+                                payload: "Access denied, Please contact the administrator.",
                             });
                         }
                     }
@@ -114,6 +125,7 @@ export const logoutUser = () => (dispatch) => {
                     type: LOGOUT_SUCCEEDED,
                     payload: response.data.body,
                 });
+                window.location.reload();
             }
         })
         .catch((error) => {

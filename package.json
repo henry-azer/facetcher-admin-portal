@@ -15,8 +15,6 @@
     "formik": "^2.2.9",
     "i18next": "^22.4.9",
     "i18next-browser-languagedetector": "^7.0.1",
-    "install": "^0.13.0",
-    "npm": "^9.4.0",
     "react": "^18.2.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",

@@ -7,9 +7,11 @@ import {
      FAILED_GETTING_USER_SUBMISSIONS,
      CURRENT_SUBMISSIONS_FETCHED,
      GET_SUBMISSION_BY_ID,
+     CLEAR_SUBMISSION_BY_ID,
+     CLEAR_GET_ALL_USER_SUBMISSIONS_BY_ID,
 } from "../types";
 
-export default function auth_reducer(state = {}, action) {
+export default function submission_reducer(state = {}, action) {
      switch (action.type) {
           case GETTING_ALL_SUBMISSIONS:
                return {
@@ -32,13 +34,6 @@ export default function auth_reducer(state = {}, action) {
                     failedGettingAllSubmissions: false,
                     allCurrentSubmissions: action.payload,
                };
-          case ALL_USER_SUBMISSIONS_FETCHED:
-               return {
-                    ...state,
-                    gettingAllSubmissions: false,
-                    failedGettingAllSubmissions: false,
-                    allSubmissionsById: action.payload,
-               };
           case FAILED_GETTING_SUBMISSIONS:
                return {
                     ...state,
@@ -59,6 +54,14 @@ export default function auth_reducer(state = {}, action) {
                     allUserSubmissions: action.payload,
                     allUserSubmissionsLength: action.payload.length,
                };
+          case CLEAR_GET_ALL_USER_SUBMISSIONS_BY_ID:
+               return {
+                    ...state,
+                    allUserSubmissions: null,
+                    allUserSubmissionsLength: null,
+                    gettingAllUserSubmissions: null,
+                    failedGettingAllUserSubmissions: null,
+               };
           case GET_SUBMISSION_BY_ID:
                return {
                     ...state,
@@ -71,6 +74,11 @@ export default function auth_reducer(state = {}, action) {
                     ...state,
                     gettingAllUserSubmissions: true,
                     failedGettingAllUserSubmissions: false,
+               };
+          case CLEAR_SUBMISSION_BY_ID:
+               return {
+                    ...state,
+                    submissionById: null,
                };
           default:
                return state;

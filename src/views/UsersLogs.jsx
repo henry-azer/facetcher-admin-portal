@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
-import { getAllSubmissions } from "../store/actions/submission/submission-actions";
+import { getUsersLogs } from "../store/actions/users-logs/users-logs-actions";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 
 import checkAuthentication from "../authentication/check-authentication";
@@ -13,38 +12,37 @@ import FacetcherDrawer from "../components/drawer/drawer";
 import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
 
-import { SUBMISSIONS, itemsPerPage } from "../constants/app_constants";
+import { USERS_LOGS, itemsPerPage } from "../constants/app_constants";
 
-const Submissions = () => {
+const UsersLogs = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const [filter, setFilter] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [isDataFetched, setIsDataFetched] = useState(false);
 
-    const submissions = useSelector((state) => state.submissions.allSubmissions);
+    const usersLogs = useSelector((state) => state.logs.usersLogs);
 
     useEffect(() => {
-        document.title = "Submissions | Facetcher";
+        document.title = "Users Logs | Facetcher";
     });
 
     useEffect(() => {
         if (!isDataFetched) {
             dispatch(getCurrentUser());
-            dispatch(getAllSubmissions());
+            dispatch(getUsersLogs());
             setIsDataFetched(true);
         }
     }, [dispatch, isDataFetched]);
 
     const formik = useFormik({
         initialValues: {
-            title: "",
-            gender: "all",
+            name: "",
             date: "default",
+            activity: "default",
         },
         onSubmit: (values) => {
-            if (values.title === "" && values.gender === "all" && values.date === "default") resetFilter();
+            if (values.name === "" && values.date === "default" && values.activity === "default") resetFilter();
             else setFilter(values);
         },
     });
@@ -54,64 +52,68 @@ const Submissions = () => {
         setFilter(null);
     };
 
-    let filteredSubmissions = [];
-    if (submissions) filteredSubmissions = [...submissions];
+    let filteredUsersLogs = [];
+    if (usersLogs) filteredUsersLogs = [...usersLogs];
     if (filter) {
         if (filter.date === "latest") {
-            filteredSubmissions = filteredSubmissions.reverse();
+            filteredUsersLogs = usersLogs.reverse();
         }
-        if (filter.gender !== "all") {
-            if (filter.gender === "male") {
-                filteredSubmissions = filteredSubmissions.filter((submission) => {
-                    return submission.gender === "MALE";
+        if (filter.activity !== "default") {
+            if (filter.activity === "login") {
+                filteredUsersLogs = usersLogs.filter((obj) => {
+                    return obj.logStatus === "LOGIN";
                 });
-            } else if (filter.gender === "female") {
-                filteredSubmissions = filteredSubmissions.filter((submission) => {
-                    return submission.gender === "FEMALE";
+            } else {
+                filteredUsersLogs = usersLogs.filter((obj) => {
+                    return obj.logStatus === "LOGOUT";
                 });
             }
         }
-        if (filter.title !== "") {
-            filteredSubmissions = filteredSubmissions.filter((submission) => {
-                return (submission.title.toLowerCase().includes(filter.title.toLowerCase()));
+        if (filter.name !== "") {
+            filteredUsersLogs = filteredUsersLogs.filter((obj) => {
+                return (
+                    obj.user.firstName.toLowerCase().includes(filter.name.toLowerCase()) ||
+                    obj.user.lastName.toLowerCase().includes(filter.name.toLowerCase()) ||
+                    obj.user.email.toLowerCase().includes(filter.name.toLowerCase())
+                );
             });
         }
     } else if (filter === null) {
-        filteredSubmissions = submissions;
+        filteredUsersLogs = usersLogs;
     }
 
     const startIndex = currentPage * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const headerArray = ["ID", "User ID", "Title", "Date", "Time", "Gender", "Trials Count", "Submitted"];
+    const headerArray = ["ID", "User Name", "Activity", "Date", "Time"];
 
     return (
         <div className="w-100">
-            <FacetcherDrawer route={SUBMISSIONS}>
+            <FacetcherDrawer route={USERS_LOGS}>
                 <div className="p-5 pb-0 w-100 d-flex justify-content-start align-items-center flex-column h-100">
                     <div className="w-100 d-flex justify-content-between align-items-center mb-5">
-                        <h1 className="fs-3 fw-bold m-0">Submissions</h1>
+                        <h1 className="fs-3 fw-bold m-0">Users Logs</h1>
                     </div>
                     <form
                         onSubmit={formik.handleSubmit}
                         className="w-100 d-flex justify-content-between align-items-end"
                     >
                         <FacetcherSearchComponent
-                            name="title"
-                            value={formik.values.title}
+                            name="name"
+                            value={formik.values.name}
                             onChange={formik.handleChange}
-                            placeHolder="Submission Title"
+                            placeHolder="User name"
                         />
                         <div className="w-50 d-flex justify-content-around">
                             <FacetcherSelectComponent
                                 width="25"
-                                label="Gender"
-                                name="gender"
-                                value={formik.values.gender}
+                                label="Activity"
+                                name="activity"
+                                value={formik.values.activity}
                                 onChange={formik.handleChange}
                                 options={[
-                                    "All",
-                                    "Male",
-                                    "Female",
+                                    "Default",
+                                    "Login",
+                                    "Logout",
                                 ]}
                             />
                             <FacetcherSelectComponent
@@ -143,45 +145,36 @@ const Submissions = () => {
                             </button>
                         </div>
                     </form>
-                    {filteredSubmissions && <div className="w-100 mt-5 overflowY-scroll ">
+                    {filteredUsersLogs && <div className="w-100 mt-5 overflowY-scroll ">
                         <FacetcherTable
                             table={2}
                             headerArray={headerArray}
-                            dataLength={filteredSubmissions.length}
+                            dataLength={filteredUsersLogs.length}
                             initialPage={currentPage}
                             handlePageClick={(e) =>
                                 setCurrentPage(e.selected)
                             }
                         >
-                            {filteredSubmissions &&
-                                filteredSubmissions
-                                    .slice(startIndex, endIndex)
-                                    .map((submission, index) => (
-                                        <tr
-                                            className="h-25"
-                                            key={index}
-                                            onClick={() => {
-                                                navigate(`/submissions/` + submission.title.replace(/\s+/g, "-").toLowerCase(),
-                                                    { state: { submission: submission, }, }
-                                                );
-                                            }}
-                                        >
-                                            <td>{submission.id}</td>
-                                            <td>{submission.userId}</td>
-                                            <td>
-                                                {submission.title}
-                                            </td>
-                                            <td>
-                                                {new Date(submission.creationDate).toDateString()}
-                                            </td>
-                                            <td>
-                                                {new Date(submission.creationDate).toLocaleTimeString()}
-                                            </td>
-                                            <td className="text-lowercase">{submission.gender}</td>
-                                            <td className="text-capitalize">{submission.trialCount === null ? 0 : submission.trialCount}</td>
-                                            <td>{`${submission.submitted}`}</td>
-                                        </tr>
-                                    ))}
+                            {filteredUsersLogs
+                                .slice(startIndex, endIndex)
+                                .map((userLog, index) => (
+                                    <tr className="h-25" key={index}
+                                    >
+                                        <td>{userLog.id}</td>
+                                        <td className="text-capitalize">
+                                            {userLog.user.firstName}{" "}{userLog.user.lastName}
+                                        </td>
+                                        <td className="text-capitalize">
+                                            {userLog.logStatus}
+                                        </td>
+                                        <td className="text-capitalize">
+                                            {new Date(userLog.creationDate).toDateString()}
+                                        </td>
+                                        <td className="text-capitalize">
+                                            {new Date(userLog.creationDate).toLocaleTimeString()}
+                                        </td>
+                                    </tr>
+                                ))}
                         </FacetcherTable>
                     </div>}
                 </div>
@@ -189,4 +182,4 @@ const Submissions = () => {
         </div>
     );
 };
-export default checkAuthentication(Submissions);
+export default checkAuthentication(UsersLogs);

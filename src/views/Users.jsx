@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 
-import { getAllSubmissions } from "../store/actions/submission/submission-actions";
+import { getUsers } from "../store/actions/users/users-actions";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 
 import checkAuthentication from "../authentication/check-authentication";
@@ -13,9 +13,11 @@ import FacetcherDrawer from "../components/drawer/drawer";
 import FacetcherSearchComponent from "../components/search-component";
 import FacetcherSelectComponent from "../components/select-component";
 
-import { SUBMISSIONS, itemsPerPage } from "../constants/app_constants";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
-const Submissions = () => {
+import { USERS, itemsPerPage } from "../constants/app_constants";
+
+const Users = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -23,28 +25,28 @@ const Submissions = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [isDataFetched, setIsDataFetched] = useState(false);
 
-    const submissions = useSelector((state) => state.submissions.allSubmissions);
+    const users = useSelector((state) => state.user.users);
 
     useEffect(() => {
-        document.title = "Submissions | Facetcher";
+        document.title = "Users | Facetcher";
     });
 
     useEffect(() => {
         if (!isDataFetched) {
             dispatch(getCurrentUser());
-            dispatch(getAllSubmissions());
+            dispatch(getUsers());
             setIsDataFetched(true);
         }
     }, [dispatch, isDataFetched]);
 
     const formik = useFormik({
         initialValues: {
-            title: "",
+            name: "",
             gender: "all",
-            date: "default",
+            alphabetic: "default",
         },
         onSubmit: (values) => {
-            if (values.title === "" && values.gender === "all" && values.date === "default") resetFilter();
+            if (values.name === "" && values.gender === "all" && values.alphabetic === "default") resetFilter();
             else setFilter(values);
         },
     });
@@ -54,52 +56,83 @@ const Submissions = () => {
         setFilter(null);
     };
 
-    let filteredSubmissions = [];
-    if (submissions) filteredSubmissions = [...submissions];
+    let filteredUsers = [];
+    if (users) filteredUsers = [...users];
     if (filter) {
-        if (filter.date === "latest") {
-            filteredSubmissions = filteredSubmissions.reverse();
-        }
+        if (filter.alphabetic === "a-z")
+            filteredUsers = filteredUsers.sort(function (a, b) {
+                if (
+                    a.firstName.toLowerCase() <
+                    b.firstName.toLowerCase()
+                ) {
+                    return -1;
+                }
+                return 0;
+            });
+        else if (filter.alphabetic === "z-a")
+            filteredUsers = filteredUsers.sort(function (a, b) {
+                if (
+                    a.firstName.toLowerCase() >
+                    b.firstName.toLowerCase()
+                ) {
+                    return -1;
+                }
+                return 0;
+            });
         if (filter.gender !== "all") {
             if (filter.gender === "male") {
-                filteredSubmissions = filteredSubmissions.filter((submission) => {
-                    return submission.gender === "MALE";
+                filteredUsers = filteredUsers.filter((user) => {
+                    return user.gender === "MALE";
                 });
             } else if (filter.gender === "female") {
-                filteredSubmissions = filteredSubmissions.filter((submission) => {
-                    return submission.gender === "FEMALE";
+                filteredUsers = filteredUsers.filter((user) => {
+                    return user.gender === "FEMALE";
                 });
             }
         }
-        if (filter.title !== "") {
-            filteredSubmissions = filteredSubmissions.filter((submission) => {
-                return (submission.title.toLowerCase().includes(filter.title.toLowerCase()));
+        if (filter.name !== "") {
+            filteredUsers = filteredUsers.filter((user) => {
+                return (
+                    user.firstName.toLowerCase().includes(filter.name.toLowerCase()) ||
+                    user.lastName.toLowerCase().includes(filter.name.toLowerCase()) ||
+                    user.email.toLowerCase().includes(filter.name.toLowerCase())
+                );
             });
         }
     } else if (filter === null) {
-        filteredSubmissions = submissions;
+        filteredUsers = users;
     }
 
     const startIndex = currentPage * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const headerArray = ["ID", "User ID", "Title", "Date", "Time", "Gender", "Trials Count", "Submitted"];
+    const headerArray = ["ID", "First Name", "Last Name", "Email", "Gender", "Created Date", "Disabled"];
 
     return (
         <div className="w-100">
-            <FacetcherDrawer route={SUBMISSIONS}>
+            <FacetcherDrawer route={USERS}>
                 <div className="p-5 pb-0 w-100 d-flex justify-content-start align-items-center flex-column h-100">
                     <div className="w-100 d-flex justify-content-between align-items-center mb-5">
-                        <h1 className="fs-3 fw-bold m-0">Submissions</h1>
+                        <h1 className="fs-3 fw-bold m-0">Users</h1>
+                        <button
+                            onClick={() =>
+                                navigate("/create-user", {
+                                    state: { userType: "User" },
+                                })
+                            }
+                            className="btn bg-transparent border border-grey light-grey-border fw-bold px-3 rounded-pill text-light-grey"
+                        >
+                            <PersonAddAltIcon /> Create New User
+                        </button>
                     </div>
                     <form
                         onSubmit={formik.handleSubmit}
                         className="w-100 d-flex justify-content-between align-items-end"
                     >
                         <FacetcherSearchComponent
-                            name="title"
-                            value={formik.values.title}
+                            name="name"
+                            value={formik.values.name}
                             onChange={formik.handleChange}
-                            placeHolder="Submission Title"
+                            placeHolder="User name"
                         />
                         <div className="w-50 d-flex justify-content-around">
                             <FacetcherSelectComponent
@@ -116,14 +149,14 @@ const Submissions = () => {
                             />
                             <FacetcherSelectComponent
                                 width="25"
-                                label="Date"
-                                name="date"
-                                value={formik.values.date}
+                                label="Alphabetic"
+                                name="alphabetic"
+                                value={formik.values.alphabetic}
                                 onChange={formik.handleChange}
                                 options={[
                                     "Default",
-                                    "Newest",
-                                    "Latest",
+                                    "A-Z",
+                                    "Z-A",
                                 ]}
                             />
                         </div>
@@ -143,50 +176,49 @@ const Submissions = () => {
                             </button>
                         </div>
                     </form>
-                    {filteredSubmissions && <div className="w-100 mt-5 overflowY-scroll ">
-                        <FacetcherTable
-                            table={2}
-                            headerArray={headerArray}
-                            dataLength={filteredSubmissions.length}
-                            initialPage={currentPage}
-                            handlePageClick={(e) =>
-                                setCurrentPage(e.selected)
-                            }
-                        >
-                            {filteredSubmissions &&
-                                filteredSubmissions
+                    {filteredUsers &&
+                        <div className="w-100 mt-5 overflowY-scroll ">
+                            <FacetcherTable
+                                table={2}
+                                headerArray={headerArray}
+                                dataLength={filteredUsers.length}
+                                initialPage={currentPage}
+                                handlePageClick={(e) =>
+                                    setCurrentPage(e.selected)
+                                }
+                            >
+                                {filteredUsers
                                     .slice(startIndex, endIndex)
-                                    .map((submission, index) => (
+                                    .map((user, index) => (
                                         <tr
                                             className="h-25"
                                             key={index}
                                             onClick={() => {
-                                                navigate(`/submissions/` + submission.title.replace(/\s+/g, "-").toLowerCase(),
-                                                    { state: { submission: submission, }, }
+                                                navigate(`/users/` + user.firstName.replace(/\s+/g, "-").toLowerCase()
+                                                    + "-" + user.lastName.replace(/\s+/g, "-").toLowerCase(),
+                                                    { state: { user: user, userType: "User" }, }
                                                 );
                                             }}
                                         >
-                                            <td>{submission.id}</td>
-                                            <td>{submission.userId}</td>
+                                            <td>{user.id}</td>
+                                            <td>{user.firstName}</td>
+                                            <td>{user.lastName}</td>
+                                            <td>{user.email}</td>
+                                            <td className="text-lowercase">{user.gender}</td>
                                             <td>
-                                                {submission.title}
+                                                {new Date(user.creationDate).toDateString()}
                                             </td>
-                                            <td>
-                                                {new Date(submission.creationDate).toDateString()}
+                                            <td className="text-capitalize">
+                                                {`${user.markedAsDeleted}`}
                                             </td>
-                                            <td>
-                                                {new Date(submission.creationDate).toLocaleTimeString()}
-                                            </td>
-                                            <td className="text-lowercase">{submission.gender}</td>
-                                            <td className="text-capitalize">{submission.trialCount === null ? 0 : submission.trialCount}</td>
-                                            <td>{`${submission.submitted}`}</td>
                                         </tr>
                                     ))}
-                        </FacetcherTable>
-                    </div>}
+                            </FacetcherTable>
+                        </div>}
                 </div>
             </FacetcherDrawer>
         </div>
     );
 };
-export default checkAuthentication(Submissions);
+
+export default checkAuthentication(Users);
