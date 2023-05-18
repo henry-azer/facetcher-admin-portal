@@ -6,8 +6,7 @@ const FacetcherSelectComponent = (props) => {
                {props.label && <h1 className="fs-6">{props.label}</h1>}
                <select
                     name={props.name && props.name}
-                    value={props.value && props.value}
-                    defaultValue={props.defaultValue && props.defaultValue}
+                    value={props.value}
                     onChange={props.onChange}
                     className="bg-transparent light-grey-border p-1 rounded-pill text-light-grey w-100"
                >
@@ -15,7 +14,7 @@ const FacetcherSelectComponent = (props) => {
                          <option
                               key={index}
                               value={`${option}`.toLowerCase()}
-                              className=" bg-dark-grey"
+                              className="bg-dark-grey"
                          >
                               {option}
                          </option>
@@ -24,4 +23,5 @@ const FacetcherSelectComponent = (props) => {
           </div>
      );
 };
+
 export default FacetcherSelectComponent;

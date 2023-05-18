@@ -12,6 +12,7 @@ export const GET_USERS_FAILURE = "get_users_failure";
 export const CREATE_USER_REQUEST = "create_user_request";
 export const CREATE_USER_SUCCEEDED = "create_user_succeeded";
 export const CREATE_USER_FAILURE = "create_user_failure";
+export const CLEAR_CREATE_USER = "clear_create_user";
 
 export const UPDATE_USER_REQUEST = "update_user_request";
 export const UPDATE_USER_SUCCEEDED = "update_user_succeeded";

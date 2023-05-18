@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-import { createUser } from "../store/actions/users/users-actions";
+import { createUser, clearCreateUser } from "../store/actions/users/users-actions";
 import { getCurrentUser } from "../store/actions/auth/auth-actions";
 
 import checkAuthentication from "../authentication/check-authentication";
@@ -35,35 +35,29 @@ const CreateUser = () => {
         }
     }, [dispatch, location]);
 
+    useEffect(() => {
+        return () => {
+            dispatch(clearCreateUser());
+        };
+    }, []);
+
     const validationSchema = Yup.object().shape({
         firstName: Yup.string().required('First Name is required'),
         lastName: Yup.string().required('Last Name is required'),
         email: Yup.string().email('Invalid email').required('Email is required'),
         password: Yup.string().required('Password is required'),
         phoneNumber: Yup.string().required('Phone Number is required'),
-        gender: Yup.string().oneOf(['Male', 'Female'], 'Invalid gender').required('Gender is required'),
-        maritalStatus: Yup.string().oneOf(['Single', 'Married'], 'Invalid marital status').required('Marital Status is required'),
     });
 
-    const initialValues = {
-        roleId: `${String(location.state.userType).toLowerCase() === 'user' ? 1 : 2}`,
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        email: '',
-        password: '',
-        gender: 'Gender',
-        maritalStatus: 'Marital Status',
-    };
-
     const handleSubmit = (values, { resetForm }) => {
+        dispatch(clearCreateUser());
         const user = {
             ...values,
             gender: String(values.gender).toUpperCase(),
             maritalStatus: String(values.maritalStatus).toUpperCase(),
         };
-        delete user.roleId;
-        dispatch(createUser(user, values.roleId));
+        const roleId =  String(location.state.userType).toLowerCase() === 'user' ? 1 : 2;
+        dispatch(createUser(user, roleId));
         resetForm();
     };
 
@@ -72,11 +66,19 @@ const CreateUser = () => {
             <FacetcherDrawer>
                 <div className="row h-100 justify-content-center align-items-center mt-3 overflowY-scroll">
                     <Formik
-                        onSubmit={handleSubmit}
-                        initialValues={initialValues}
+                        initialValues={{
+                            firstName: '',
+                            lastName: '',
+                            phoneNumber: '',
+                            email: '',
+                            password: '',
+                            gender: 'Gender',
+                            maritalStatus: 'Marital Status',
+                        }}
                         validationSchema={validationSchema}
+                        onSubmit={handleSubmit}
                     >
-                        {({ values, handleChange, handleSubmit, errors, touched }) => (
+                        {({ values, handleChange, errors, touched }) => (
                             <div className="w-50 bg-dark-grey mx-5 position-relative d-flex justify-content-center align-items-center flex-column h-100 overflow-hidden">
                                 <div className="bg-dark-grey2 w-100 h-25 user-profile-pic position-absolute top-0"></div>
                                 <div className="rounded-circle bg-cyan grey-border user-profile-pic position-absolute top-0 overflow-hidden">
@@ -84,7 +86,7 @@ const CreateUser = () => {
                                         <PersonIcon sx={{ fontSize: 160 }} />
                                     </div>
                                 </div>
-                                <Form className="w-50 mx-5 d-flex justify-content-center flex-column align-items-center text-center" style={{marginTop: 180}}>
+                                <Form className="w-50 mx-5 d-flex justify-content-center flex-column align-items-center text-center" style={{ marginTop: 180 }}>
                                     {!createUserErrorOccurred && !createUserRequest && createdUserMessage && (<h6>* {createdUserMessage}</h6>)}
                                     {createUserErrorOccurred && <h6>* {createUserError}</h6>}
                                     <div className="row justify-content-center align-items-center">
@@ -143,7 +145,7 @@ const CreateUser = () => {
                                         <div className="w-100 my-4">
                                             <FacetcherSelectComponent
                                                 onChange={handleChange}
-                                                name="Marital Status"
+                                                name="maritalStatus"
                                                 value={values.maritalStatus}
                                                 defaultValue="Marital Status"
                                                 options={["Marital Status", "Single", "Married"]}
@@ -154,7 +156,6 @@ const CreateUser = () => {
                                     </div>
                                     <button
                                         type="submit"
-                                        onClick={handleSubmit}
                                         className="btn bg-cyan text-light-grey rounded-pill w-50 mt-4 fw-bold"
                                     >
                                         {createUserRequest ? "Loading ..." : `Create New ${location.state.userType}`}

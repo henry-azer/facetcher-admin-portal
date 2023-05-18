@@ -15,6 +15,7 @@ import {
     CREATE_USER_REQUEST,
     CREATE_USER_SUCCEEDED,
     CREATE_USER_FAILURE,
+    CLEAR_CREATE_USER,
 
     UPDATE_USER_REQUEST,
     UPDATE_USER_SUCCEEDED,
@@ -207,6 +208,13 @@ export const uploadUserProfilePicture = (photo) => async (dispatch) => {
 export function clearGetUserById() {
     return {
         type: CLEAR_GET_USER_BY_ID,
+        payload: null,
+    };
+};
+
+export function clearCreateUser() {
+    return {
+        type: CLEAR_CREATE_USER,
         payload: null,
     };
 };

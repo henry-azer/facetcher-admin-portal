@@ -13,6 +13,7 @@ import {
     CREATE_USER_REQUEST,
     CREATE_USER_SUCCEEDED,
     CREATE_USER_FAILURE,
+    CLEAR_CREATE_USER,
 
     UPDATE_USER_REQUEST,
     UPDATE_USER_SUCCEEDED,
@@ -86,6 +87,15 @@ export default function users_reducer(state = {}, action) {
                 createUserErrorOccurred: true,
                 createUserRequest: false,
             };
+        case CLEAR_CREATE_USER:
+            return {
+                ...state,
+                createdUser: null,
+                createUserError: null,
+                createUserRequest: null,
+                createdUserMessage: null,
+                createUserErrorOccurred: null,
+            };
 
         // UPDATE USER
         case UPDATE_USER_REQUEST:
@@ -115,7 +125,7 @@ export default function users_reducer(state = {}, action) {
                 updateUserErrorOccurred: null,
             };
 
-        // UPDATE USER
+        // TOGGLE DELETION USER
         case TOGGLE_DELETION_USER_REQUEST:
             return { ...state, toggleDeletionUserRequest: true };
         case TOGGLE_DELETION_USER_SUCCEEDED:
