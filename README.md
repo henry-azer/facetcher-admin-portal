@@ -5,9 +5,6 @@ Facetcher Admin Dashboard is a comprehensive and powerful tool for managing and 
   <img src="https://github.com/henry-azer/facetcher-admin-portal/assets/102770811/73482330-a398-4cb9-9b51-03c9f147a6d0" alt="System Architecture" width="800">
 </p>
 
-<p align="center">
-  <img src="https://github.com/henry-azer/facetcher-admin-portal/assets/102770811/bdda620a-185b-4d11-b85e-1bd0a4a9e52e" alt="System Architecture" width="800">
-</p>
 
 # Requirements
 
