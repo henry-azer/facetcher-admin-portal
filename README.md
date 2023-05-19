@@ -1,6 +1,6 @@
 # Getting Started
 
-Facetcher Admin Dashboard is a comprehensive and powerful tool for managing and monitoringuser activities on a web application. Its user-friendly interface, efficient state management and API integration, and comprehensive set of features make it a valuable tool for administrators who need to manage user accounts, monitor user activities, and ensure the security of the system.
+Facetcher Admin Dashboard is a comprehensive and powerful tool for managing and monitoring user activities on a web application. Its user-friendly interface, efficient state management and API integration, and comprehensive set of features make it a valuable tool for administrators who need to manage user accounts, monitor user activities, and ensure the security of the system.
 <p align="center">
   <img src="https://github.com/henry-azer/facetcher-admin-portal/assets/102770811/73482330-a398-4cb9-9b51-03c9f147a6d0" alt="System Architecture" width="800">
 </p>
