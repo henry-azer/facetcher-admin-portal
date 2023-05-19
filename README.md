@@ -44,7 +44,7 @@ http://localhost:3000/
 |    └── docker-compose.yml
 │
 |
-├──  public - This folder contains the main HTML file, information about the web application and instructions for web robots.
+├──  public - This folder contains the main HTML file, information and instructions for web robots.
 │    └── index.html
 |    └── manifest.json
 |    └── robots.txt
