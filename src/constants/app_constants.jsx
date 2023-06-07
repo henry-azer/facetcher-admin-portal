@@ -1,5 +1,5 @@
 export const APIs_URL = {
-     STAGING: "http://3.134.84.125:8010/facetcher-service/api",
+     STAGING: "http://18.116.231.60:8010/facetcher-service/api",
      PRODUCTION: "http://127.0.0.1:8080",
 };
 export const ACCESS_TOKEN = "%807&tI$4Wzm";
